@@ -47,16 +47,15 @@ def chat(request: ChatRequest):
 
     client = OpenAI(api_key=key)
 
-    try:
-    response = client.responses.create(
-        model="gpt-5.6",
-        instructions=SYSTEM_PROMPT,
-        input=request.message,
-    )
-except Exception as e:
-    print(f"OPENAI ERROR: {type(e).__name__}: {e}", flush=True)
-    raise HTTPException(status_code=500, detail="OpenAI request failed")
-
+       try:
+        response = client.responses.create(
+            model="gpt-5.6",
+            instructions=SYSTEM_PROMPT,
+            input=request.message,
+        )
+    except Exception as e:
+        print(f"OPENAI ERROR: {type(e).__name__}: {e}", flush=True)
+        raise HTTPException(status_code=500, detail="OpenAI request failed")
     return {
         "reply": response.output_text,
         "assistant": "Foxie",
