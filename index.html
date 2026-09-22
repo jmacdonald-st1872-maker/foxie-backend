@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Foxie — JJ's AI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial;background:#0b0d12;color:#f5f7fb}
+.app{display:flex;height:100vh}.side{width:250px;background:#11141b;border-right:1px solid #252936;padding:22px;display:flex;flex-direction:column}
+.logo{font-size:25px;font-weight:800;margin-bottom:5px}.owner{color:#9ca3b4;font-size:13px;margin-bottom:28px}
+.nav button{width:100%;background:transparent;color:#d9dce5;border:0;text-align:left;padding:13px;border-radius:10px;font-size:15px;margin:3px 0;cursor:pointer}.nav button:hover,.nav .active{background:#20242e}
+.bottom{margin-top:auto}.pill{font-size:12px;color:#9ca3b4;border:1px solid #303441;border-radius:20px;padding:8px 10px;display:inline-block}
+.main{flex:1;display:flex;flex-direction:column}.top{height:70px;border-bottom:1px solid #252936;display:flex;align-items:center;padding:0 28px;justify-content:space-between}.top strong{font-size:18px}.status{font-size:13px;color:#8fe0a6}
+.content{flex:1;overflow:auto;padding:35px}.hero{max-width:900px;margin:0 auto}.hero h1{font-size:48px;margin:10px 0 5px}.hero p{color:#a9afbd}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:28px 0}.card{background:#151922;border:1px solid #282d39;border-radius:16px;padding:20px;cursor:pointer}.card:hover{border-color:#505666}.icon{font-size:28px}.card h3{margin:12px 0 6px}.card p{color:#9299aa;font-size:14px;margin:0}
+.chat{background:#151922;border:1px solid #282d39;border-radius:18px;padding:18px}.messages{height:210px;overflow:auto}.msg{padding:12px 14px;border-radius:13px;margin:8px 0;max-width:80%;white-space:pre-wrap}.fox{background:#202530}.me{background:#303542;margin-left:auto}.form{display:flex;gap:9px;margin-top:12px}.form input{flex:1;background:#0e1117;border:1px solid #303542;border-radius:12px;padding:14px;color:#fff;outline:none}.form button{border:0;border-radius:12px;padding:0 18px;font-weight:700;cursor:pointer}
+.page{display:none;max-width:950px;margin:auto}.page.active{display:block}.box{background:#151922;border:1px solid #282d39;border-radius:16px;padding:22px;margin-top:18px}.map{height:330px;border-radius:14px;background:linear-gradient(135deg,#19251d,#15202b);display:flex;align-items:center;justify-content:center;color:#9da6b8;font-size:18px}
+label{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #292e3a}.toggle{width:45px;height:25px;background:#555d6c;border-radius:30px;padding:3px;cursor:pointer}.toggle i{display:block;width:19px;height:19px;background:white;border-radius:50%;transition:.2s}.toggle.on{background:#5b8cff}.toggle.on i{margin-left:20px}
+@media(max-width:700px){.side{width:70px;padding:14px}.logo{font-size:0}.logo:first-letter{font-size:25px}.owner,.nav span,.bottom{display:none}.content{padding:20px}.cards{grid-template-columns:1fr}.hero h1{font-size:36px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+<div class="logo">🦊 Foxie</div><div class="owner">JJ's AI assistant</div>
+<div class="nav">
+<button class="active" onclick="show('home',this)">🏠 <span>Home</span></button>
+<button onclick="show('search',this)">🔎 <span>Search</span></button>
+<button onclick="show('maps',this)">🗺️ <span>Maps & Traffic</span></button>
+<button onclick="show('admin',this)">⚙️ <span>JJ Admin</span></button>
+</div>
+<div class="bottom"><span class="pill">Owner: JJ</span></div>
+</aside>
+<main class="main">
+<header class="top"><strong id="title">Foxie</strong><span class="status">● Online</span></header>
+<section class="content">
+
+<div id="home" class="page active">
+<div class="hero"><h1>Hi JJ 👋</h1><p>I'm Foxie. Your all-in-one AI assistant.</p>
+<div class="cards">
+<div class="card" onclick="show('search')"><div class="icon">🔎</div><h3>Search the web</h3><p>Ask questions and find information.</p></div>
+<div class="card" onclick="show('maps')"><div class="icon">🗺️</div><h3>Maps & traffic</h3><p>Plan routes and check travel information.</p></div>
+<div class="card" onclick="show('admin')"><div class="icon">⚙️</div><h3>JJ controls</h3><p>Choose what Foxie is allowed to access.</p></div>
+</div>
+<div class="chat"><div class="messages" id="messages"><div class="msg fox">Hey JJ! What can I help you with?</div></div>
+<div class="form"><input id="chatInput" placeholder="Ask Foxie anything..."><button onclick="send()">Send</button></div></div>
+</div></div>
+
+<div id="search" class="page"><h2>🔎 Web Search</h2><p>Foxie's search area.</p><div class="box"><input id="searchInput" style="width:100%;padding:14px;background:#0e1117;color:white;border:1px solid #303542;border-radius:12px" placeholder="What do you want to search for?"><button style="margin-top:12px;padding:12px 18px;border:0;border-radius:10px" onclick="fakeSearch()">Search</button><div id="results" style="margin-top:18px;color:#aeb5c5"></div></div></div>
+
+<div id="maps" class="page"><h2>🗺️ Maps & Traffic</h2><p>Foxie's route-planning area.</p><div class="box"><div class="map">Map integration goes here<br>📍 Routes • 🚦 Traffic • 🛣️ Road information</div><div style="display:flex;gap:10px;margin-top:15px"><input id="from" style="flex:1;padding:13px;background:#0e1117;color:white;border:1px solid #303542;border-radius:10px" placeholder="From"><input id="to" style="flex:1;padding:13px;background:#0e1117;color:white;border:1px solid #303542;border-radius:10px" placeholder="To"></div></div></div>
+
+<div id="admin" class="page"><h2>⚙️ JJ Admin Panel</h2><p>Control what Foxie can access.</p><div class="box">
+<label>Web search <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
+<label>Maps & traffic <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
+<label>Files <div class="toggle" onclick="toggle(this)"><i></i></div></label>
+<label>Email <div class="toggle" onclick="toggle(this)"><i></i></div></label>
+<label>Calendar <div class="toggle" onclick="toggle(this)"><i></i></div></label>
+<label>Device controls <div class="toggle" onclick="toggle(this)"><i></i></div></label>
+</div></div>
+
+</section></main></div>
+<script>
+function show(id,el){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active');document.getElementById('title').textContent=id==='admin'?'JJ Admin':id==='maps'?'Maps & Traffic':id==='search'?'Web Search':'Foxie'}
+function toggle(x){x.classList.toggle('on')}
+function send(){let i=document.getElementById('chatInput'),m=i.value.trim();if(!m)return;let box=document.getElementById('messages');box.innerHTML+=`<div class="msg me">${esc(m)}</div><div class="msg fox">I'm the Foxie website prototype. To give me real AI, web search, maps, traffic and connected tools, my backend needs to be connected.</div>`;i.value='';box.scrollTop=box.scrollHeight}
+function fakeSearch(){let q=document.getElementById('searchInput').value.trim();document.getElementById('results').textContent=q?`Foxie would search the web for: “${q}”`:'Type something to search.'}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+</script>
+</body></html>
