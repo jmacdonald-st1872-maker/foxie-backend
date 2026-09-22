@@ -47,7 +47,7 @@ def chat(request: ChatRequest):
 
     client = OpenAI(api_key=key)
 
-       try:
+    try:
         response = client.responses.create(
             model="gpt-5.6",
             instructions=SYSTEM_PROMPT,
