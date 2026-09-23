@@ -7,227 +7,173 @@ html = r'''<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Foxie — JJ's AI</title>
 <style>
-:root{
-  --bg:#080b10;--panel:#111722;--card:#151c28;--border:#293243;
-  --text:#f5f7fb;--muted:#98a3b7;--accent:#48ff91;--accent2:#19d6ff;
-}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial;background:radial-gradient(circle at 80% 10%,#10291e 0,#080b10 35%,#05070a 100%);color:var(--text);min-height:100vh;overflow:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(transparent 96%,rgba(72,255,145,.05) 100%);background-size:100% 5px;opacity:.25}
-.app{display:flex;height:100vh}.side{width:255px;background:rgba(12,16,23,.94);border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;z-index:2}
-.logo{font-size:25px;font-weight:900}.owner{color:var(--muted);font-size:12px;margin:5px 0 20px}.nav{overflow:auto}
-.nav button{width:100%;background:transparent;color:#dce2ec;border:0;text-align:left;padding:11px;border-radius:10px;font-size:14px;margin:2px 0;cursor:pointer}.nav button:hover,.nav .active{background:#1c2633;color:#fff}
-.bottom{margin-top:auto}.pill{font-size:12px;color:var(--accent);border:1px solid #2d6d4b;border-radius:20px;padding:8px 10px;display:inline-block}
-.main{flex:1;display:flex;flex-direction:column;min-width:0}.top{height:65px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;justify-content:space-between;background:rgba(8,11,16,.8)}
-.status{font-size:13px;color:#8fe0a6}.clock{font-variant-numeric:tabular-nums;color:var(--accent)}
-.content{flex:1;overflow:auto;padding:28px}.page{display:none;max-width:1100px;margin:auto}.page.active{display:block}
-.hero h1{font-size:46px;margin:8px 0}.hero p{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:25px 0}
-.card,.box{background:rgba(17,23,34,.9);border:1px solid var(--border);border-radius:16px;padding:18px}.card{cursor:pointer}.card:hover{border-color:var(--accent)}.icon{font-size:27px}.card h3{margin:9px 0 5px}.card p{color:var(--muted);font-size:13px;margin:0}
-.chat{background:rgba(17,23,34,.9);border:1px solid var(--border);border-radius:18px;padding:16px}.messages{height:220px;overflow:auto}.msg{padding:10px 13px;border-radius:13px;margin:8px 0;max-width:80%;white-space:pre-wrap}.fox{background:#1b2532}.me{background:#253342;margin-left:auto}
-.form{display:flex;gap:8px;margin-top:10px}.form input,.input{flex:1;background:#090d13;border:1px solid #303b4d;border-radius:10px;padding:12px;color:#fff;outline:none}
-button.primary,button.gamebtn,.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer;background:var(--accent);color:#06100a}
-.btn.secondary{background:#273242;color:#fff}.btn.danger{background:#8e3040;color:#fff}.btn+.btn{margin-left:6px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.sectionTitle{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-label{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #252e3d}.toggle{width:45px;height:25px;background:#555d6c;border-radius:30px;padding:3px;cursor:pointer}.toggle i{display:block;width:19px;height:19px;background:white;border-radius:50%;transition:.2s}.toggle.on{background:var(--accent)}.toggle.on i{margin-left:20px}
-.themeRow{display:flex;flex-wrap:wrap;gap:9px}.themeRow button{border:1px solid var(--border);background:#151c28;color:#fff;border-radius:10px;padding:10px 13px;cursor:pointer}
-.calc{max-width:360px}.calcDisplay{width:100%;height:65px;background:#080c11;border:1px solid var(--border);color:#fff;border-radius:12px;padding:12px;font-size:28px;text-align:right;margin-bottom:10px}.calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.calcGrid button{height:52px;border:1px solid var(--border);background:#17202d;color:#fff;border-radius:10px;font-size:17px;cursor:pointer}
-.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.gameCard{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:18px}.gameCard button{margin-top:10px}
-.board3{display:grid;grid-template-columns:repeat(3,90px);gap:7px;margin:15px auto;width:max-content}.board3 button{width:90px;height:90px;background:#101824;border:1px solid #344154;color:#fff;font-size:35px;border-radius:10px;cursor:pointer}
-.chess{display:grid;grid-template-columns:repeat(8,52px);width:max-content;border:4px solid #303b4d}.sq{width:52px;height:52px;border:0;font-size:31px;cursor:pointer}.light{background:#d9e3d2;color:#111}.dark{background:#54705e;color:#fff}.selected{outline:3px solid var(--accent);outline-offset:-3px}
-canvas{background:#fff;border-radius:12px;touch-action:none;max-width:100%;border:2px solid var(--border)}.drawTools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.fightWrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}.fighterArena{height:330px;border-radius:18px;background:linear-gradient(#101d2d,#0a1018 65%,#18241a);border:1px solid var(--border);position:relative;overflow:hidden}
-.fighter{position:absolute;bottom:38px;width:65px;height:110px;border-radius:25px 25px 10px 10px;background:var(--accent);color:#07120b;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900}.fighter.p1{left:13%}.fighter.p2{right:13%;background:#19d6ff;color:#061116}.hp{height:14px;background:#2b3442;border-radius:10px;overflow:hidden;margin:6px 0 12px}.hp i{display:block;height:100%;background:var(--accent);width:100%}.p2hp i{margin-left:auto;background:#19d6ff}.fightControls{display:flex;flex-wrap:wrap;gap:8px}.score{color:var(--muted);font-size:13px}
-.videoGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.video{background:#121925;border:1px solid var(--border);border-radius:14px;padding:18px}
-.userRow{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #273142}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#20362b}
-.camera{display:grid;grid-template-columns:1fr 1fr;gap:15px}.camera video,.camera img{width:100%;border-radius:12px;background:#05070a;min-height:220px;object-fit:cover}
-.notice{padding:10px 12px;border-radius:10px;background:#12251b;color:#9ff1b8;margin:10px 0}.small{font-size:12px;color:var(--muted)}
-@media(max-width:760px){body{overflow:auto}.app{height:auto;min-height:100vh}.side{width:72px;padding:12px}.logo{font-size:0}.logo:first-letter{font-size:25px}.owner,.nav span,.bottom{display:none}.content{padding:18px}.hero h1{font-size:34px}.fightWrap,.camera{grid-template-columns:1fr}.chess{grid-template-columns:repeat(8,40px)}.sq{width:40px;height:40px;font-size:24px}}
+:root{--bg:#070a0d;--panel:#0d1217;--card:#111820;--border:#24303a;--text:#f5f7fb;--muted:#8e9aa7;--green:#39ff88;--green2:#13c967;--danger:#ff5470;--blue:#55a8ff;--orange:#ff9f43}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,Arial,sans-serif;background:radial-gradient(circle at 70% 10%,#10251b 0,#070a0d 38%,#050709 100%);color:var(--text)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(57,255,136,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,136,.025) 1px,transparent 1px);background-size:35px 35px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+.app{display:flex;min-height:100vh}.side{width:255px;background:rgba(8,12,16,.96);border-right:1px solid var(--border);padding:20px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:auto}.logo{font-size:26px;font-weight:900;color:var(--green);text-shadow:0 0 16px rgba(57,255,136,.3)}.owner{font-size:12px;color:var(--muted);margin:5px 0 22px}.nav button{width:100%;background:transparent;border:1px solid transparent;color:#dce3e8;text-align:left;padding:11px 12px;border-radius:11px;font-size:14px;margin:2px 0;cursor:pointer}.nav button:hover,.nav button.active{background:#132019;border-color:#234b34;color:var(--green)}.bottom{margin-top:auto;padding-top:18px}.pill{display:inline-block;font-size:11px;color:var(--green);border:1px solid #245c3b;border-radius:999px;padding:7px 10px}
+.main{flex:1;min-width:0}.top{height:68px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:rgba(7,10,13,.85);position:sticky;top:0;z-index:5}.top strong{font-size:17px}.topright{display:flex;align-items:center;gap:18px;font-size:12px}.clock{color:var(--green);font-variant-numeric:tabular-nums}.status{color:#7fffa9}.creator{color:#a9b2bc}.content{padding:28px;max-width:1250px;margin:auto}.page{display:none}.page.active{display:block}.hero{max-width:1000px;margin:auto}.hero h1{font-size:48px;margin:8px 0}.hero p,.muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:25px 0}.card,.box{background:rgba(13,18,23,.92);border:1px solid var(--border);border-radius:16px;padding:18px}.card{cursor:pointer}.card:hover{border-color:#376548;transform:translateY(-1px)}.icon{font-size:27px}.card h3{margin:9px 0 5px}.card p{color:var(--muted);font-size:13px;margin:0}.chat{background:rgba(13,18,23,.94);border:1px solid var(--border);border-radius:17px;padding:17px}.messages{height:220px;overflow:auto}.msg{padding:11px 13px;border-radius:13px;margin:7px 0;max-width:82%;white-space:pre-wrap}.fox{background:#17211b;border:1px solid #22392b}.me{background:#202934;margin-left:auto}.form{display:flex;gap:8px;margin-top:11px}.form input,.input,.select{width:100%;background:#080c10;border:1px solid #2a3741;border-radius:10px;color:white;padding:12px;outline:none}.form button,.btn{border:1px solid #2e7148;background:#163c27;color:var(--green);border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.btn.secondary{background:#111820;border-color:#303b45;color:#dce3e8}.btn.danger{border-color:#6c2a38;background:#31131a;color:#ff8ca0}.btn.blue{border-color:#285987;background:#10263b;color:#75bbff}.btn.small{padding:7px 10px;font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.badge{font-size:11px;border:1px solid #31523e;border-radius:999px;padding:4px 8px;color:var(--green)}.badge.blue{border-color:#315273;color:#73baff}.badge.red{border-color:#66303c;color:#ff8a9c}.list{display:grid;gap:9px}.listitem{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border:1px solid #202b34;border-radius:11px;background:#0a0f13}.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#183a27;border:1px solid #2d6c46}.spacer{height:12px}
+.gameTabs{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.game{display:none}.game.active{display:block}.board{display:grid;grid-template-columns:repeat(8,1fr);max-width:520px;aspect-ratio:1;margin:auto;border:3px solid #27322d}.sq{display:grid;place-items:center;font-size:clamp(22px,5vw,43px);cursor:pointer;user-select:none}.sq.light{background:#d6e2d5;color:#152018}.sq.dark{background:#31513d;color:#fff}.sq.selected{outline:4px solid var(--green);outline-offset:-4px}.ttt{display:grid;grid-template-columns:repeat(3,100px);justify-content:center}.ttt button{height:100px;font-size:45px;background:#0b1115;color:white;border:1px solid #304039;cursor:pointer}.drawcanvas{width:100%;height:420px;background:#fff;border-radius:12px;touch-action:none}.racer{display:block;width:min(520px,100%);height:auto;background:#101519;border:1px solid #304039;border-radius:12px;margin:auto}.fighter{display:grid;grid-template-columns:1fr 1fr;gap:20px}.fighterbox{background:#111820;border:1px solid #2a3640;border-radius:14px;padding:16px;text-align:center}.health{height:16px;background:#32131b;border-radius:99px;overflow:hidden}.health i{display:block;height:100%;background:#35e87e;width:100%}.arena{height:240px;background:linear-gradient(#121a20,#0b0e11);border:1px solid #2b3942;border-radius:13px;position:relative;overflow:hidden}.fighterchar{position:absolute;bottom:15px;font-size:58px;transition:.1s}.p1{left:25%}.p2{right:25%}.leaderboard table{width:100%;border-collapse:collapse}.leaderboard th,.leaderboard td{text-align:left;padding:10px;border-bottom:1px solid #22303a}.toggle{width:45px;height:25px;background:#48535d;border-radius:30px;padding:3px;cursor:pointer}.toggle i{display:block;width:19px;height:19px;background:#fff;border-radius:50%;transition:.2s}.toggle.on{background:#1b9c52}.toggle.on i{margin-left:20px}.calc{max-width:360px}.calcDisplay{font-size:28px;text-align:right;margin-bottom:10px}.calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.calcgrid button{height:55px;background:#121a20;border:1px solid #2b3942;color:white;border-radius:9px;font-size:18px;cursor:pointer}.calcgrid .op{color:var(--green)}.selfievideo,.selfieimg{max-width:100%;border-radius:14px;background:#050708}.selfiegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.selfiegrid img{width:100%;border-radius:10px}.themebtn{min-height:80px}.themebtn[data-theme=green]{--c:#39ff88}.themebtn[data-theme=blue]{--c:#55a8ff}.themebtn[data-theme=purple]{--c:#b77aff}.themebtn[data-theme=red]{--c:#ff5470}.themebtn[data-theme=orange]{--c:#ff9f43}.themebtn[data-theme=pink]{--c:#ff70c8}.themebtn{border:1px solid var(--c);background:#0e1419;color:var(--c);border-radius:12px;padding:14px;cursor:pointer}
+.lobby{display:grid;grid-template-columns:1.25fr .75fr;gap:15px}.room{border:1px solid #23323a;background:#0b1115;border-radius:13px;padding:13px}.room.live{border-color:#2c6944}.roomhead{display:flex;justify-content:space-between;gap:10px}.roommeta{font-size:12px;color:var(--muted);margin:7px 0}.spectatorbar{display:flex;gap:8px;flex-wrap:wrap}.spectator{padding:6px 9px;border-radius:99px;background:#151e25;border:1px solid #2b3740;font-size:12px}.chatmini{height:180px;overflow:auto;background:#070b0e;border:1px solid #202b33;border-radius:10px;padding:10px}.notice{padding:11px;border:1px dashed #31513e;border-radius:10px;color:#9decb8;background:#0d1912}.online{color:#69f79b}.offline{color:#ff8b9c}
+@media(max-width:950px){.cards{grid-template-columns:repeat(2,1fr)}.lobby,.grid2{grid-template-columns:1fr}.side{width:210px}.creator{display:none}}
+@media(max-width:650px){.side{width:62px;padding:12px}.logo{font-size:0}.logo:first-letter{font-size:25px}.owner,.nav span,.bottom{display:none}.content{padding:17px}.cards{grid-template-columns:1fr}.hero h1{font-size:36px}.top{padding:0 13px}.fighter{grid-template-columns:1fr}.ttt{grid-template-columns:repeat(3,80px)}.ttt button{height:80px}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="side">
-  <div class="logo">🦊 Foxie</div><div class="owner">JJ's AI assistant</div>
-  <div class="nav">
-    <button class="active" onclick="show('home',this)">🏠 <span>Home</span></button>
-    <button onclick="show('users',this)">👥 <span>Users</span></button>
-    <button onclick="show('friends',this)">🤝 <span>Friends</span></button>
-    <button onclick="show('vids',this)">🎥 <span>Foxie Vids</span></button>
-    <button onclick="show('games',this)">🎮 <span>Games</span></button>
-    <button onclick="show('calculator',this)">🧮 <span>Calculator</span></button>
-    <button onclick="show('selfies',this)">🤳 <span>Selfies</span></button>
-    <button onclick="show('search',this)">🔎 <span>Search</span></button>
-    <button onclick="show('maps',this)">🗺️ <span>Maps & Traffic</span></button>
-    <button onclick="show('themes',this)">🎨 <span>Themes</span></button>
-    <button onclick="show('admin',this)">👑 <span>JJ Admin</span></button>
-  </div>
-  <div class="bottom"><span class="pill">Owner: JJ</span></div>
+<div class="logo">🦊 Foxie</div>
+<div class="owner">JJ's AI assistant</div>
+<div class="nav">
+<button class="active" onclick="show('home',this)">🏠 <span>Home</span></button>
+<button onclick="show('users',this)">👥 <span>Users</span></button>
+<button onclick="show('friends',this)">🤝 <span>Friends</span></button>
+<button onclick="show('vids',this)">🎬 <span>Foxie Vids</span></button>
+<button onclick="show('games',this)">🎮 <span>Games</span></button>
+<button onclick="show('multiplayer',this)">🌐 <span>Multiplayer</span></button>
+<button onclick="show('spectators',this)">👀 <span>Spectator Room</span></button>
+<button onclick="show('calculator',this)">🧮 <span>Calculator</span></button>
+<button onclick="show('selfies',this)">📸 <span>Selfies</span></button>
+<button onclick="show('search',this)">🔎 <span>Search</span></button>
+<button onclick="show('maps',this)">🗺️ <span>Maps & Traffic</span></button>
+<button onclick="show('themes',this)">🎨 <span>Themes</span></button>
+<button onclick="show('admin',this)">⚙️ <span>JJ Admin</span></button>
+</div>
+<div class="bottom"><span class="pill">Owner: JJ</span></div>
 </aside>
-
 <main class="main">
-<header class="top"><strong id="title">Foxie</strong><div><span class="clock" id="clock"></span> &nbsp; <span class="status">● Online</span></div></header>
+<header class="top">
+<strong id="title">Foxie</strong>
+<div class="topright"><span class="creator">Jayden Wayne Macdonald created this</span><span class="clock" id="clock">--:--:--</span><span class="status">● Online</span></div>
+</header>
 <section class="content">
 
 <div id="home" class="page active">
-  <div class="hero"><h1>Hi JJ 👋</h1><p>I'm Foxie — your all-in-one AI assistant and game hub.</p>
-  <div class="cards">
-    <div class="card" onclick="show('games')"><div class="icon">🎮</div><h3>Games</h3><p>Chess, Tic-Tac-Toe, Solitaire, racing, cards and Foxie Fighter.</p></div>
-    <div class="card" onclick="show('calculator')"><div class="icon">🧮</div><h3>Calculator</h3><p>Quick calculations right inside Foxie.</p></div>
-    <div class="card" onclick="show('selfies')"><div class="icon">🤳</div><h3>Selfies</h3><p>Use your camera or choose an image from your device.</p></div>
-    <div class="card" onclick="show('themes')"><div class="icon">🎨</div><h3>Change vibe</h3><p>Switch colours while keeping the Foxie style.</p></div>
-  </div>
-  <div class="chat"><div class="messages" id="messages"><div class="msg fox">Hey JJ! Foxie is ready. 🦊</div></div>
-    <div class="form"><input id="chatInput" placeholder="Ask Foxie anything..." onkeydown="if(event.key==='Enter')send()"><button class="primary" onclick="send()">Send</button></div>
-  </div></div>
+<div class="hero">
+<h1>Hi JJ 👋</h1><p>Welcome to Foxie — your AI, games and social hub.</p>
+<div class="cards">
+<div class="card" onclick="show('games')"><div class="icon">🎮</div><h3>Games</h3><p>Play Foxie games against AI.</p></div>
+<div class="card" onclick="show('multiplayer')"><div class="icon">🌐</div><h3>Multiplayer</h3><p>Create or join game rooms.</p></div>
+<div class="card" onclick="show('spectators')"><div class="icon">👀</div><h3>Spectator Room</h3><p>Watch live matches and chat.</p></div>
+<div class="card" onclick="show('calculator')"><div class="icon">🧮</div><h3>Calculator</h3><p>Quick calculations.</p></div>
+</div>
+<div class="chat">
+<div class="messages" id="messages"><div class="msg fox">Hey JJ! 🦊 What are we building today?</div></div>
+<div class="form"><input id="chatInput" placeholder="Ask Foxie anything..." onkeydown="if(event.key==='Enter')send()"><button onclick="send()">Send</button></div>
+</div>
+</div>
 </div>
 
-<div id="users" class="page"><h2>👥 Users</h2><div class="box">
-  <div class="userRow"><div class="avatar">🦊</div><div><b>JJ</b><div class="small">Owner / Admin</div></div></div>
-  <div class="userRow"><div class="avatar">🤖</div><div><b>Foxie AI</b><div class="small">AI assistant</div></div></div>
-  <p class="small">Real multi-user accounts require a backend and database. This page is the front-end prototype.</p>
-</div></div>
+<div id="users" class="page"><h2>👥 Users</h2><p class="muted">Demo social area. Real accounts need a backend database.</p><div class="box"><div class="list"><div class="listitem"><div class="row"><div class="avatar">JJ</div><div><b>JJ</b><div class="muted">Owner • online</div></div></div><span class="badge">ADMIN</span></div><div class="listitem"><div class="row"><div class="avatar">F</div><div><b>Foxie</b><div class="muted">AI assistant • online</div></div></div><span class="badge">AI</span></div></div></div></div>
 
-<div id="friends" class="page"><h2>🤝 Friends</h2><div class="box">
-  <input class="input" id="friendName" placeholder="Friend username">
-  <button class="btn" onclick="addFriend()">Add friend</button>
-  <div id="friendList" style="margin-top:15px"></div>
-</div></div>
+<div id="friends" class="page"><h2>🤝 Friends</h2><div class="box"><div class="row"><input class="input" id="friendInput" placeholder="Enter a username"><button class="btn" onclick="addFriend()">Add Friend</button></div><div class="spacer"></div><div id="friendList" class="list"></div></div></div>
 
-<div id="vids" class="page"><h2>🎥 Foxie Vids</h2><p class="small">A front-end video area. Upload/storage needs a backend for permanent public videos.</p>
-  <div class="videoGrid"><div class="video">🦊 <b>Foxie Welcome</b><p class="small">Welcome to Foxie Vids.</p></div><div class="video">🎮 <b>Game Clips</b><p class="small">Share your best local game scores.</p></div><div class="video">🤳 <b>Selfie Clips</b><p class="small">Your own content area.</p></div></div>
+<div id="vids" class="page"><h2>🎬 Foxie Vids</h2><p class="muted">Video area ready for your future uploads.</p><div class="grid3"><div class="box">🎥 Foxie Clips<br><span class="muted">Add videos when your backend storage is connected.</span></div><div class="box">🎮 Game Highlights<br><span class="muted">Save multiplayer highlights here.</span></div><div class="box">🦊 Foxie Shorts<br><span class="muted">Short videos and clips.</span></div></div></div>
+
+<div id="games" class="page">
+<div class="section-title"><div><h2>🎮 Foxie Games</h2><p class="muted">AI games plus the multiplayer lobby.</p></div><button class="btn blue" onclick="show('multiplayer')">🌐 Multiplayer Lobby</button></div>
+<div class="gameTabs">
+<button class="btn small" onclick="game('ttt')">⭕ Tic-Tac-Toe</button>
+<button class="btn small" onclick="game('chess')">♟ Chess</button>
+<button class="btn small" onclick="game('draw')">🎨 Drawing</button>
+<button class="btn small" onclick="game('solitaire')">🃏 Solitaire</button>
+<button class="btn small" onclick="game('cards')">🂡 Cards</button>
+<button class="btn small" onclick="game('racer')">🏎 Racer</button>
+<button class="btn small" onclick="game('fighter')">🥊 Foxie Fighter</button>
 </div>
 
-<div id="games" class="page"><div class="sectionTitle"><h2>🎮 Foxie Games</h2><span class="small">AI modes available where supported</span></div>
-  <div class="games">
-    <div class="gameCard"><div class="icon">♟️</div><h3>Foxie Chess</h3><p class="small">Play a simple chess board against Foxie AI.</p><button class="btn gamebtn" onclick="startChess()">Play vs AI</button></div>
-    <div class="gameCard"><div class="icon">❌⭕</div><h3>Tic-Tac-Toe</h3><p class="small">Beat Foxie AI.</p><button class="btn gamebtn" onclick="startTTT()">Play vs AI</button></div>
-    <div class="gameCard"><div class="icon">🎨</div><h3>Drawing Pad</h3><p class="small">Draw anything you want.</p><button class="btn gamebtn" onclick="show('drawing')">Draw</button></div>
-    <div class="gameCard"><div class="icon">🃏</div><h3>Solitaire</h3><p class="small">Simple local solitaire-style card challenge.</p><button class="btn gamebtn" onclick="startSolitaire()">Play</button></div>
-    <div class="gameCard"><div class="icon">🂡</div><h3>Foxie Cards</h3><p class="small">High-card duel against AI.</p><button class="btn gamebtn" onclick="startCards()">Play vs AI</button></div>
-    <div class="gameCard"><div class="icon">🚗</div><h3>Foxie Racer</h3><p class="small">Dodge traffic and race AI cars.</p><button class="btn gamebtn" onclick="startRacer()">Race vs AI</button></div>
-    <div class="gameCard"><div class="icon">🥊</div><h3>Foxie Fighter</h3><p class="small">Original arcade-style fighter with AI.</p><button class="btn gamebtn" onclick="startFighter()">Fight vs AI</button></div>
-  </div>
-  <div class="box" style="margin-top:18px"><h3>🏆 Leaderboards</h3><div class="grid"><div><b>Weekly</b><p id="lbWeek">JJ — 0 points</p></div><div><b>Monthly</b><p id="lbMonth">JJ — 0 points</p></div><div><b>Yearly</b><p id="lbYear">JJ — 0 points</p></div></div></div>
+<div id="game-ttt" class="game active"><div class="box"><h3>⭕ Tic-Tac-Toe</h3><div class="row"><label>Difficulty <select class="select" id="tttDifficulty" style="width:auto"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></label><button class="btn" onclick="resetTTT()">New Game</button></div><div class="spacer"></div><div class="ttt" id="tttBoard"></div><p id="tttStatus" class="muted"></p></div></div>
+
+<div id="game-chess" class="game"><div class="box"><h3>♟ Foxie Chess</h3><p class="muted">Local demo board. Multiplayer chess rooms are available in the lobby.</p><div id="chessBoard" class="board"></div><div class="row" style="margin-top:12px"><button class="btn" onclick="resetChess()">Reset</button><span id="chessStatus" class="muted"></span></div></div></div>
+
+<div id="game-draw" class="game"><div class="box"><h3>🎨 Drawing Pad</h3><div class="row"><input type="color" id="drawColor" value="#111111"><button class="btn small" onclick="clearDraw()">Clear</button><button class="btn small" onclick="saveDraw()">Save PNG</button></div><div class="spacer"></div><canvas id="drawCanvas" class="drawcanvas" width="1000" height="500"></canvas></div></div>
+
+<div id="game-solitaire" class="game"><div class="box"><h3>🃏 Foxie Solitaire</h3><p class="muted">Simple target-card challenge. Pick the card matching the target suit.</p><h2 id="solTarget">🎯 Target: ♠</h2><div class="row" id="solCards"></div><p id="solStatus" class="muted"></p><button class="btn" onclick="newSolitaire()">New Round</button></div></div>
+
+<div id="game-cards" class="game"><div class="box"><h3>🂡 Foxie Cards</h3><p class="muted">High Card vs Foxie.</p><div class="grid2"><div><h3>You</h3><div id="playerCard" style="font-size:70px">🂠</div></div><div><h3>Foxie</h3><div id="aiCard" style="font-size:70px">🂠</div></div></div><button class="btn" onclick="dealCards()">Deal</button><p id="cardStatus" class="muted"></p></div></div>
+
+<div id="game-racer" class="game"><div class="box"><h3>🏎 Foxie Racer</h3><p class="muted">Use ← → or A/D. Avoid the blocks.</p><canvas id="racerCanvas" class="racer" width="520" height="650"></canvas><div class="row"><button class="btn" onclick="startRacer()">Start Race</button><span id="raceStatus" class="muted"></span></div></div></div>
+
+<div id="game-fighter" class="game"><div class="box"><h3>🥊 Foxie Fighter</h3><p class="muted">Original arcade-style Foxie fighter. Choose difficulty and fight the AI.</p><div class="row"><select class="select" id="fightDifficulty" style="width:auto"><option>Easy</option><option selected>Medium</option><option>Hard</option></select><button class="btn" onclick="resetFight()">Reset Fight</button></div><div class="fighter"><div class="fighterbox"><h3>JJ 🧑</h3><div class="health"><i id="pHealth"></i></div><p><button class="btn small" onclick="fightMove('punch')">👊 Punch</button> <button class="btn small" onclick="fightMove('kick')">🦵 Kick</button> <button class="btn small" onclick="fightMove('block')">🛡 Block</button></p></div><div class="fighterbox"><h3>Foxie 🦊</h3><div class="health"><i id="aHealth"></i></div><p class="muted">AI fights back automatically.</p></div></div><div class="arena"><div class="fighterchar p1" id="fighterP">🧑</div><div class="fighterchar p2" id="fighterA">🦊</div></div><p id="fightStatus" class="muted"></p></div></div>
 </div>
 
-<div id="ttt" class="page"><div class="sectionTitle"><h2>❌⭕ Tic-Tac-Toe</h2><button class="btn secondary" onclick="show('games')">Back</button></div><div class="box"><p id="tttStatus">You are X. Foxie is O.</p><div class="board3" id="tttBoard"></div><button class="btn" onclick="startTTT()">Restart</button></div></div>
-
-<div id="chess" class="page"><div class="sectionTitle"><h2>♟️ Foxie Chess</h2><button class="btn secondary" onclick="show('games')">Back</button></div><div class="box"><p id="chessStatus">You are White. Select a piece, then a square.</p><div class="chess" id="chessBoard"></div><button class="btn" onclick="startChess()">Restart</button><p class="small">This browser version uses basic legal-looking movement and a simple AI reply; a full tournament-strength chess engine belongs on the backend.</p></div></div>
-
-<div id="drawing" class="page"><div class="sectionTitle"><h2>🎨 Foxie Drawing Pad</h2><button class="btn secondary" onclick="show('games')">Back</button></div><div class="box"><div class="drawTools"><label style="border:0;padding:0">Brush <input id="brush" type="range" min="1" max="30" value="5"></label><input id="drawColor" type="color" value="#111111"><button class="btn" onclick="clearDraw()">Clear</button><button class="btn" onclick="saveDraw()">Save drawing</button></div><canvas id="drawCanvas" width="900" height="520"></canvas></div></div>
-
-<div id="solitaire" class="page"><div class="sectionTitle"><h2>🃏 Foxie Solitaire</h2><button class="btn secondary" onclick="show('games')">Back</button></div><div class="box"><p id="solStatus">Match the card target. Click Draw.</p><div style="font-size:70px" id="solCard">🂠</div><button class="btn" onclick="solDraw()">Draw</button><button class="btn secondary" onclick="startSolitaire()">New game</button></div></div>
-
-<div id="cards" class="page"><div class="sectionTitle"><h2>🂡 Foxie Cards</h2><button class="btn secondary" onclick="show('games')">Back</button></div><div class="box"><p id="cardStatus">Press Deal to challenge Foxie AI.</p><div class="grid"><div><b>You</b><div id="myCard" style="font-size:60px">🂠</div></div><div><b>Foxie AI</b><div id="aiCard" style="font-size:60px">🂠</div></div></div><button class="btn" onclick="dealCards()">Deal</button></div></div>
-
-<div id="racer" class="page"><div class="sectionTitle"><h2>🚗 Foxie Racer</h2><button class="btn secondary" onclick="show('games')">Back</button></div><div class="box"><canvas id="raceCanvas" width="600" height="380"></canvas><p id="raceStatus">Use ← → or A/D to steer. Avoid the cars.</p><button class="btn" onclick="startRacer()">Start race</button></div></div>
-
-<div id="fighter" class="page"><div class="sectionTitle"><h2>🥊 Foxie Fighter</h2><button class="btn secondary" onclick="show('games')">Back</button></div>
-  <div class="fightWrap"><div><b>JJ Fox</b><div class="hp"><i id="pHp"></i></div></div><div><b>Foxie AI</b><div class="hp p2hp"><i id="aHp"></i></div></div></div>
-  <div class="fighterArena" id="arena"><div class="fighter p1">🦊</div><div class="fighter p2">🤖</div></div>
-  <div class="box"><p id="fightStatus">Choose an attack.</p><div class="fightControls"><button class="btn" onclick="fightMove('punch')">👊 Punch</button><button class="btn" onclick="fightMove('kick')">🦵 Kick</button><button class="btn secondary" onclick="fightMove('block')">🛡️ Block</button><button class="btn" onclick="startFighter()">Restart</button></div></div>
+<div id="multiplayer" class="page">
+<div class="section-title"><div><h2>🌐 Multiplayer Lobby</h2><p class="muted">Create rooms, join players and open a spectator view.</p></div><div class="row"><span class="badge">DEMO SERVER MODE</span><button class="btn" onclick="createRoom()">＋ Create Room</button></div></div>
+<div class="notice">⚡ These rooms are ready for real WebSocket multiplayer. This browser-only build simulates the lobby locally. Once the Foxie backend is connected, players on different devices can share the same rooms.</div>
+<div class="spacer"></div>
+<div class="lobby"><div class="box"><h3>🎮 Live Game Rooms</h3><div id="roomList" class="list"></div></div><div class="box"><h3>🟢 Your Player</h3><input class="input" id="playerName" value="JJ"><div class="spacer"></div><label class="muted">Choose game<select class="select" id="roomGame"><option>Foxie Fighter</option><option>Chess</option><option>Tic-Tac-Toe</option><option>Foxie Racer</option><option>Foxie Cards</option><option>Solitaire</option></select></label><div class="spacer"></div><button class="btn" onclick="createRoom()">Create Game Room</button></div></div>
 </div>
 
-<div id="calculator" class="page"><h2>🧮 Calculator</h2><div class="box calc"><input id="calcDisplay" class="calcDisplay" value="0" readonly><div class="calcGrid">
-<button onclick="calc('7')">7</button><button onclick="calc('8')">8</button><button onclick="calc('9')">9</button><button onclick="calc('/')">÷</button>
-<button onclick="calc('4')">4</button><button onclick="calc('5')">5</button><button onclick="calc('6')">6</button><button onclick="calc('*')">×</button>
-<button onclick="calc('1')">1</button><button onclick="calc('2')">2</button><button onclick="calc('3')">3</button><button onclick="calc('-')">−</button>
-<button onclick="calc('0')">0</button><button onclick="calc('.')">.</button><button onclick="calculate()">=</button><button onclick="calc('+')">+</button>
-<button onclick="clearCalc()" style="grid-column:span 4">Clear</button></div></div></div>
+<div id="spectators" class="page">
+<div class="section-title"><div><h2>👀 Spectator Room</h2><p class="muted">Watch active games and chat without joining the match.</p></div><span class="badge blue">LIVE WATCH</span></div>
+<div class="grid2"><div class="box"><h3>📺 Match Feed</h3><div id="spectatorMatch" class="room live"><div class="roomhead"><b>No live match selected</b><span class="badge red">WAITING</span></div><p class="muted">Create a multiplayer room, then choose “Spectate”.</p></div><div class="spacer"></div><div class="spectatorbar" id="spectatorList"></div></div><div class="box"><h3>💬 Spectator Chat</h3><div id="spectatorChat" class="chatmini"></div><div class="form"><input id="spectatorInput" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendSpectator()"><button onclick="sendSpectator()">Send</button></div></div></div>
+</div>
 
-<div id="selfies" class="page"><h2>🤳 Selfies</h2><div class="box"><div class="camera"><div><video id="camera" autoplay playsinline></video><button class="btn" onclick="startCamera()">Start camera</button><button class="btn" onclick="takeSelfie()">Take selfie</button></div><div><img id="selfiePreview" alt="Selfie preview"><p class="small">Camera access is only requested when you press Start camera.</p></div></div><input type="file" accept="image/*" capture="user" onchange="loadSelfie(event)" style="margin-top:12px"></div></div>
+<div id="calculator" class="page"><h2>🧮 Calculator</h2><div class="box calc"><input id="calcDisplay" class="input calcDisplay" readonly value="0"><div class="calcgrid"><button onclick="calc('7')">7</button><button onclick="calc('8')">8</button><button onclick="calc('9')">9</button><button class="op" onclick="calc('/')">÷</button><button onclick="calc('4')">4</button><button onclick="calc('5')">5</button><button onclick="calc('6')">6</button><button class="op" onclick="calc('*')">×</button><button onclick="calc('1')">1</button><button onclick="calc('2')">2</button><button onclick="calc('3')">3</button><button class="op" onclick="calc('-')">−</button><button onclick="calc('0')">0</button><button onclick="calc('.')">.</button><button onclick="calc('C')">C</button><button class="op" onclick="calc('+')">+</button><button style="grid-column:span 4" class="op" onclick="calc('=')">=</button></div></div></div>
 
-<div id="search" class="page"><h2>🔎 Web Search</h2><div class="box"><input id="searchInput" class="input" placeholder="What do you want to search for?"><button class="btn" onclick="fakeSearch()">Search</button><div id="results" style="margin-top:18px;color:#aeb5c5"></div></div></div>
-<div id="maps" class="page"><h2>🗺️ Maps & Traffic</h2><div class="box"><div style="height:260px;border-radius:14px;background:linear-gradient(135deg,#14241b,#12202d);display:grid;place-items:center;color:#9da6b8">Map integration area<br>📍 Routes • 🚦 Traffic • 🛣️ Roads</div><div class="form"><input class="input" id="from" placeholder="From"><input class="input" id="to" placeholder="To"></div></div></div>
+<div id="selfies" class="page"><h2>📸 Selfies</h2><p class="muted">Camera/upload demo. Camera permission stays in your browser.</p><div class="box"><div class="row"><button class="btn" onclick="startCamera()">Start Camera</button><button class="btn" onclick="takeSelfie()">Take Selfie</button><input id="selfieUpload" type="file" accept="image/*" onchange="uploadSelfie(event)"></div><div class="spacer"></div><video id="selfieVideo" class="selfievideo" autoplay playsinline></video><canvas id="selfieCanvas" style="display:none"></canvas><h3>Gallery</h3><div id="selfieGrid" class="selfiegrid"></div></div></div>
 
-<div id="themes" class="page"><h2>🎨 Foxie Themes</h2><p class="small">Every theme keeps the dark Foxie/glitch vibe.</p><div class="box"><div class="themeRow">
-<button onclick="theme('#48ff91','#19d6ff')">🟢 Matrix Green</button><button onclick="theme('#4da3ff','#a855f7')">🔵 Cyber Blue</button><button onclick="theme('#c084fc','#22d3ee')">🟣 Purple Glitch</button><button onclick="theme('#ff5c72','#ffb347')">🔴 Red Hacker</button><button onclick="theme('#ff9f43','#ffd166')">🟠 Fox Orange</button><button onclick="theme('#8b5cf6','#38bdf8')">🌌 Deep Space</button><button onclick="theme('#ff70c8','#a78bfa')">🌸 Pink Neon</button><button onclick="theme('#ffffff','#8b949e')">⚫ Midnight</button>
-</div></div></div>
+<div id="search" class="page"><h2>🔎 Web Search</h2><p class="muted">Front-end search area. Connect a backend search API for real results.</p><div class="box"><input id="searchInput" class="input" placeholder="What do you want to search for?"><button class="btn" style="margin-top:10px" onclick="fakeSearch()">Search</button><div id="results" style="margin-top:15px"></div></div></div>
 
-<div id="admin" class="page"><h2>👑 JJ Admin Panel</h2><p>Owner controls for the front-end prototype.</p><div class="notice">👑 Signed in as JJ / Owner</div><div class="box">
-<label>Web search <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
-<label>Maps & traffic <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
-<label>Games <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
-<label>Selfies <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
-<label>Foxie Vids <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
-<label>User management <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
-<label>Leaderboard management <div class="toggle on" onclick="toggle(this)"><i></i></div></label>
-<label>Files <div class="toggle" onclick="toggle(this)"><i></i></div></label>
-<label>Email <div class="toggle" onclick="toggle(this)"><i></i></div></label>
-</div><div class="box"><h3>Admin actions</h3><button class="btn danger" onclick="alert('Demo action: user management would happen on the secure backend.')">Manage users</button><button class="btn danger" onclick="alert('Demo action: leaderboard editing would happen on the secure backend.')">Manage leaderboards</button><button class="btn secondary" onclick="alert('JJ is the owner in this front-end demo.')">Owner info</button></div></div>
+<div id="maps" class="page"><h2>🗺️ Maps & Traffic</h2><p class="muted">Route-planning area. Real maps/traffic require an external map service and backend/API key.</p><div class="box"><div style="height:300px;border-radius:13px;background:linear-gradient(135deg,#14251b,#111c28);display:grid;place-items:center;color:#9da6b8;font-size:18px">📍 MAP AREA<br>Routes • 🚦 Traffic • 🛣️ Roads</div><div class="row" style="margin-top:12px"><input class="input" id="from" placeholder="From"><input class="input" id="to" placeholder="To"><button class="btn" onclick="routeDemo()">Plan</button></div><p id="routeResult" class="muted"></p></div></div>
 
-<div class="page" id="unused"></div>
+<div id="themes" class="page"><h2>🎨 Foxie Themes</h2><p class="muted">Change the accent while keeping the dark Foxie style.</p><div class="grid3"><button class="themebtn" data-theme="green" onclick="setTheme('#39ff88','#13c967')">🟢 Matrix Green</button><button class="themebtn" onclick="setTheme('#55a8ff','#2274c8')">🔵 Cyber Blue</button><button class="themebtn" onclick="setTheme('#b77aff','#7137c7')">🟣 Purple Glitch</button><button class="themebtn" onclick="setTheme('#ff5470','#c52343')">🔴 Red Hacker</button><button class="themebtn" onclick="setTheme('#ff9f43','#d66d0c')">🟠 Fox Orange</button><button class="themebtn" onclick="setTheme('#ff70c8','#bd3290')">🩷 Pink Neon</button></div></div>
+
+<div id="admin" class="page"><h2>⚙️ JJ Admin Panel</h2><p class="muted">Owner controls. Front-end toggles are not secure admin authentication until the backend is connected.</p><div class="box"><label>Web search <div class="toggle on" onclick="toggle(this)"><i></i></div></label><label>Maps & traffic <div class="toggle on" onclick="toggle(this)"><i></i></div></label><label>Multiplayer server <div class="toggle on" onclick="toggle(this)"><i></i></div></label><label>Spectator room <div class="toggle on" onclick="toggle(this)"><i></i></div></label><label>Files <div class="toggle" onclick="toggle(this)"><i></i></div></label><label>Email <div class="toggle" onclick="toggle(this)"><i></i></div></label><label>Calendar <div class="toggle" onclick="toggle(this)"><i></i></div></label><label>Device controls <div class="toggle" onclick="toggle(this)"><i></i></div></label></div><div class="box"><h3>Owner tools</h3><div class="row"><button class="btn danger" onclick="clearRooms()">Clear Demo Rooms</button><button class="btn" onclick="alert('JJ admin mode is enabled in this front-end demo. Secure admin permissions must be enforced on the backend.')">Admin Info</button></div></div></div>
+
 </section>
-</main></div>
+</main>
+</div>
 
 <script>
-const pages=[...document.querySelectorAll('.page')];
-function show(id,el){
-  pages.forEach(x=>x.classList.remove('active'));
-  const p=document.getElementById(id); if(p)p.classList.add('active');
-  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
-  if(el)el.classList.add('active');
-  const names={admin:'JJ Admin',maps:'Maps & Traffic',search:'Web Search',games:'Games',calculator:'Calculator',selfies:'Selfies',themes:'Themes',users:'Users',friends:'Friends',vids:'Foxie Vids',ttt:'Tic-Tac-Toe',chess:'Foxie Chess',drawing:'Drawing Pad',solitaire:'Solitaire',cards:'Foxie Cards',racer:'Foxie Racer',fighter:'Foxie Fighter'};
-  document.getElementById('title').textContent=names[id]||'Foxie';
-}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function show(id,el){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active');const names={admin:'JJ Admin',maps:'Maps & Traffic',search:'Web Search',multiplayer:'Multiplayer Lobby',spectators:'Spectator Room',games:'Foxie Games',calculator:'Calculator',selfies:'Selfies',themes:'Themes',users:'Users',friends:'Friends',vids:'Foxie Vids',home:'Foxie'};$('title').textContent=names[id]||'Foxie'}
+function game(id){document.querySelectorAll('.game').forEach(x=>x.classList.remove('active'));$('game-'+id).classList.add('active')}
 function toggle(x){x.classList.toggle('on')}
-function send(){const i=document.getElementById('chatInput'),m=i.value.trim();if(!m)return;const b=document.getElementById('messages');b.innerHTML+=`<div class="msg me">${esc(m)}</div><div class="msg fox">I'm Foxie. This front end is ready for a real AI backend connection. 🦊</div>`;i.value='';b.scrollTop=b.scrollHeight}
-function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleTimeString(),1000);
+function updateClock(){const d=new Date();$('clock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}updateClock();setInterval(updateClock,1000);
+function send(){const i=$('chatInput'),m=i.value.trim();if(!m)return;$('messages').innerHTML+=`<div class="msg me">${esc(m)}</div><div class="msg fox">${foxReply(m)}</div>`;i.value='';$('messages').scrollTop=$('messages').scrollHeight}
+function foxReply(m){const x=m.toLowerCase();if(x.includes('hello')||x.includes('hi'))return'Hey JJ! 🦊🔥';if(x.includes('game'))return'Open Games or Multiplayer — I added rooms and spectators!';if(x.includes('time'))return'The current time is '+new Date().toLocaleTimeString();return'I got you. I’m the Foxie front-end demo. Connect the backend to unlock real AI, accounts and online multiplayer.'}
+function fakeSearch(){const q=$('searchInput').value.trim();$('results').innerHTML=q?`<div class="box">🔎 Foxie would search for <b>“${esc(q)}”</b> here. Connect a backend search service for live results.</div>`:'Type something to search.'}
+function routeDemo(){const a=$('from').value.trim(),b=$('to').value.trim();$('routeResult').textContent=a&&b?`Route requested: ${a} → ${b}. Real traffic needs a map/traffic API.`:'Enter both locations.'}
+function setTheme(a,b){document.documentElement.style.setProperty('--green',a);document.documentElement.style.setProperty('--green2',b)}
+function addFriend(){const n=$('friendInput').value.trim();if(!n)return;const row=document.createElement('div');row.className='listitem';row.innerHTML=`<div class="row"><div class="avatar">${esc(n.slice(0,2).toUpperCase())}</div><b>${esc(n)}</b></div><span class="badge">FRIEND</span>`;$('friendList').appendChild(row);$('friendInput').value=''}
+function calc(v){const d=$('calcDisplay');if(v==='C'){d.value='0';return}if(v==='='){try{if(!/^[0-9+*/(). -]+$/.test(d.value))throw 0;d.value=String(Function('return '+d.value)())}catch{d.value='Error'}return}if(d.value==='0'&&/[0-9.]/.test(v))d.value=v;else d.value+=v}
+let ttt=['','','','','','','','',''],turn='X',tttOver=false;
+function drawTTT(){const b=$('tttBoard');b.innerHTML='';ttt.forEach((v,i)=>{const x=document.createElement('button');x.textContent=v;x.onclick=()=>tttMove(i);b.appendChild(x)});$('tttStatus').textContent=tttOver?'Game over — start a new game.':`Your turn: ${turn}`}
+function winner(a){for(const [x,y,z] of [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]])if(a[x]&&a[x]===a[y]&&a[x]===a[z])return a[x];return a.every(Boolean)?'draw':null}
+function tttMove(i){if(tttOver||ttt[i])return;ttt[i]='X';let w=winner(ttt);if(w){tttOver=true;drawTTT();return}turn='O';drawTTT();setTimeout(()=>{if(tttOver)return;let empty=ttt.map((v,j)=>v?null:j).filter(v=>v!==null);let pick;if($('tttDifficulty').value==='Hard'){pick=empty.find(j=>{ttt[j]='O';const ok=winner(ttt)==='O';ttt[j]='';return ok});if(pick===undefined)pick=empty.find(j=>{ttt[j]='X';const ok=winner(ttt)==='X';ttt[j]='';return ok})}if(pick===undefined)pick=empty[Math.floor(Math.random()*empty.length)];if(pick!==undefined)ttt[pick]='O';w=winner(ttt);if(w)tttOver=true;turn='X';drawTTT()},300)}
+function resetTTT(){ttt=['','','','','','','','',''];turn='X';tttOver=false;drawTTT()}resetTTT();
 
-function fakeSearch(){let q=document.getElementById('searchInput').value.trim();document.getElementById('results').textContent=q?`Foxie would search the web for: “${q}”`:'Type something to search.'}
-function addFriend(){let n=document.getElementById('friendName').value.trim();if(!n)return;let d=document.createElement('div');d.className='userRow';d.innerHTML=`<div class="avatar">🙂</div><div><b>${esc(n)}</b><div class="small">Friend request added locally</div></div>`;document.getElementById('friendList').appendChild(d);document.getElementById('friendName').value=''}
+const chessPieces=['♜','♞','♝','♛','♚','♝','♞','♜','♟','♟','♟','♟','♟','♟','♟','♟','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','♙','♙','♙','♙','♙','♙','♙','♙','♖','♘','♗','♕','♔','♗','♘','♖'];let chess=chessPieces.slice(),chSel=-1;
+function drawChess(){const b=$('chessBoard');b.innerHTML='';chess.forEach((p,i)=>{const x=document.createElement('div');x.className='sq '+(((Math.floor(i/8)+i)%2)?'dark':'light')+(chSel===i?' selected':'');x.textContent=p;x.onclick=()=>moveChess(i);b.appendChild(x)})}
+function moveChess(i){if(chSel<0){if(chess[i])chSel=i}else{if(chSel!==i){chess[i]=chess[chSel];chess[chSel]='';$('chessStatus').textContent='Demo move made.'}chSel=-1;drawChess()}}
+function resetChess(){chess=chessPieces.slice();chSel=-1;$('chessStatus').textContent='';drawChess()}resetChess();
 
-let calcText='';
-function calc(v){if(calcText.length>30)return;if(v==='.'&&calcText.endsWith('.'))return;calcText+=v;document.getElementById('calcDisplay').value=calcText||'0'}
-function calculate(){try{if(!/^[0-9+\-*/().\s]+$/.test(calcText))throw 0;let r=Function('"use strict";return ('+calcText+')')();if(!Number.isFinite(r))throw 0;calcText=String(r);document.getElementById('calcDisplay').value=calcText}catch(e){document.getElementById('calcDisplay').value='Error';calcText=''}}
-function clearCalc(){calcText='';document.getElementById('calcDisplay').value='0'}
+const dc=$('drawCanvas'),ctx=dc.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,dc.width,dc.height);let drawing=false;
+function pos(e){const r=dc.getBoundingClientRect();return{x:(e.clientX-r.left)*dc.width/r.width,y:(e.clientY-r.top)*dc.height/r.height}}
+dc.addEventListener('pointerdown',e=>{drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});dc.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);ctx.lineWidth=6;ctx.lineCap='round';ctx.strokeStyle=$('drawColor').value;ctx.lineTo(p.x,p.y);ctx.stroke()});dc.addEventListener('pointerup',()=>drawing=false);dc.addEventListener('pointerleave',()=>drawing=false);
+function clearDraw(){ctx.fillStyle='#fff';ctx.fillRect(0,0,dc.width,dc.height)}function saveDraw(){const a=document.createElement('a');a.href=dc.toDataURL();a.download='foxie-drawing.png';a.click()}
 
-function theme(a,b){document.documentElement.style.setProperty('--accent',a);document.documentElement.style.setProperty('--accent2',b)}
+let solSuit='♠';function newSolitaire(){const suits=['♠','♥','♦','♣'];solSuit=suits[Math.floor(Math.random()*4)];$('solTarget').textContent='🎯 Target: '+solSuit;$('solStatus').textContent='';const box=$('solCards');box.innerHTML='';const deck=[...suits,...suits,...suits,...suits];for(let i=0;i<6;i++){const s=deck[Math.floor(Math.random()*deck.length)];const b=document.createElement('button');b.className='btn';b.style.fontSize='30px';b.textContent=s;b.onclick=()=>{$('solStatus').textContent=s===solSuit?'🎉 Correct!':'Try again!';if(s===solSuit)newSolitaire()};box.appendChild(b)}}newSolitaire();
+function dealCards(){const ranks=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],suits=['♠','♥','♦','♣'];const draw=()=>({r:ranks[Math.floor(Math.random()*13)],s:suits[Math.floor(Math.random()*4)]});const a=draw(),b=draw(),val=x=>ranks.indexOf(x.r);$('playerCard').textContent=a.r+a.s;$('aiCard').textContent=b.r+b.s;$('cardStatus').textContent=val(a)>val(b)?'🎉 You win!':val(a)<val(b)?'Foxie wins this round.':'Draw!'} 
 
-let ttt=[];
-function startTTT(){show('ttt');ttt=Array(9).fill('');drawTTT()}
-function drawTTT(){const b=document.getElementById('tttBoard');b.innerHTML='';ttt.forEach((v,i)=>{let x=document.createElement('button');x.textContent=v;x.onclick=()=>tttMove(i);b.appendChild(x)})}
-function tttMove(i){if(ttt[i])return;ttt[i]='X';drawTTT();if(checkTTT('X'))return endTTT('You win! 🎉');if(ttt.every(Boolean))return endTTT('Draw!');setTimeout(()=>{let choices=ttt.map((v,i)=>v?null:i).filter(v=>v!==null);let j=choices[Math.floor(Math.random()*choices.length)];if(j!==undefined){ttt[j]='O';drawTTT();if(checkTTT('O'))endTTT('Foxie AI wins 🤖');else if(ttt.every(Boolean))endTTT('Draw!')}},350)}
-function checkTTT(p){return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]].some(a=>a.every(i=>ttt[i]===p))}
-function endTTT(s){document.getElementById('tttStatus').textContent=s;award(10)}
+const rc=$('racerCanvas'),rx=rc.getContext('2d');let race=null,keys={};addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+function startRacer(){cancelAnimationFrame(race);let car={x:240,y:570,w:40,h:65},obs=[],score=0,last=0,run=true;function frame(t){if(!run)return;const dt=Math.min(32,t-last);last=t;rx.fillStyle='#111820';rx.fillRect(0,0,rc.width,rc.height);rx.fillStyle='#28343c';rx.fillRect(70,0,380,650);rx.fillStyle='#d7e0e5';for(let y=(t/5)%80-80;y<650;y+=80)rx.fillRect(253,y,14,42);if(keys['arrowleft']||keys['a'])car.x-=5;if(keys['arrowright']||keys['d'])car.x+=5;car.x=Math.max(80,Math.min(400,car.x));if(Math.random()<.025)obs.push({x:85+Math.random()*310,y:-70,w:42,h:55});obs.forEach(o=>o.y+=4+score/500);obs=obs.filter(o=>o.y<700);rx.fillStyle='#39ff88';rx.fillRect(car.x,car.y,car.w,car.h);rx.fillStyle='#ff5470';obs.forEach(o=>{rx.fillRect(o.x,o.y,o.w,o.h);if(car.x<o.x+o.w&&car.x+car.w>o.x&&car.y<o.y+o.h&&car.y+car.h>o.y){run=false}});score++;$('raceStatus').textContent=run?'Score: '+score:'💥 Crash! Score: '+score;if(run)race=requestAnimationFrame(frame)}race=requestAnimationFrame(frame)}
 
-const pieces={r:'♜',n:'♞',b:'♝',q:'♛',k:'♚',p:'♟',R:'♖',N:'♘',B:'♗',Q:'♕',K:'♔',P:'♙'};
-let chessBoard=[],sel=-1;
-function startChess(){show('chess');chessBoard=['r','n','b','q','k','b','n','r',...'p'.repeat(8),...Array(32).fill(''),...'P'.repeat(8),'R','N','B','Q','K','B','N','R'];sel=-1;drawChess()}
-function drawChess(){const b=document.getElementById('chessBoard');b.innerHTML='';chessBoard.forEach((p,i)=>{let s=document.createElement('button');s.className='sq '+(((Math.floor(i/8)+i)%2)?'dark':'light')+(sel===i?' selected':'');s.textContent=pieces[p]||'';s.onclick=()=>chessClick(i);b.appendChild(s)})}
-function chessClick(i){if(sel<0){if(chessBoard[i]&&chessBoard[i]===chessBoard[i].toUpperCase()){sel=i;drawChess()}}else{if(i!==sel){chessBoard[i]=chessBoard[sel];chessBoard[sel]='';drawChess();document.getElementById('chessStatus').textContent='Foxie AI is thinking...';setTimeout(chessAI,400)}sel=-1;drawChess()}}
-function chessAI(){let from=chessBoard.findIndex(p=>p&&p===p.toLowerCase());if(from<0)return;let targets=[from+8,from+7,from+9,from-8,from-7,from-9].filter(i=>i>=0&&i<64);let to=targets.find(i=>!chessBoard[i]||chessBoard[i]===chessBoard[i].toUpperCase());if(to!==undefined){chessBoard[to]=chessBoard[from];chessBoard[from]='';drawChess()}document.getElementById('chessStatus').textContent='Your turn. White pieces are yours.'}
-function award(n){document.getElementById('lbWeek').textContent='JJ — '+n+' points';document.getElementById('lbMonth').textContent='JJ — '+n+' points';document.getElementById('lbYear').textContent='JJ — '+n+' points'}
+let ph=100,ah=100,blocking=false;function resetFight(){ph=100;ah=100;blocking=false;$('pHealth').style.width='100%';$('aHealth').style.width='100%';$('fightStatus').textContent='Fight! Choose a move.'}
+function fightMove(move){if(ph<=0||ah<=0)return;blocking=move==='block';let dmg=move==='punch'?8:move==='kick'?12:0;ah=Math.max(0,ah-dmg);if(ah===0){$('fightStatus').textContent='🏆 JJ wins!';updateFight();return}let diff=$('fightDifficulty').value;let aiD=diff==='Easy'?4:diff==='Hard'?10:7;if(Math.random()<.35&&!blocking)ph=Math.max(0,ph-aiD);if(ph===0)$('fightStatus').textContent='🦊 Foxie wins!';else $('fightStatus').textContent=move==='block'?'🛡 Blocked and survived!':`You used ${move}.`;updateFight()}
+function updateFight(){$('pHealth').style.width=ph+'%';$('aHealth').style.width=ah+'%'}resetFight();
 
-let solTarget=0;
-function startSolitaire(){show('solitaire');solTarget=Math.floor(Math.random()*13)+1;document.getElementById('solCard').textContent='🂠';document.getElementById('solStatus').textContent='Draw cards until you match the target number.'}
-function solDraw(){let n=Math.floor(Math.random()*13)+1;document.getElementById('solCard').textContent=['A','2','3','4','5','6','7','8','9','10','J','Q','K'][n-1];document.getElementById('solStatus').textContent=n===solTarget?'You matched it! 🎉':'Target: '+solTarget+' — keep drawing!';if(n===solTarget)award(15)}
-
-function startCards(){show('cards');document.getElementById('myCard').textContent='🂠';document.getElementById('aiCard').textContent='🂠';document.getElementById('cardStatus').textContent='Press Deal.'}
-function dealCards(){let a=Math.floor(Math.random()*13)+1,b=Math.floor(Math.random()*13)+1;let faces=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];document.getElementById('myCard').textContent=faces[a-1]+' ♥';document.getElementById('aiCard').textContent=faces[b-1]+' ♠';document.getElementById('cardStatus').textContent=a>b?'You win! 🎉':a<b?'Foxie AI wins 🤖':'Draw!';if(a>b)award(10)}
-
-let drawCtx,drawing=false;
-function initDraw(){const c=document.getElementById('drawCanvas');drawCtx=c.getContext('2d');drawCtx.fillStyle='#fff';drawCtx.fillRect(0,0,c.width,c.height);c.onpointerdown=e=>{drawing=true;drawCtx.beginPath();drawCtx.moveTo(e.offsetX,e.offsetY)};c.onpointerup=()=>drawing=false;c.onpointerleave=()=>drawing=false;c.onpointermove=e=>{if(!drawing)return;drawCtx.strokeStyle=document.getElementById('drawColor').value;drawCtx.lineWidth=+document.getElementById('brush').value;drawCtx.lineCap='round';drawCtx.lineTo(e.offsetX,e.offsetY);drawCtx.stroke()}}
-function clearDraw(){drawCtx.fillStyle='#fff';drawCtx.fillRect(0,0,900,520)}
-function saveDraw(){let a=document.createElement('a');a.download='foxie-drawing.png';a.href=document.getElementById('drawCanvas').toDataURL();a.click()}
-initDraw();
-
-let stream=null;
-async function startCamera(){try{stream=await navigator.mediaDevices.getUserMedia({video:true});document.getElementById('camera').srcObject=stream}catch(e){alert('Camera permission was not granted or camera is unavailable. You can still upload a selfie.')} }
-function takeSelfie(){const v=document.getElementById('camera');if(!v.videoWidth){alert('Start the camera first.');return}const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);document.getElementById('selfiePreview').src=c.toDataURL('image/png')}
-function loadSelfie(e){const f=e.target.files[0];if(f)document.getElementById('selfiePreview').src=URL.createObjectURL(f)}
-
-let raceTimer,raceRunning=false;
-function startRacer(){show('racer');clearInterval(raceTimer);const c=document.getElementById('raceCanvas'),x=c.getContext('2d');let car=280,enemy=120,score=0;racerKey=null;raceRunning=true;document.getElementById('raceStatus').textContent='Race started! Use ← → or A/D.';function frame(){if(!raceRunning)return;x.clearRect(0,0,600,380);x.fillStyle='#1c242c';x.fillRect(130,0,340,380);x.strokeStyle='#ddd';x.setLineDash([25,20]);x.beginPath();x.moveTo(300,0);x.lineTo(300,380);x.stroke();x.setLineDash([]);x.fillStyle='#48ff91';x.fillRect(car,300,40,65);x.fillStyle='#19d6ff';x.fillRect(enemy,40,40,65);enemy+=2;if(enemy>420)enemy=140;car+=racerKey==='left'?-5:racerKey==='right'?5:0;car=Math.max(140,Math.min(420,car));score++;if(enemy>275&&enemy<345&&Math.abs(car-enemy)<42){raceRunning=false;clearInterval(raceTimer);document.getElementById('raceStatus').textContent='Crash! Score: '+score;award(Math.min(50,Math.floor(score/10)));}else{requestAnimationFrame(frame)}}requestAnimationFrame(frame);raceTimer=setInterval(()=>{},1000)}
-let racerKey=null;document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')racerKey='left';if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')racerKey='right'});document.addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','a','d'].includes(e.key)||['a','d'].includes(e.key.toLowerCase()))racerKey=null});
-
-let pHP=100,aHP=100,block=false;
-function startFighter(){show('fighter');pHP=100;aHP=100;document.getElementById('pHp').style.width='100%';document.getElementById('aHp').style.width='100%';document.getElementById('fightStatus').textContent='Choose an attack.'}
-function fightMove(m){if(pHP<=0||aHP<=0)return;block=m==='block';let dmg=m==='punch'?8:m==='kick'?12:0;if(!block)aHP=Math.max(0,aHP-dmg);let ai=Math.floor(Math.random()*3);let aiD=ai===0?8:ai===1?12:0;if(!block)pHP=Math.max(0,pHP-aiD);document.getElementById('pHp').style.width=pHP+'%';document.getElementById('aHp').style.width=aHP+'%';if(aHP<=0){document.getElementById('fightStatus').textContent='YOU WIN! 🦊🔥';award(25)}else if(pHP<=0){document.getElementById('fightStatus').textContent='Foxie AI wins 🤖';}else document.getElementById('fightStatus').textContent=`You used ${m}. AI attacked too. Keep fighting!`}
+let rooms=[];let roomCounter=1;function renderRooms(){const list=$('roomList');list.innerHTML='';if(!rooms.length){list.innerHTML='<div class="muted">No rooms yet. Create the first one!</div>';return}rooms.forEach(r=>{const d=document.createElement('div');d.className='room live';d.innerHTML=`<div class="roomhead"><b>🎮 ${esc(r.game)}</b><span class="badge">LIVE</span></div><div class="roommeta">Room ${esc(r.id)} • Host: ${esc(r.host)} • ${r.players}/2 players • 👀 ${r.spectators}</div><div class="row"><button class="btn small" onclick="joinRoom('${r.id}')">Join</button><button class="btn small blue" onclick="spectate('${r.id}')">👀 Spectate</button></div>`;list.appendChild(d)})}
+function createRoom(){const host=($('playerName').value.trim()||'JJ'),game=$('roomGame').value;const r={id:'FOX-'+String(roomCounter++).padStart(3,'0'),game,host,players:1,spectators:0};rooms.push(r);renderRooms();show('multiplayer');}
+function joinRoom(id){const r=rooms.find(x=>x.id===id);if(!r)return;if(r.players<2){r.players=2;alert('Joined '+r.id+' as Player 2! Real cross-device sync will work after the WebSocket backend is connected.')}else alert('This room is full. Try spectating.');renderRooms()}
+function spectate(id){const r=rooms.find(x=>x.id===id);if(!r)return;r.spectators++;$('spectatorMatch').innerHTML=`<div class="roomhead"><b>📺 ${esc(r.game)} — ${esc(r.id)}</b><span class="badge">LIVE</span></div><p class="muted">Players: ${esc(r.host)} vs ${r.players>1?'Player 2':'Waiting for Player 2'}</p><p>👀 You are spectating this match.</p>`;$('spectatorList').innerHTML='<span class="spectator">👀 You</span><span class="spectator">👀 FoxieFan</span>';show('spectators');renderRooms()}
+function sendSpectator(){const i=$('spectatorInput'),m=i.value.trim();if(!m)return;$('spectatorChat').innerHTML+=`<div><b>JJ:</b> ${esc(m)}</div>`;i.value='';const box=$('spectatorChat');box.scrollTop=box.scrollHeight}
+function clearRooms(){rooms=[];renderRooms();$('spectatorMatch').innerHTML='<div class="room"><b>No live match selected</b><p class="muted">Create a multiplayer room, then spectate it.</p></div>';alert('Demo rooms cleared.')}
+renderRooms();
 </script>
 </body>
-</html>
-'''
+</html>'''
 
 path = Path("/mnt/data/index.html")
 path.write_text(html, encoding="utf-8")
