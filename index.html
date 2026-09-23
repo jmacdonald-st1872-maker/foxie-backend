@@ -1,649 +1,193 @@
-html = r'''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#00ff66">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Foxie 🦊</title>
 <style>
-:root{
-  --bg:#020504;--panel:#07110b;--panel2:#0a170e;--line:#12351f;
-  --green:#00ff66;--green2:#19c85a;--text:#d7ffe5;--muted:#7da98a;
-  --danger:#ff405d;--gold:#ffd34d;--blue:#46a6ff;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-body{overflow-x:hidden}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-a{color:var(--green)}
-.hidden{display:none!important}
-.muted{color:var(--muted)}
-.small{font-size:12px}
-.container{max-width:1250px;margin:auto;padding:20px}
-#particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.particle{position:absolute;width:3px;height:3px;background:var(--green);box-shadow:0 0 9px var(--green);opacity:.65;border-radius:50%;animation:rise linear infinite}
-@keyframes rise{from{transform:translateY(110vh);opacity:0}15%{opacity:.7}90%{opacity:.35}to{transform:translateY(-20vh);opacity:0}}
-.app{position:relative;z-index:1;min-height:100vh;display:grid;grid-template-columns:240px 1fr}
-.sidebar{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:rgba(2,8,4,.92);backdrop-filter:blur(12px);padding:16px;overflow:auto}
-.logo{font-size:28px;font-weight:900;color:var(--green);text-shadow:0 0 14px #00ff6688;margin:5px 0 18px}
-.logo span{color:#fff}
-.nav-title{font-size:10px;letter-spacing:2px;color:var(--muted);margin:16px 8px 7px}
-.nav button{width:100%;text-align:left;background:transparent;color:#c9f8d6;border:1px solid transparent;padding:10px;border-radius:9px;margin:2px 0}
-.nav button:hover,.nav button.active{border-color:#1b5a32;background:#0b2113;color:var(--green)}
-.creator{font-size:10px;color:var(--muted);border-top:1px solid var(--line);margin-top:15px;padding-top:12px}
-.userBadge{display:inline-block;color:var(--green);margin-top:6px}
-.main{min-width:0}
-.topbar{position:sticky;top:0;z-index:20;background:rgba(2,5,4,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:11px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between}
-.status{color:var(--green);font-size:12px}.clock{font-family:monospace;color:#fff}
-.page{display:none;padding:22px;max-width:1250px;margin:auto}.page.active{display:block}
-h1,h2,h3{margin-top:0}.glitch{color:var(--green);text-shadow:2px 0 #00aa44,-2px 0 #006622;letter-spacing:1px}
-.grid{display:grid;gap:14px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.card{background:linear-gradient(145deg,rgba(8,22,13,.94),rgba(4,11,7,.94));border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 10px 30px #0008}
-.hero{padding:28px;background:radial-gradient(circle at 70% 20%,#00ff6618,transparent 35%),linear-gradient(145deg,#07150c,#020604);border:1px solid #165a2e;border-radius:18px}
-.btn{background:#0a2614;border:1px solid #1a7c3a;color:var(--green);padding:9px 13px;border-radius:9px}
-.btn:hover{background:#0f351c;box-shadow:0 0 14px #00ff6625}
-.btn.primary{background:var(--green);color:#001b09;font-weight:800}
-.btn.danger{color:#ff6a7d;border-color:#762333}
-.btn.gold{color:var(--gold);border-color:#806b20}
-.btn.blue{color:var(--blue);border-color:#245a87}
-.input,.select,.textarea{width:100%;background:#020905;border:1px solid #174526;color:#d9ffe5;border-radius:9px;padding:10px;outline:none}
-.input:focus,.select:focus,.textarea:focus{border-color:var(--green);box-shadow:0 0 0 2px #00ff6615}
-.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}
-.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:4px 9px;font-size:11px;color:var(--muted)}
-.list{display:grid;gap:8px}.listItem{padding:11px;border:1px solid var(--line);border-radius:10px;background:#06100a}
-.chatBox{height:420px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:12px;background:#010503}
-.msg{padding:8px 10px;margin:6px 0;border-left:2px solid var(--green);background:#06100a;border-radius:6px}
-.msg b{color:var(--green)}
-.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#092114;border:1px solid #1b6a35;font-size:22px}
-.stat{font-size:28px;font-weight:900;color:var(--green)}
-.progress{height:9px;background:#06140b;border:1px solid var(--line);border-radius:20px;overflow:hidden}.progress>div{height:100%;background:var(--green);box-shadow:0 0 12px #00ff6688}
-table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{color:var(--green)}
-.game{display:none}.game.active{display:block}
-.gameBoard{display:grid;gap:7px;margin:15px auto;max-width:430px}
-.ttt{grid-template-columns:repeat(3,1fr)}.ttt button{aspect-ratio:1;background:#06140b;border:1px solid #19582e;color:var(--green);font-size:48px;border-radius:10px}
-.chessBoard{display:grid;grid-template-columns:repeat(8,1fr);width:min(92vw,520px);aspect-ratio:1;margin:15px auto;border:4px solid #153d23}
-.square{border:0;display:grid;place-items:center;font-size:clamp(22px,6vw,44px);padding:0}
-.light{background:#c7e8cc;color:#132017}.dark{background:#275c37;color:#fff}
-.square.selected{outline:4px solid var(--green);outline-offset:-4px}
-.drawWrap{display:flex;justify-content:center}.drawCanvas{width:min(100%,720px);height:420px;background:#020604;border:1px solid var(--line);touch-action:none}
-.solitaire{max-width:700px;margin:auto}.cardFace{min-width:90px;height:130px;border-radius:10px;background:#f4f4ef;color:#111;display:grid;place-items:center;font-size:28px;border:2px solid #aaa}
-.racer{height:360px;position:relative;overflow:hidden;background:repeating-linear-gradient(90deg,#222 0,#222 48%,#444 49%,#444 51%,#222 52%);border:2px solid var(--line);border-radius:12px}
-.roadLine{position:absolute;left:50%;top:0;width:5px;height:100%;background:repeating-linear-gradient(#fff 0 40px,transparent 40px 80px);opacity:.6}
-.car{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:48px}
-.enemyCar{position:absolute;top:-60px;font-size:42px}
-.fighterArena{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}.fighter{padding:25px;text-align:center;border:1px solid var(--line);border-radius:14px;background:#06100a}.fighterEmoji{font-size:90px}
-canvas{max-width:100%}
-.room{border:1px solid var(--line);padding:12px;border-radius:10px}
-.video{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#040907}.videoThumb{height:160px;display:grid;place-items:center;background:radial-gradient(circle,#0d4d29,#020604);font-size:55px}
-.themeGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.theme{padding:18px;border:1px solid var(--line);border-radius:12px;text-align:center}
-.overlay{position:fixed;inset:0;z-index:100;background:#000b;display:grid;place-items:center;padding:20px}.modal{width:min(430px,100%);background:#06100a;border:1px solid #1b6d37;border-radius:16px;padding:25px;box-shadow:0 0 50px #00ff6622}
-.nameModal{display:none}.nameModal.show{display:grid}
-.toast{position:fixed;right:18px;bottom:18px;z-index:200;background:#07140c;border:1px solid #1b6d37;padding:12px 15px;border-radius:10px;color:var(--green);display:none}
-.toast.show{display:block}
-#cameraVideo{width:100%;max-height:480px;background:#000;border:1px solid var(--line);border-radius:12px}
-.preview{max-width:100%;max-height:360px;border-radius:12px;border:1px solid var(--line)}
-.adminBox{border-color:#4e3d08;background:#171306}
-.badge{font-size:10px;border-radius:99px;padding:3px 7px;border:1px solid var(--line)}
-@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{position:fixed;left:-270px;z-index:80;width:250px;transition:.2s}.sidebar.open{left:0}.mobileMenu{display:inline-block!important}.grid2,.grid3{grid-template-columns:1fr}.page{padding:15px}.fighterArena{grid-template-columns:1fr}.topbar{position:sticky}}
-.mobileMenu{display:none}
+:root{--g:#39ff14;--bg:#020604;--panel:#07120b;--line:#174d25;--text:#d9ffe0;--muted:#82b88c;--danger:#ff4d6d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#0b2412 0,#020604 45%,#000 100%);color:var(--text);font:15px Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(57,255,20,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,.025) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:-1}
+#particles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}.particle{position:absolute;width:3px;height:3px;background:var(--g);box-shadow:0 0 8px var(--g);border-radius:50%;animation:rise linear infinite;opacity:.8}@keyframes rise{from{transform:translateY(110vh) translateX(0);opacity:0}15%{opacity:.9}85%{opacity:.8}to{transform:translateY(-10vh) translateX(var(--drift));opacity:0}}
+header{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(0,0,0,.86);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;z-index:10;backdrop-filter:blur(10px)}
+.brand{font-size:24px;font-weight:900;color:var(--g);text-shadow:0 0 12px #39ff14}.creator{font-size:12px;color:#8fe99a;text-align:right}.clock{color:var(--g);font-family:monospace}
+.layout{display:flex;padding-top:64px;min-height:100vh}.side{width:240px;position:fixed;top:64px;bottom:0;overflow:auto;background:rgba(2,8,4,.94);border-right:1px solid var(--line);padding:12px;z-index:8}.side button{width:100%;text-align:left;background:#061009;color:#bfffc8;border:1px solid #123b1d;padding:10px;margin:4px 0;border-radius:8px;cursor:pointer}.side button:hover,.side button.active{border-color:var(--g);color:var(--g);box-shadow:0 0 10px rgba(57,255,20,.15)}
+main{margin-left:240px;width:calc(100% - 240px);padding:24px;position:relative;z-index:1}.page{display:none;max-width:1200px;margin:auto}.page.active{display:block}.hero{border:1px solid var(--line);background:rgba(5,17,9,.88);border-radius:16px;padding:24px;box-shadow:0 0 30px rgba(57,255,20,.07)}h1,h2,h3{color:var(--g)}h1{margin-top:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:rgba(7,18,11,.94);border:1px solid var(--line);border-radius:14px;padding:16px}.card:hover{border-color:#2aa93b}.muted{color:var(--muted)}input,textarea,select{width:100%;background:#020704;color:var(--text);border:1px solid #1b5a28;border-radius:8px;padding:10px;margin:5px 0}textarea{min-height:120px;resize:vertical}button,.btn{background:#0a1b0e;color:var(--g);border:1px solid var(--g);padding:9px 13px;border-radius:8px;cursor:pointer;margin:4px 2px}.btn:hover,button:hover{background:#103919}.danger{border-color:var(--danger);color:#ff8ca2}.pill{display:inline-block;border:1px solid #1c652b;padding:5px 8px;border-radius:99px;margin:3px;color:#a9ffb4}.list{display:grid;gap:8px}.item{padding:12px;border:1px solid #123b1d;border-radius:10px;background:#050d07}.stat{font-size:28px;color:var(--g);font-weight:bold}.chatbox{height:340px;overflow:auto;border:1px solid var(--line);padding:10px;background:#010402;border-radius:10px}.msg{padding:7px;border-bottom:1px solid #0b2411}.notice{padding:12px;border-left:3px solid var(--g);background:#061009;margin:10px 0}.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:20}.modal.hidden{display:none}.modalbox{width:min(440px,92vw);background:#061009;border:1px solid var(--g);box-shadow:0 0 30px rgba(57,255,20,.2);border-radius:16px;padding:24px}
+canvas{max-width:100%;background:#010302;border:1px solid var(--line);border-radius:10px}.chess{display:grid;grid-template-columns:repeat(8,1fr);max-width:520px;aspect-ratio:1;margin:10px 0}.sq{display:flex;align-items:center;justify-content:center;font-size:clamp(24px,6vw,46px);cursor:pointer}.sq.a{background:#16421f}.sq.b{background:#0a1d0e}.sq.sel{outline:3px solid var(--g);z-index:2}.video{width:100%;max-height:360px;background:#000;border:1px solid var(--line);border-radius:10px}
+@media(max-width:800px){.side{width:190px}.side button{font-size:12px}main{margin-left:190px;width:calc(100% - 190px);padding:14px}.creator{display:none}}
+@media(max-width:560px){.side{position:relative;top:0;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr}.layout{display:block}.side button{margin:3px}main{margin-left:0;width:100%}.layout{padding-top:64px}header{height:64px}}
 </style>
 </head>
 <body>
 <div id="particles"></div>
+<header><div class="brand">🦊 FOXIE</div><div><div class="creator">Jayden Wayne Macdonald created this</div><div class="clock" id="clock">--:--:--</div></div></header>
 
-<div class="app">
-<aside class="sidebar" id="sidebar">
-  <div class="logo">🦊 F<span>OXIE</span></div>
-  <div class="nav">
-    <div class="nav-title">MAIN</div>
-    <button onclick="showPage('home',this)">🏠 Home</button>
-    <button onclick="showPage('chat',this)">💬 Foxie Chat</button>
-    <button onclick="showPage('users',this)">👤 Users</button>
-    <button onclick="showPage('friends',this)">👥 Friends</button>
-    <button onclick="showPage('videos',this)">🎥 Foxie Vids</button>
-    <div class="nav-title">PLAY</div>
-    <button onclick="showPage('games',this)">🎮 Games</button>
-    <button onclick="showPage('multiplayer',this)">🌐 Multiplayer</button>
-    <button onclick="showPage('spectator',this)">👀 Spectator Room</button>
-    <button onclick="showPage('leaderboards',this)">🏆 Leaderboards</button>
-    <div class="nav-title">TOOLS</div>
-    <button onclick="showPage('calculator',this)">🧮 Calculator</button>
-    <button onclick="showPage('selfies',this)">📸 Selfies</button>
-    <button onclick="showPage('search',this)">🔎 Search</button>
-    <button onclick="showPage('maps',this)">🗺️ Maps & Traffic</button>
-    <button onclick="showPage('themes',this)">🎨 Themes</button>
-    <div class="nav-title">OWNER</div>
-    <button onclick="showPage('admin',this)">👑 Owner Admin</button>
-  </div>
-  <div class="creator">Jayden Wayne Macdonald created this<br><span class="userBadge">🦊 <span data-foxie-name>Player</span></span></div>
-</aside>
+<div class="layout">
+<nav class="side">
+<button onclick="show('home')">🏠 Home</button>
+<button onclick="show('chat')">💬 Foxie Chat</button>
+<button onclick="show('users')">👥 Users</button>
+<button onclick="show('friends')">🤝 Friends</button>
+<button onclick="show('calls')">📞 Calls</button>
+<button onclick="show('randomRooms')">🌎 Random Rooms</button>
+<button onclick="show('vids')">📺 Foxie Vids</button>
+<button onclick="show('games')">🎮 Games</button>
+<button onclick="show('multiplayer')">🌐 Multiplayer</button>
+<button onclick="show('spectator')">👀 Spectator Room</button>
+<button onclick="show('leaderboards')">🏆 Leaderboards</button>
+<button onclick="show('football')">⚽ Football</button>
+<button onclick="show('interests')">🌎 Interests</button>
+<button onclick="show('shoes')">👟 Shoes</button>
+<button onclick="show('pokemon')">⚡ Pokémon</button>
+<button onclick="show('notes')">📝 Notes</button>
+<button onclick="show('ideas')">💡 Ideas</button>
+<button onclick="show('books')">📚 Books</button>
+<button onclick="show('recipes')">🍕 Food Recipes</button>
+<button onclick="show('movies')">🎬 Movies</button>
+<button onclick="show('calculator')">🧮 Calculator</button>
+<button onclick="show('selfies')">📸 Selfies</button>
+<button onclick="show('search')">🔎 Search</button>
+<button onclick="show('maps')">🗺️ Maps & Traffic</button>
+<button onclick="show('themes')">🎨 Themes</button>
+<button onclick="show('admin')">👑 Owner Admin</button>
+</nav>
 
-<main class="main">
-<header class="topbar">
-  <div class="row"><button class="btn mobileMenu" onclick="toggleSidebar()">☰</button><b class="glitch">FOXIE // ONLINE</b><span class="status">● SYSTEM READY</span></div>
-  <div class="row"><span id="xpMini" class="pill">LVL 1 · 0 XP</span><span class="clock" id="clock">--:--:--</span></div>
-</header>
+<main>
+<section id="home" class="page active"><div class="hero"><h1>Welcome to Foxie 🦊</h1><p>Welcome, <b data-name>friend</b>!</p><p class="muted">Your hacker-space social hub for chat, games, interests, football, calls, notes, media and more.</p><div class="grid">
+<div class="card"><h3>⭐ Level</h3><div class="stat" id="level">1</div><span id="xp">0 XP</span></div>
+<div class="card"><h3>🪙 Coins</h3><div class="stat" id="coins">100</div></div>
+<div class="card"><h3>🏆 Achievements</h3><div class="stat" id="achievements">0</div></div>
+<div class="card"><h3>📅 Today</h3><div id="date"></div></div></div>
+<div class="notice">⚠️ Public calls, random rooms and multiplayer need a real backend/WebRTC server to connect different devices. This HTML provides the Foxie interface and local demo storage.</div></div></section>
 
-<section id="home" class="page active">
-  <div class="hero">
-    <span class="pill">FOXIE OS</span>
-    <h1 class="glitch">Welcome to Foxie, <span data-foxie-name>Player</span> 🦊</h1>
-    <p class="muted">Your hacker-space hub for games, friends, videos, tools and Foxie experiments.</p>
-    <div class="row">
-      <button class="btn primary" onclick="showPage('games')">🎮 Play Games</button>
-      <button class="btn" onclick="showPage('chat')">💬 Open Chat</button>
-      <button class="btn" onclick="showPage('users')">👤 View Users</button>
-    </div>
-  </div>
-  <div class="grid grid3" style="margin-top:15px">
-    <div class="card"><div class="muted small">LEVEL</div><div class="stat" id="homeLevel">1</div><div class="progress"><div id="levelBar" style="width:0%"></div></div></div>
-    <div class="card"><div class="muted small">FOXIE COINS</div><div class="stat" id="coinCount">100</div><div class="muted">Daily rewards available</div></div>
-    <div class="card"><div class="muted small">ONLINE MODE</div><div class="stat">●</div><div class="muted">Local demo + room system</div></div>
-  </div>
-  <div class="grid grid2" style="margin-top:15px">
-    <div class="card"><h3>⚡ Quick actions</h3><div class="row"><button class="btn" onclick="dailyReward()">🎁 Daily Reward</button><button class="btn" onclick="showPage('calculator')">🧮 Calculator</button><button class="btn" onclick="showPage('selfies')">📸 Selfie</button></div></div>
-    <div class="card"><h3>🏅 Achievements</h3><div id="achievementList" class="list"></div></div>
-  </div>
-</section>
+<section id="chat" class="page"><div class="hero"><h1>💬 Foxie Chat</h1><div id="chatbox" class="chatbox"></div><input id="chatInput" placeholder="Type a message..."><button onclick="sendChat()">Send</button><button onclick="clearChat()" class="danger">Clear local chat</button><p class="muted">Demo chat is stored on this device.</p></div></section>
 
-<section id="chat" class="page">
-  <h1 class="glitch">💬 Foxie Chat</h1>
-  <div class="card">
-    <div id="chatBox" class="chatBox"></div>
-    <div class="row" style="margin-top:10px"><input id="chatInput" class="input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="btn primary" onclick="sendChat()">Send</button></div>
-    <p class="muted small">Demo chat is stored on this device. A real cross-device chat needs a backend/database.</p>
-  </div>
-</section>
+<section id="users" class="page"><div class="hero"><h1>👥 Users</h1><div id="usersList" class="grid"></div></div></section>
+<section id="friends" class="page"><div class="hero"><h1>🤝 Friends</h1><div id="friendsList" class="list"></div></div></section>
 
-<section id="users" class="page">
-  <h1 class="glitch">👤 Users</h1>
-  <div class="grid grid3" id="userGrid"></div>
-</section>
+<section id="calls" class="page"><div class="hero"><h1>📞 Calls & Video Calls</h1><p>Friend-only call interface. Real cross-device calling requires WebRTC/signaling on a backend.</p><div class="grid">
+<div class="card"><h3>📞 Voice Call</h3><input id="callFriend" placeholder="Friend name"><button onclick="startCall(false)">Start Voice Call</button></div>
+<div class="card"><h3>📹 Video Call</h3><input id="videoFriend" placeholder="Friend name"><button onclick="startCall(true)">Start Video Call</button></div>
+<div class="card"><h3>Controls</h3><button onclick="toggleMute()">🎙️ Mute/Unmute</button><button onclick="toggleCamera()">📷 Camera</button><button onclick="endCall()" class="danger">🚪 End Call</button><div id="callStatus" class="notice">No active call.</div></div>
+</div><div id="videoArea"></div></div></section>
 
-<section id="friends" class="page">
-  <h1 class="glitch">👥 Friends</h1>
-  <div class="grid grid2">
-    <div class="card"><h3>Add a friend</h3><div class="row"><input id="friendInput" class="input" placeholder="Username"><button class="btn primary" onclick="addFriend()">Add</button></div></div>
-    <div class="card"><h3>Your friends</h3><div id="friendList" class="list"></div></div>
-  </div>
-</section>
+<section id="randomRooms" class="page"><div class="hero"><h1>🌎 Random Call Rooms</h1><p>Public rooms for people who want to meet and chat. Demo mode only until a backend/WebRTC service is connected.</p><button onclick="randomRoom()">🎲 Find Random Room</button><button onclick="createRoom()">➕ Create Room</button><div id="roomList" class="grid"></div></div></section>
 
-<section id="videos" class="page">
-  <div class="row between"><h1 class="glitch">🎥 Foxie Vids</h1><button class="btn" onclick="addVideo()">➕ Add video</button></div>
-  <div class="grid grid3" id="videoGrid"></div>
-</section>
+<section id="vids" class="page"><div class="hero"><h1>📺 Foxie Vids</h1><input id="vidTitle" placeholder="Video title"><input id="vidUrl" placeholder="https://..."><button onclick="addVid()">Add video</button><div id="vidList" class="list"></div></div></section>
 
-<section id="games" class="page">
-  <div class="row between"><div><h1 class="glitch">🎮 Games Hub</h1><p class="muted">Pick a game and start playing.</p></div><span class="pill" id="gameStatus">Ready</span></div>
-  <div class="grid grid3">
-    <div class="card"><h3>❌⭕ Tic-Tac-Toe</h3><p class="muted">Play against Foxie AI.</p><button class="btn primary" onclick="startGame('ttt')">Play</button></div>
-    <div class="card"><h3>♟️ Chess</h3><p class="muted">Local chess board with selectable pieces.</p><button class="btn primary" onclick="startGame('chess')">Play</button></div>
-    <div class="card"><h3>🎨 Drawing</h3><p class="muted">Draw anything you want.</p><button class="btn primary" onclick="startGame('drawing')">Play</button></div>
-    <div class="card"><h3>🃏 Solitaire</h3><p class="muted">Mini solitaire-style card game.</p><button class="btn primary" onclick="startGame('solitaire')">Play</button></div>
-    <div class="card"><h3>🂡 High Card</h3><p class="muted">Beat Foxie by drawing higher.</p><button class="btn primary" onclick="startGame('highcard')">Play</button></div>
-    <div class="card"><h3>🏎️ Foxie Racer</h3><p class="muted">Dodge traffic and survive.</p><button class="btn primary" onclick="startGame('racer')">Play</button></div>
-    <div class="card"><h3>🥊 Foxie Fighter</h3><p class="muted">Fight the training bot.</p><button class="btn primary" onclick="startGame('fighter')">Play</button></div>
-  </div>
+<section id="games" class="page"><div class="hero"><h1>🎮 Games</h1><div class="grid">
+<div class="card"><h3>⭕ Tic-Tac-Toe</h3><select id="tttDiff"><option>Easy</option><option>Medium</option><option>Hard</option></select><div id="ttt"></div><button onclick="newTTT()">New Game</button></div>
+<div class="card"><h3>♠️ High Card</h3><p id="highCard">Press play!</p><button onclick="highCard()">Play</button></div>
+<div class="card"><h3>🃏 Mini Cards</h3><p>Draw a card from the deck.</p><button onclick="drawCard()">Draw Card</button><div id="drawn"></div></div>
+<div class="card"><h3>🚗 Foxie Racer</h3><p>Use ← → keys to move.</p><div id="racer" style="height:160px;border:1px solid var(--line);position:relative;background:#020604;overflow:hidden"><div id="car" style="position:absolute;bottom:8px;left:45%;font-size:32px">🏎️</div></div><button onclick="startRacer()">Start</button></div>
+<div class="card"><h3>🥊 Foxie Fighter</h3><select id="fightDiff"><option>Easy</option><option>Normal</option><option>Hard</option></select><button onclick="fight()">Fight!</button><p id="fightOut"></p></div>
+</div><h2>♟️ Chess</h2><p class="muted">Lightweight local chess board. Advanced chess rules such as castling/checkmate are not implemented in this demo.</p><div id="chess" class="chess"></div><button onclick="newChess()">Reset Chess</button><h2>🎨 Drawing</h2><canvas id="draw" width="700" height="400"></canvas><br><input id="drawColor" type="color" value="#39ff14"><input id="drawSize" type="range" min="1" max="30" value="4"><button onclick="clearDraw()">Clear</button><button onclick="saveDraw()">Save Drawing</button></div></section>
 
-  <div id="tttGame" class="game card" style="margin-top:15px">
-    <div class="row between"><h2>❌⭕ Tic-Tac-Toe</h2><select id="tttDifficulty" class="select" style="max-width:170px"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></div>
-    <div id="tttBoard" class="gameBoard ttt"></div><p id="tttInfo" class="muted">Your turn.</p><button class="btn" onclick="resetTTT()">Restart</button>
-  </div>
+<section id="multiplayer" class="page"><div class="hero"><h1>🌐 Multiplayer Rooms</h1><p>Local/demo room lobby. Real cross-device multiplayer requires a server.</p><input id="mpName" placeholder="Room name"><button onclick="createRoom('mp')">Create Multiplayer Room</button><div id="mpRooms" class="list"></div></div></section>
+<section id="spectator" class="page"><div class="hero"><h1>👀 Spectator Room</h1><p>Watch shared/demo activities. Connect a real live stream/game server later.</p><div class="card">🔴 Demo stream waiting...</div></div></section>
+<section id="leaderboards" class="page"><div class="hero"><h1>🏆 Leaderboards</h1><div class="grid"><div class="card"><h3>Weekly</h3><div id="lbWeek"></div></div><div class="card"><h3>Monthly</h3><div id="lbMonth"></div></div><div class="card"><h3>Yearly</h3><div id="lbYear"></div></div></div></div></section>
 
-  <div id="chessGame" class="game card" style="margin-top:15px">
-    <div class="row between"><h2>♟️ Foxie Chess</h2><div class="row"><select id="chessTheme" class="select" onchange="setChessTheme(this.value)"><option value="green">Foxie Green</option><option value="classic">Classic</option><option value="neon">Neon</option></select><button class="btn" onclick="resetChess()">Reset</button></div></div>
-    <p class="muted">Click a piece, then click a square. This is a lightweight local chess board; advanced rules such as castling and en passant are not implemented.</p>
-    <div id="chessBoard" class="chessBoard"></div><div id="chessInfo" class="muted"></div>
-  </div>
+<section id="football" class="page"><div class="hero"><h1>⚽ Football Hub</h1><p>Teams, leagues, fixtures, tables and match links.</p><div class="grid">
+<div class="card"><h3>🏆 Leagues</h3><button onclick="openFootball('Premier League')">Premier League</button><button onclick="openFootball('Champions League')">Champions League</button><button onclick="openFootball('La Liga')">La Liga</button><button onclick="openFootball('Bundesliga')">Bundesliga</button><button onclick="openFootball('Serie A')">Serie A</button><button onclick="openFootball('Ligue 1')">Ligue 1</button></div>
+<div class="card"><h3>⭐ Favourite Team</h3><input id="teamName" placeholder="e.g. Arsenal"><button onclick="saveTeam()">Save Team</button><p id="favTeam"></p></div>
+<div class="card"><h3>📅 Upcoming Matches</h3><p>Live fixtures can be connected to a football data service/backend. Use the buttons above to open the current competition search.</p><button onclick="window.open('https://www.google.com/search?q=football+fixtures+today','_blank')">Find today's fixtures</button></div>
+</div><div id="footballInfo" class="notice">Choose a league to search fixtures, standings and news.</div></div></section>
 
-  <div id="drawingGame" class="game card" style="margin-top:15px">
-    <div class="row between"><h2>🎨 Foxie Draw</h2><div class="row"><input id="drawColor" type="color" value="#00ff66"><input id="drawSize" type="range" min="1" max="30" value="5"><button class="btn" onclick="clearDrawing()">Clear</button><button class="btn" onclick="downloadDrawing()">Save</button></div></div>
-    <div class="drawWrap"><canvas id="drawCanvas" class="drawCanvas" width="900" height="520"></canvas></div>
-  </div>
+<section id="interests" class="page"><div class="hero"><h1>🌎 Interests Hub</h1><p>Pick anything you like and make your own Foxie interest spaces.</p><div class="grid" id="interestGrid"></div><div class="card"><h3>➕ Add an interest</h3><input id="newInterest" placeholder="e.g. Skateboarding"><button onclick="addInterest()">Add</button></div></div></section>
 
-  <div id="solitaireGame" class="game card" style="margin-top:15px">
-    <h2>🃏 Foxie Solitaire</h2><p id="solitaireInfo" class="muted">Try to reveal and build cards.</p>
-    <div class="row" style="justify-content:center;margin:20px"><div id="solitaireDeck" class="cardFace">🂠</div><div id="solitaireWaste" class="cardFace">?</div><div id="solitaireScore" class="stat">0</div></div>
-    <div class="row" style="justify-content:center"><button class="btn primary" onclick="solitaireDraw()">Draw Card</button><button class="btn" onclick="resetSolitaire()">Restart</button></div>
-  </div>
+<section id="shoes" class="page"><div class="hero"><h1>👟 Sneaker Zone</h1><p>Talk about shoes, collections and new releases.</p><input id="shoeSearch" placeholder="Search a shoe/model"><button onclick="shoeSearch()">Search</button><div id="shoeResults" class="grid"></div><div class="notice">Foxie doesn't store or sell shoes here. Search links open external sites.</div></div></section>
 
-  <div id="highcardGame" class="game card" style="margin-top:15px">
-    <h2>🂡 High Card</h2><div class="row" style="justify-content:center;gap:35px;margin:20px"><div><div class="muted">YOU</div><div id="playerCard" class="cardFace">?</div></div><div><div class="muted">FOXIE</div><div id="foxieCard" class="cardFace">?</div></div></div><p id="highInfo" class="muted" style="text-align:center">Draw a card.</p><div class="row" style="justify-content:center"><button class="btn primary" onclick="playHighCard()">Draw</button><button class="btn" onclick="resetHighCard()">Reset</button></div>
-  </div>
+<section id="pokemon" class="page"><div class="hero"><h1>⚡ Pokémon Hub</h1><input id="pokeSearch" placeholder="Search Pokémon"><button onclick="pokeSearch()">Search</button><div id="pokeResults" class="grid"></div><div class="grid"><div class="card"><h3>⭐ Favourite Pokémon</h3><input id="favPoke" placeholder="Name"><button onclick="savePoke()">Save</button><p id="favPokeOut"></p></div><div class="card"><h3>🎲 Random Pokémon</h3><button onclick="randomPoke()">Pick one</button><p id="randomPokeOut"></p></div></div></div></section>
 
-  <div id="racerGame" class="game card" style="margin-top:15px">
-    <div class="row between"><h2>🏎️ Foxie Racer</h2><span id="racerScore" class="stat">0</span></div>
-    <div id="racerArena" class="racer"><div class="roadLine"></div><div id="playerCar" class="car">🏎️</div></div>
-    <p class="muted">Use ← → or A/D. Tap the arena sides on mobile.</p><button class="btn" onclick="startRacer()">Start / Restart</button>
-  </div>
+<section id="notes" class="page"><div class="hero"><h1>📝 Notes</h1><input id="noteTitle" placeholder="Note title"><textarea id="noteText" placeholder="Write your note..."></textarea><button onclick="addNote()">Save Note</button><div id="notesList" class="list"></div></div></section>
+<section id="ideas" class="page"><div class="hero"><h1>💡 Ideas</h1><input id="ideaTitle" placeholder="Idea title"><textarea id="ideaText" placeholder="Write your idea..."></textarea><button onclick="addIdea()">Save Idea</button><div id="ideasList" class="list"></div></div></section>
+<section id="books" class="page"><div class="hero"><h1>📚 Books</h1><input id="bookTitle" placeholder="Book title"><input id="bookAuthor" placeholder="Author"><textarea id="bookNotes" placeholder="Notes about the book..."></textarea><button onclick="addBook()">Save Book</button><div id="booksList" class="list"></div></div></section>
+<section id="recipes" class="page"><div class="hero"><h1>🍕 Food Recipes</h1><input id="recipeTitle" placeholder="Recipe name"><input id="recipeIngredients" placeholder="Ingredients"><textarea id="recipeSteps" placeholder="Steps / instructions..."></textarea><button onclick="addRecipe()">Save Recipe</button><div id="recipesList" class="list"></div></div></section>
+<section id="movies" class="page"><div class="hero"><h1>🎬 Movies</h1><input id="movieTitle" placeholder="Movie title"><input id="movieYear" placeholder="Year"><textarea id="movieNotes" placeholder="Your notes / rating..."></textarea><button onclick="addMovie()">Save Movie</button><div id="moviesList" class="list"></div></div></section>
 
-  <div id="fighterGame" class="game card" style="margin-top:15px">
-    <div class="row between"><h2>🥊 Foxie Fighter</h2><select id="fighterDifficulty" class="select" style="max-width:160px"><option>Easy</option><option selected>Normal</option><option>Hard</option></select></div>
-    <div class="fighterArena">
-      <div class="fighter"><div class="fighterEmoji">🦊</div><h3>You</h3><div class="progress"><div id="playerHP" style="width:100%"></div></div><p id="playerHPText">100 HP</p></div>
-      <div class="fighter"><div class="fighterEmoji">🤖</div><h3>Foxie Bot</h3><div class="progress"><div id="enemyHP" style="width:100%"></div></div><p id="enemyHPText">100 HP</p></div>
-    </div>
-    <div class="row" style="justify-content:center;margin-top:15px"><button class="btn primary" onclick="fighterAttack()">👊 Attack</button><button class="btn" onclick="fighterHeal()">💚 Heal</button><button class="btn" onclick="resetFighter()">Restart</button></div><p id="fighterInfo" class="muted" style="text-align:center"></p>
-  </div>
-</section>
+<section id="calculator" class="page"><div class="hero"><h1>🧮 Calculator</h1><input id="calc" placeholder="e.g. 12*(4+2)"><button onclick="calculate()">Calculate</button><h2 id="calcOut"></h2></div></section>
+<section id="selfies" class="page"><div class="hero"><h1>📸 Selfies</h1><button onclick="startCamera()">Start Camera</button><button onclick="takePhoto()">Take Photo</button><button onclick="stopCamera()">Stop</button><video id="camera" class="video" autoplay playsinline></video><canvas id="photo" width="640" height="480"></canvas><input type="file" accept="image/*" onchange="uploadPhoto(event)"><div id="selfieStatus"></div></div></section>
+<section id="search" class="page"><div class="hero"><h1>🔎 Search</h1><input id="searchQ" placeholder="Search the web"><button onclick="webSearch('Google')">Google</button><button onclick="webSearch('YouTube')">YouTube</button><button onclick="webSearch('Wikipedia')">Wikipedia</button></div></section>
+<section id="maps" class="page"><div class="hero"><h1>🗺️ Maps & Traffic</h1><button onclick="window.open('https://www.google.com/maps','_blank')">Google Maps</button><button onclick="window.open('https://www.google.com/maps/@?api=1&map_action=map','_blank')">Map View</button><button onclick="window.open('https://www.openstreetmap.org','_blank')">OpenStreetMap</button><p class="muted">External map services open in a new tab.</p></div></section>
+<section id="themes" class="page"><div class="hero"><h1>🎨 Themes</h1><button onclick="theme('#39ff14','#020604')">Green</button><button onclick="theme('#00e5ff','#02060a')">Blue</button><button onclick="theme('#c45cff','#07020a')">Purple</button><button onclick="theme('#ff4d6d','#0a0204')">Red</button><button onclick="theme('#ffd84d','#090700')">Gold</button><button onclick="theme('#39ff14','#020604')">Reset</button></div></section>
+<section id="admin" class="page"><div class="hero"><h1>👑 Owner Admin</h1><p>Owner controls for this local/demo front-end.</p><button onclick="addXP(100)">Give +100 XP</button><button onclick="addCoins(500)">Give +500 Coins</button><button onclick="localStorage.clear();location.reload()" class="danger">Reset Local Data</button><textarea id="announcement" placeholder="Write an announcement"></textarea><button onclick="postAnnouncement()">Post Announcement</button><div id="adminNotice"></div><div class="notice">For secure real admin powers, authentication and authorization must be implemented on the backend. Never put admin secrets in HTML.</div></div></section>
+</main></div>
 
-<section id="multiplayer" class="page">
-  <h1 class="glitch">🌐 Multiplayer Rooms</h1>
-  <div class="grid grid2">
-    <div class="card"><h3>Create room</h3><input id="roomName" class="input" placeholder="Room name"><br><br><select id="roomGame" class="select"><option>Chess</option><option>Tic-Tac-Toe</option><option>Foxie Racer</option><option>Foxie Fighter</option></select><br><br><button class="btn primary" onclick="createRoom()">Create Room</button></div>
-    <div class="card"><h3>Rooms</h3><div id="roomList" class="list"></div></div>
-  </div>
-  <p class="muted small">Rooms in this single-file version are stored locally. To make them truly cross-device, connect a realtime backend such as WebSockets/Firebase/Supabase.</p>
-</section>
-
-<section id="spectator" class="page">
-  <h1 class="glitch">👀 Spectator Room</h1>
-  <div class="grid grid2">
-    <div class="card"><h3>Live room feed</h3><div id="spectatorFeed" class="list"></div></div>
-    <div class="card"><h3>Spectator chat</h3><div id="specChat" class="chatBox" style="height:300px"></div><div class="row" style="margin-top:8px"><input id="specInput" class="input" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendSpecChat()"><button class="btn" onclick="sendSpecChat()">Send</button></div></div>
-  </div>
-</section>
-
-<section id="calculator" class="page">
-  <h1 class="glitch">🧮 Foxie Calculator</h1>
-  <div class="card" style="max-width:430px;margin:auto"><input id="calcDisplay" class="input" style="font-size:28px;text-align:right" readonly value="0"><div class="grid grid3" style="margin-top:10px">
-    <button class="btn" onclick="calcClear()">C</button><button class="btn" onclick="calcBack()">⌫</button><button class="btn" onclick="calcPress('/')">÷</button>
-    <button class="btn" onclick="calcPress('7')">7</button><button class="btn" onclick="calcPress('8')">8</button><button class="btn" onclick="calcPress('9')">9</button>
-    <button class="btn" onclick="calcPress('*')">×</button><button class="btn" onclick="calcPress('4')">4</button><button class="btn" onclick="calcPress('5')">5</button>
-    <button class="btn" onclick="calcPress('6')">6</button><button class="btn" onclick="calcPress('-')">−</button><button class="btn" onclick="calcPress('1')">1</button>
-    <button class="btn" onclick="calcPress('2')">2</button><button class="btn" onclick="calcPress('3')">3</button><button class="btn" onclick="calcPress('+')">+</button>
-    <button class="btn" onclick="calcPress('0')">0</button><button class="btn" onclick="calcPress('.')">.</button><button class="btn primary" onclick="calcEquals()">=</button>
-  </div></div>
-</section>
-
-<section id="selfies" class="page">
-  <h1 class="glitch">📸 Foxie Selfies</h1>
-  <div class="grid grid2">
-    <div class="card"><video id="cameraVideo" autoplay playsinline></video><div class="row" style="margin-top:10px"><button class="btn primary" onclick="startCamera()">Start Camera</button><button class="btn" onclick="takePhoto()">📸 Take Photo</button><button class="btn danger" onclick="stopCamera()">Stop</button></div><canvas id="photoCanvas" class="hidden"></canvas></div>
-    <div class="card"><h3>Your photo</h3><img id="photoPreview" class="preview hidden"><p id="cameraInfo" class="muted">Camera permission is only requested when you press Start Camera.</p><input type="file" id="imageUpload" class="input" accept="image/*" onchange="previewUpload(event)"></div>
-  </div>
-</section>
-
-<section id="search" class="page">
-  <h1 class="glitch">🔎 Foxie Search</h1>
-  <div class="card"><div class="row"><input id="searchInput" class="input" placeholder="Search the web..."><button class="btn primary" onclick="webSearch()">Search</button></div><div class="row" style="margin-top:12px"><button class="btn" onclick="quickSearch('Google')">Google</button><button class="btn" onclick="quickSearch('YouTube')">YouTube</button><button class="btn" onclick="quickSearch('Wikipedia')">Wikipedia</button></div></div>
-</section>
-
-<section id="maps" class="page">
-  <h1 class="glitch">🗺️ Maps & Traffic</h1>
-  <div class="grid grid3"><div class="card"><h3>Google Maps</h3><button class="btn primary" onclick="openMap('https://www.google.com/maps')">Open Maps</button></div><div class="card"><h3>Google Traffic</h3><button class="btn" onclick="openMap('https://www.google.com/maps/@?api=1&map_action=map')">Open</button></div><div class="card"><h3>OpenStreetMap</h3><button class="btn" onclick="openMap('https://www.openstreetmap.org')">Open</button></div></div>
-</section>
-
-<section id="themes" class="page">
-  <h1 class="glitch">🎨 Themes</h1>
-  <div class="themeGrid">
-    <button class="theme" onclick="setTheme('green')">🟢<br>Foxie Green</button>
-    <button class="theme" onclick="setTheme('blue')">🔵<br>Cyber Blue</button>
-    <button class="theme" onclick="setTheme('purple')">🟣<br>Neon Purple</button>
-    <button class="theme" onclick="setTheme('red')">🔴<br>Red Alert</button>
-    <button class="theme" onclick="setTheme('gold')">🟡<br>Gold Mode</button>
-    <button class="theme" onclick="setTheme('reset')">⚪<br>Reset</button>
-  </div>
-</section>
-
-<section id="leaderboards" class="page">
-  <h1 class="glitch">🏆 Leaderboards</h1>
-  <div class="row"><button class="btn" onclick="renderLeaderboard('week')">Weekly</button><button class="btn" onclick="renderLeaderboard('month')">Monthly</button><button class="btn" onclick="renderLeaderboard('year')">Yearly</button></div>
-  <div class="card" style="margin-top:15px"><table><thead><tr><th>#</th><th>Player</th><th>XP</th><th>Games</th></tr></thead><tbody id="leaderboardBody"></tbody></table></div>
-  <p class="muted small">This demo leaderboard is local. A global leaderboard requires a shared database.</p>
-</section>
-
-<section id="admin" class="page">
-  <h1 class="glitch">👑 Owner Admin</h1>
-  <div class="card adminBox"><h3>Jayden Wayne Macdonald — Owner</h3><p class="muted">Owner controls shown only as a front-end demo. Never put passwords, secret API keys or private tokens inside this HTML.</p><div class="row"><button class="btn gold" onclick="adminAnnounce()">📢 Announcement</button><button class="btn" onclick="grantXP(100)">⚡ Give +100 XP</button><button class="btn" onclick="grantCoins(500)">💰 Give +500 Coins</button><button class="btn danger" onclick="resetLocalFoxie()">Reset Local Data</button></div></div>
-  <div class="grid grid2" style="margin-top:15px"><div class="card"><h3>System stats</h3><div id="adminStats"></div></div><div class="card"><h3>Feature checklist</h3><div class="list"><div class="listItem">✅ Name/profile system</div><div class="listItem">✅ Games + AI</div><div class="listItem">✅ Leaderboards</div><div class="listItem">✅ Themes + particles</div><div class="listItem">✅ Camera/upload</div><div class="listItem">⚠️ Real online multiplayer needs backend</div></div></div></div>
-</section>
-</main>
-</div>
-
-<div id="nameModal" class="overlay nameModal">
-  <div class="modal">
-    <div style="font-size:52px">🦊</div><h2 class="glitch">Welcome to Foxie</h2><p>What should we call you?</p>
-    <input id="nameInput" class="input" maxlength="24" autocomplete="nickname" placeholder="Enter your name...">
-    <div id="nameError" class="muted" style="color:#ff7080;margin:8px 0"></div>
-    <button class="btn primary" style="width:100%" onclick="saveFoxieName()">Enter Foxie 🚀</button>
-    <p class="muted small">Your name is saved on this device only.</p>
-  </div>
-</div>
-<div id="toast" class="toast"></div>
+<div id="nameModal" class="modal hidden"><div class="modalbox"><h1>Welcome to Foxie 🦊</h1><p>What should we call you?</p><input id="nameInput" maxlength="24" placeholder="Your name"><button onclick="saveName()">Enter Foxie</button></div></div>
 
 <script>
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-let foxieUserName=localStorage.getItem('foxieUserName')||'';
-let xp=Number(localStorage.getItem('foxieXP')||0), coins=Number(localStorage.getItem('foxieCoins')||100);
-let gamesPlayed=Number(localStorage.getItem('foxieGamesPlayed')||0);
+const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let user=localStorage.getItem('foxieUserName')||'';
+if(!user)$('nameModal').classList.remove('hidden');
+function saveName(){let n=$('nameInput').value.trim();if(!n)return alert('Please enter a name.');user=n.slice(0,24);localStorage.setItem('foxieUserName',user);$('nameModal').classList.add('hidden');refresh()}
+function refresh(){document.querySelectorAll('[data-name]').forEach(x=>x.textContent=user||'friend');$('clock').textContent=new Date().toLocaleTimeString();$('date').textContent=new Date().toLocaleDateString();updateStats();renderChat();renderNotes();renderIdeas();renderBooks();renderRecipes();renderMovies();renderVids();renderFriends();renderRooms();renderMP();renderInterests();renderLB();renderFavs()}
+setInterval(()=>{$('clock').textContent=new Date().toLocaleTimeString()},1000);
+function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
+function updateStats(){let xp=+localStorage.getItem('foxieXP')||0,coins=+localStorage.getItem('foxieCoins');if(!coins&&coins!==0){coins=100;localStorage.setItem('foxieCoins',coins)}$('xp').textContent=xp+' XP';$('level').textContent=Math.floor(xp/100)+1;$('coins').textContent=coins;$('achievements').textContent=get('foxieAchievements',[]).length}
+function addXP(n){let x=(+localStorage.getItem('foxieXP')||0)+n;localStorage.setItem('foxieXP',x);refresh()}function addCoins(n){let c=(+localStorage.getItem('foxieCoins')||100)+n;localStorage.setItem('foxieCoins',c);refresh()}
 
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove('show'),2200)}
-function saveStats(){localStorage.setItem('foxieXP',xp);localStorage.setItem('foxieCoins',coins);localStorage.setItem('foxieGamesPlayed',gamesPlayed);updateStats()}
-function addXP(n){xp+=n;coins+=Math.floor(n/10);saveStats();toast('+'+n+' XP!')}
-function grantXP(n){addXP(n);renderAdmin()}
-function grantCoins(n){coins+=n;saveStats();toast('+'+n+' coins!')}
-function level(){return Math.floor(xp/100)+1}
-function updateStats(){
-  const lv=level(), pct=xp%100;
-  ['xpMini'].forEach(id=>{if($(id))$(id).textContent='LVL '+lv+' · '+xp+' XP'});
-  if($('homeLevel'))$('homeLevel').textContent=lv;
-  if($('levelBar'))$('levelBar').style.width=pct+'%';
-  if($('coinCount'))$('coinCount').textContent=coins;
-}
-function updateFoxieNameUI(){
-  document.querySelectorAll('[data-foxie-name]').forEach(el=>el.textContent=foxieUserName||'Player');
-}
-function saveFoxieName(){
-  const n=$('nameInput').value.trim().replace(/\s+/g,' ');
-  if(n.length<2){$('nameError').textContent='Please enter at least 2 characters.';return}
-  foxieUserName=n.slice(0,24);localStorage.setItem('foxieUserName',foxieUserName);
-  $('nameModal').classList.remove('show');updateFoxieNameUI();renderUsers();toast('Welcome, '+foxieUserName+' 🦊');addXP(10);
-}
-function toggleSidebar(){$('sidebar').classList.toggle('open')}
-function showPage(id,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const p=$(id);if(p)p.classList.add('active');
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  $('sidebar').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'});
-  if(id==='admin')renderAdmin();
-  if(id==='leaderboards')renderLeaderboard('week');
-  if(id==='spectator')renderSpectator();
-}
+function sendChat(){let v=$('chatInput').value.trim();if(!v)return;let a=get('foxieChat',[]);a.push({name:user||'friend',text:v,time:new Date().toLocaleTimeString()});set('foxieChat',a);$('chatInput').value='';renderChat();addXP(2)}
+function renderChat(){let a=get('foxieChat',[]);$('chatbox').innerHTML=a.length?a.map(m=>`<div class="msg"><b style="color:var(--g)">${esc(m.name)}</b> <span class="muted">${esc(m.time)}</span><br>${esc(m.text)}</div>`).join(''):'<div class="muted">No local messages yet.</div>';$('chatbox').scrollTop=$('chatbox').scrollHeight}
+function clearChat(){localStorage.removeItem('foxieChat');renderChat()}
 
-function clock(){
-  $('clock').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-setInterval(clock,1000);clock();
+const demoUsers=['Alex','Sam','Jordan','Taylor','Morgan','Casey','Riley','Avery'];function renderUsers(){ $('usersList').innerHTML=demoUsers.filter(n=>n.toLowerCase()!=user.toLowerCase()).map(n=>`<div class="card"><h3>👤 ${n}</h3><span class="pill">Online demo</span><button onclick="addFriend('${n}')">Add Friend</button></div>`).join('') }renderUsers();
+function addFriend(n){let a=get('foxieFriends',[]);if(!a.includes(n))a.push(n);set('foxieFriends',a);renderFriends();alert(n+' added to your local friends.')}
+function renderFriends(){let a=get('foxieFriends',[]);$('friendsList').innerHTML=a.length?a.map(n=>`<div class="item">🤝 <b>${esc(n)}</b><button onclick="callFriend('${esc(n)}',false)">📞 Call</button><button onclick="callFriend('${esc(n)}',true)">📹 Video</button><button class="danger" onclick="removeFriend('${esc(n)}')">Remove</button></div>`).join(''):'<div class="muted">No friends yet. Add some from Users.</div>'}
+function removeFriend(n){set('foxieFriends',get('foxieFriends',[]).filter(x=>x!==n));renderFriends()}
 
-function particles(){
-  const wrap=$('particles');
-  for(let i=0;i<75;i++){
-    const p=document.createElement('i');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=(5+Math.random()*12)+'s';p.style.animationDelay=(-Math.random()*12)+'s';p.style.opacity=.2+Math.random()*.7;wrap.appendChild(p);
-  }
-}
+function callFriend(n,video){$('callStatus').textContent=(video?'📹 Video':'📞 Voice')+' call with '+n+' — demo room created.';show('calls');if(video)makeCameraPreview()}
+function startCall(video){let n=(video?$('videoFriend'):$('callFriend')).value.trim();if(!n)return alert('Enter a friend name.');if(!get('foxieFriends',[]).includes(n))return alert('For friend calls, add each other first.');callFriend(n,video)}
+function toggleMute(){$('callStatus').textContent+=' 🎙️ Mute toggled.'}function toggleCamera(){$('callStatus').textContent+=' 📷 Camera toggled.'}function endCall(){$('callStatus').textContent='No active call.';$('videoArea').innerHTML=''}
+async function makeCameraPreview(){try{let s=await navigator.mediaDevices.getUserMedia({video:true,audio:true});let v=document.createElement('video');v.className='video';v.autoplay=true;v.muted=true;v.srcObject=s;$('videoArea').innerHTML='';$('videoArea').appendChild(v)}catch(e){$('videoArea').innerHTML='<div class="notice">Camera/microphone permission was not granted.</div>'}}
+function randomRoom(){let rooms=get('foxieRooms',[]);let r=rooms[Math.floor(Math.random()*rooms.length)];alert(r?`Random room: ${r.name}`:'No public rooms yet — create one!')}function createRoom(){let n=prompt('Room name?')||('Foxie Room '+Math.floor(Math.random()*9999));let a=get('foxieRooms',[]);a.push({name:n,host:user||'friend',people:1});set('foxieRooms',a);renderRooms();renderMP()}
+function renderRooms(){let a=get('foxieRooms',[]);$('roomList').innerHTML=a.length?a.map(r=>`<div class="card"><h3>🌎 ${esc(r.name)}</h3><p>Host: ${esc(r.host)}</p><p>👥 ${r.people} people</p><button onclick="alert('Joined ${esc(r.name)} — demo room')">Join</button></div>`).join(''):'<div class="muted">No rooms yet.</div>'}
+function renderMP(){let a=get('foxieRooms',[]);$('mpRooms').innerHTML=a.map(r=>`<div class="item">🌐 ${esc(r.name)} <button onclick="alert('Joined room — demo mode')">Join</button></div>`).join('')||'<div class="muted">No rooms.</div>'}
 
-function sendChat(){
-  const input=$('chatInput'), text=input.value.trim();if(!text)return;
-  const msgs=JSON.parse(localStorage.getItem('foxieChat')||'[]');
-  msgs.push({name:foxieUserName||'Player',text,time:new Date().toLocaleTimeString()});
-  localStorage.setItem('foxieChat',JSON.stringify(msgs.slice(-100)));input.value='';renderChat();addXP(2);
-}
-function renderChat(){
-  const msgs=JSON.parse(localStorage.getItem('foxieChat')||'[]');
-  $('chatBox').innerHTML=msgs.map(m=>`<div class="msg"><b>${esc(m.name)}</b> <span class="muted small">${esc(m.time)}</span><br>${esc(m.text)}</div>`).join('')||'<p class="muted">No messages yet. Say hello!</p>';
-  $('chatBox').scrollTop=$('chatBox').scrollHeight;
-}
+function addVid(){let t=$('vidTitle').value.trim(),u=$('vidUrl').value.trim();if(!t||!/^https?:\/\//i.test(u))return alert('Add a title and a valid http/https URL.');let a=get('foxieVids',[]);a.push({t,u});set('foxieVids',a);$('vidTitle').value=$('vidUrl').value='';renderVids()}
+function renderVids(){let a=get('foxieVids',[]);$('vidList').innerHTML=a.map((v,i)=>`<div class="item">📺 <b>${esc(v.t)}</b><br><a href="${esc(v.u)}" target="_blank" rel="noopener" style="color:var(--g)">${esc(v.u)}</a><button class="danger" onclick="del('foxieVids',${i},renderVids)">Delete</button></div>`).join('')||'<div class="muted">No videos saved.</div>'}
 
-const demoUsers=[
- {name:'NovaFox',status:'Online',xp:1280,avatar:'🦊'},{name:'Pixel',status:'Playing Chess',xp:930,avatar:'🐺'},
- {name:'Glitch',status:'Online',xp:710,avatar:'👾'},{name:'StarByte',status:'Away',xp:540,avatar:'⭐'},
- {name:'Rex',status:'Racing',xp:420,avatar:'🐯'}
-];
-function renderUsers(){
-  const me={name:foxieUserName||'Player',status:'Online',xp,avatar:'🦊'};
-  $('userGrid').innerHTML=[me,...demoUsers].map((u,i)=>`<div class="card"><div class="row"><div class="avatar">${u.avatar}</div><div><b>${esc(u.name)}</b><div class="muted small">● ${esc(u.status)}</div></div></div><div class="row" style="margin-top:12px"><span class="pill">⭐ ${u.xp} XP</span><button class="btn" onclick="addFriendName('${esc(u.name)}')">Add Friend</button></div></div>`).join('');
-}
-function addFriendName(name){
-  const key='foxieFriends', arr=JSON.parse(localStorage.getItem(key)||'[]');
-  if(!arr.includes(name)){arr.push(name);localStorage.setItem(key,JSON.stringify(arr));renderFriends();toast(name+' added!');addXP(5)}else toast('Already a friend');
-}
-function addFriend(){const n=$('friendInput').value.trim();if(!n)return;addFriendName(n);$('friendInput').value=''}
-function renderFriends(){
-  const arr=JSON.parse(localStorage.getItem('foxieFriends')||'[]');
-  $('friendList').innerHTML=arr.length?arr.map((n,i)=>`<div class="listItem row between"><span>🦊 ${esc(n)}</span><button class="btn danger" onclick="removeFriend(${i})">Remove</button></div>`).join(''):'<div class="muted">No friends yet.</div>';
-}
-function removeFriend(i){const a=JSON.parse(localStorage.getItem('foxieFriends')||'[]');a.splice(i,1);localStorage.setItem('foxieFriends',JSON.stringify(a));renderFriends()}
+let ttt=['','','','','','','','',''],turn='X';function newTTT(){ttt=['','','','','','','','',''];turn='X';renderTTT()}function renderTTT(){let out='';ttt.forEach((v,i)=>out+=`<button style="width:31%;height:55px;font-size:24px" onclick="tttMove(${i})">${v||'·'}</button>`);$('ttt').innerHTML=out}function tttMove(i){if(ttt[i])return;ttt[i]=turn;if(win(ttt,turn)){alert(turn+' wins!');addXP(10);return renderTTT()}if(ttt.every(Boolean)){alert('Draw!');return}turn='O';renderTTT();setTimeout(aiTTT,250)}function aiTTT(){let open=ttt.map((v,i)=>v?null:i).filter(x=>x!==null);if(!open.length)return;let i=open[Math.floor(Math.random()*open.length)];ttt[i]='O';if(win(ttt,'O')){renderTTT();return alert('AI wins!')}turn='X';renderTTT()}function win(a,p){return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]].some(c=>c.every(i=>a[i]===p))}newTTT();
+function highCard(){let a=Math.ceil(Math.random()*13),b=Math.ceil(Math.random()*13);$('highCard').textContent=`You: ${a} — Foxie: ${b} — ${a>b?'You win!':a<b?'Foxie wins!':'Draw!'}`;if(a>b)addXP(5)}
+function drawCard(){let suits=['♠','♥','♦','♣'],r=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];$('drawn').textContent=r[Math.floor(Math.random()*13)]+suits[Math.floor(Math.random()*4)]}
+function fight(){let d=$('fightDiff').value,m=d==='Easy'?50:d==='Normal'?65:80,p=Math.floor(Math.random()*100),win=p>m;$('fightOut').textContent=win?'🥊 You won!':'💥 Foxie won this round!';if(win)addXP(15)}
+let carPos=45;document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')carPos=Math.max(2,carPos-3);if(e.key==='ArrowRight')carPos=Math.min(94,carPos+3);$('car').style.left=carPos+'%'});
+function startRacer(){carPos=45;$('car').style.left=carPos+'%';alert('Race started! Use ← and →.')}
 
-function renderVideos(){
-  const vids=JSON.parse(localStorage.getItem('foxieVideos')||'[]');
-  const all=[{title:'Welcome to Foxie',url:'https://www.youtube.com',emoji:'🦊'},...vids];
-  $('videoGrid').innerHTML=all.map(v=>`<div class="video"><div class="videoThumb">${v.emoji||'🎬'}</div><div style="padding:12px"><b>${esc(v.title)}</b><p class="muted small">${esc(v.url)}</p><button class="btn" onclick="window.open('${esc(v.url)}','_blank')">Open Video</button></div></div>`).join('');
-}
-function addVideo(){
-  const title=prompt('Video title?');if(!title)return;
-  const url=prompt('Video URL?');if(!url||!/^https?:\/\//i.test(url))return toast('Please use a valid http/https URL.');
-  const vids=JSON.parse(localStorage.getItem('foxieVideos')||'[]');vids.push({title:title.slice(0,80),url});localStorage.setItem('foxieVideos',JSON.stringify(vids));renderVideos();addXP(5);
-}
+const pieces=['♜','♞','♝','♛','♚','♝','♞','♜','♟','♟','♟','♟','♟','♟','♟','♟','','','','','','','','','♙','♙','♙','♙','♙','♙','♙','♙','♖','♘','♗','♕','♔','♗','♘','♖'];let chessPos=[...pieces],selected=-1;function newChess(){chessPos=[...pieces];selected=-1;renderChess()}function renderChess(){let s='';chessPos.forEach((p,i)=>s+=`<div class="sq ${Math.floor(i/8)%2===i%2?'a':'b'} ${selected===i?'sel':''}" onclick="chessClick(${i})">${p}</div>`);$('chess').innerHTML=s}function chessClick(i){if(selected<0){if(chessPos[i])selected=i}else{if(i!==selected){chessPos[i]=chessPos[selected];chessPos[selected]=''}selected=-1;renderChess()}}newChess();
 
-let ttt=[],tttOver=false;
-function resetTTT(){ttt=Array(9).fill('');tttOver=false;renderTTT();$('tttInfo').textContent='Your turn.'}
-function renderTTT(){
-  $('tttBoard').innerHTML=ttt.map((v,i)=>`<button onclick="tttMove(${i})">${v}</button>`).join('');
-}
-function tttMove(i){
-  if(ttt[i]||tttOver)return;ttt[i]='X';renderTTT();if(checkTTT('X'))return endTTT('You win! 🎉');if(ttt.every(Boolean))return endTTT('Draw!');
-  $('tttInfo').textContent='Foxie is thinking...';setTimeout(()=>{if(tttOver)return;const d=$('tttDifficulty').value.toLowerCase();let choices=ttt.map((v,j)=>v?null:j).filter(v=>v!==null);let move;
-    if(d==='hard')move=bestTTT();
-    else if(d==='medium'){move=Math.random()<.7?bestTTT():choices[Math.floor(Math.random()*choices.length)]}
-    else move=choices[Math.floor(Math.random()*choices.length)];
-    if(move!==undefined)ttt[move]='O';renderTTT();if(checkTTT('O'))endTTT('Foxie wins 🤖');else if(ttt.every(Boolean))endTTT('Draw!');else $('tttInfo').textContent='Your turn.';
-  },300);
-}
-function checkTTT(p){return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]].some(a=>a.every(i=>ttt[i]===p))}
-function endTTT(msg){tttOver=true;$('tttInfo').textContent=msg;if(msg.startsWith('You'))addXP(25);else if(msg.startsWith('Foxie'))addXP(5)}
-function bestTTT(){
-  const empty=ttt.map((v,i)=>v?null:i).filter(v=>v!==null);
-  for(const i of empty){ttt[i]='O';if(checkTTT('O')){ttt[i]='';return i}ttt[i]=''}
-  for(const i of empty){ttt[i]='X';if(checkTTT('X')){ttt[i]='';return i}ttt[i]=''}
-  if(ttt[4]==='')return 4;
-  const corners=[0,2,6,8].filter(i=>!ttt[i]);if(corners.length)return corners[Math.floor(Math.random()*corners.length)];
-  return empty[Math.floor(Math.random()*empty.length)];
-}
+let ctx,drawDown=false;function setupDraw(){let c=$('draw');ctx=c.getContext('2d');c.onpointerdown=e=>{drawDown=true;ctx.beginPath();ctx.moveTo(...pt(e,c))};c.onpointerup=()=>drawDown=false;c.onpointerleave=()=>drawDown=false;c.onpointermove=e=>{if(!drawDown)return;ctx.strokeStyle=$('drawColor').value;ctx.lineWidth=$('drawSize').value;ctx.lineCap='round';ctx.lineTo(...pt(e,c));ctx.stroke()}}function pt(e,c){let r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]}function clearDraw(){ctx.clearRect(0,0,$('draw').width,$('draw').height)}function saveDraw(){let a=document.createElement('a');a.download='foxie-drawing.png';a.href=$('draw').toDataURL();a.click()}setupDraw();
 
-const pieces={r:'♜',n:'♞',b:'♝',q:'♛',k:'♚',p:'♟',R:'♖',N:'♘',B:'♗',Q:'♕',K:'♔',P:'♙'};
-let chessState=[],chessTurn='white',chessSelected=null;
-function resetChess(){
-  chessState=[
-    ['r','n','b','q','k','b','n','r'],Array(8).fill('p'),...Array.from({length:4},()=>Array(8).fill('')),Array(8).fill('P'),
-    ['R','N','B','Q','K','B','N','R']
-  ];chessTurn='white';chessSelected=null;renderChess();$('chessInfo').textContent='White to move.';
-}
-function colorOf(p){return !p?null:p===p.toUpperCase()?'white':'black'}
-function renderChess(){
-  const b=$('chessBoard');b.innerHTML='';
-  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
-    const s=document.createElement('button');s.className='square '+((r+c)%2?'dark':'light');s.textContent=pieces[chessState[r][c]]||'';s.dataset.r=r;s.dataset.c=c;
-    if(chessSelected&&chessSelected[0]===r&&chessSelected[1]===c)s.classList.add('selected');
-    s.onclick=()=>chessClick(r,c);b.appendChild(s);
-  }
-}
-function chessClick(r,c){
-  const p=chessState[r][c];
-  if(chessSelected){
-    const [sr,sc]=chessSelected;
-    if(sr===r&&sc===c){chessSelected=null;renderChess();return}
-    if(canChessMove(sr,sc,r,c)){
-      chessState[r][c]=chessState[sr][sc];chessState[sr][sc]='';chessTurn=chessTurn==='white'?'black':'white';chessSelected=null;renderChess();$('chessInfo').textContent=(chessTurn==='white'?'White':'Black')+' to move.';
-      if(chessTurn==='black')setTimeout(chessBot,350);return;
-    }
-  }
-  if(p&&colorOf(p)===chessTurn){chessSelected=[r,c];renderChess()}
-}
-function canChessMove(sr,sc,r,c){
-  const p=chessState[sr][sc], target=chessState[r][c];if(!p||colorOf(p)!==chessTurn||colorOf(target)===chessTurn)return false;
-  const dr=r-sr,dc=c-sc,adr=Math.abs(dr),adc=Math.abs(dc),type=p.toLowerCase();
-  if(type==='p'){const dir=colorOf(p)==='white'?-1:1,start=colorOf(p)==='white'?6:1;if(dc===0&&!target&&(dr===dir||dr===2*dir&&sr===start&&!chessState[sr+dir][sc]))return true;return adr===1&&dr===dir&&!!target}
-  if(type==='n')return (adr===2&&adc===1)||(adr===1&&adc===2);
-  if(type==='k')return adr<=1&&adc<=1;
-  if(type==='r' || type==='b' || type==='q'){
-    const straight=dr===0||dc===0,diag=adr===adc;
-    if((type==='r'&&!straight)||(type==='b'&&!diag)||(type==='q'&&!straight&&!diag))return false;
-    const srn=Math.sign(dr),scn=Math.sign(dc);let rr=sr+srn,cc=sc+scn;
-    while(rr!==r||cc!==c){if(chessState[rr][cc])return false;rr+=srn;cc+=scn}
-    return true;
-  }return false;
-}
-function chessBot(){
-  const moves=[];for(let sr=0;sr<8;sr++)for(let sc=0;sc<8;sc++)if(chessState[sr][sc]&&colorOf(chessState[sr][sc])==='black'){
-    for(let r=0;r<8;r++)for(let c=0;c<8;c++){const oldTurn=chessTurn;chessTurn='black';if(canChessMove(sr,sc,r,c))moves.push([sr,sc,r,c]);chessTurn=oldTurn}
-  }
-  if(!moves.length){$('chessInfo').textContent='Black has no move.';return}
-  const captures=moves.filter(m=>chessState[m[2]][m[3]]);const m=(captures.length?captures:moves)[Math.floor(Math.random()*(captures.length?captures.length:moves.length))];
-  chessState[m[2]][m[3]]=chessState[m[0]][m[1]];chessState[m[0]][m[1]]='';chessTurn='white';renderChess();$('chessInfo').textContent='White to move.'
-}
-function setChessTheme(v){
-  const root=document.documentElement;
-  if(v==='classic'){document.querySelectorAll('.light').forEach(x=>x.style.background='#f0d9b5');document.querySelectorAll('.dark').forEach(x=>x.style.background='#b58863')}
-  else if(v==='neon'){document.querySelectorAll('.light').forEach(x=>x.style.background='#16351f');document.querySelectorAll('.dark').forEach(x=>x.style.background='#07110b')}
-  else {document.querySelectorAll('.light').forEach(x=>x.style.background='#c7e8cc');document.querySelectorAll('.dark').forEach(x=>x.style.background='#275c37')}
-}
+function renderLB(){let names=[user||'You','Foxie','Alex','Sam'];['lbWeek','lbMonth','lbYear'].forEach((id,j)=>$(id).innerHTML=names.map((n,i)=>`<div class="item">#${i+1} ${esc(n)} — ${Math.max(20,1000-i*137-j*50)} XP</div>`).join(''))}
+function openFootball(l){$('footballInfo').innerHTML=`<b>${esc(l)}</b><br>Opening current fixtures, standings and news search... <button onclick="window.open('https://www.google.com/search?q=${encodeURIComponent(l+' fixtures standings news')}','_blank')">Open ${esc(l)} search</button>`}
+function saveTeam(){let n=$('teamName').value.trim();if(n)localStorage.setItem('foxieTeam',n);renderFavs()}function renderFavs(){$('favTeam').textContent=localStorage.getItem('foxieTeam')?'⭐ '+localStorage.getItem('foxieTeam'):'';$('favPokeOut').textContent=localStorage.getItem('foxiePoke')?'⚡ '+localStorage.getItem('foxiePoke'):''}
 
-let drawing=false,ctx;
-function setupDrawing(){
-  const c=$('drawCanvas');ctx=c.getContext('2d');ctx.lineCap='round';ctx.lineJoin='round';
-  const pos=e=>{const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}};
-  c.onpointerdown=e=>{drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};
-  c.onpointermove=e=>{if(!drawing)return;const p=pos(e);ctx.strokeStyle=$('drawColor').value;ctx.lineWidth=+$('drawSize').value;ctx.lineTo(p.x,p.y);ctx.stroke()};
-  c.onpointerup=()=>drawing=false;c.onpointerleave=()=>drawing=false;
-}
-function clearDrawing(){ctx.clearRect(0,0,$('drawCanvas').width,$('drawCanvas').height)}
-function downloadDrawing(){const a=document.createElement('a');a.href=$('drawCanvas').toDataURL();a.download='foxie-drawing.png';a.click();addXP(10)}
+const interests=['🎮 Gaming','⚽ Football','🏀 Basketball','👟 Shoes','⚡ Pokémon','🎵 Music','🎬 Movies','📚 Books','🍕 Food','🚗 Cars','💻 Technology','🎨 Art','📷 Photography','✈️ Travel','👕 Fashion'];function renderInterests(){let a=get('foxieInterests',interests);$('interestGrid').innerHTML=a.map(x=>`<div class="card"><h3>${esc(x)}</h3><button onclick="alert('Interest room for ${esc(x)} — demo mode')">Open Space</button></div>`).join('')}function addInterest(){let n=$('newInterest').value.trim();if(!n)return;let a=get('foxieInterests',interests);a.push('🌟 '+n);set('foxieInterests',a);$('newInterest').value='';renderInterests()}
 
-let deck=[],solScore=0;
-function resetSolitaire(){deck=[];for(const s of ['♠','♥','♦','♣'])for(let n=1;n<=13;n++)deck.push({n,s});deck.sort(()=>Math.random()-.5);solScore=0;$('solitaireWaste').textContent='?';$('solitaireScore').textContent='0';$('solitaireInfo').textContent='Draw cards. Match higher numbers for points.'}
-function solitaireDraw(){if(!deck.length)return $('solitaireInfo').textContent='Deck empty! Restart.';const c=deck.pop();$('solitaireWaste').textContent=(c.n===1?'A':c.n===11?'J':c.n===12?'Q':c.n===13?'K':c.n)+c.s;solScore+=c.n; $('solitaireScore').textContent=solScore;addXP(2)}
+function shoeSearch(){let q=$('shoeSearch').value.trim()||'sneakers';$('shoeResults').innerHTML=`<div class="card"><h3>👟 ${esc(q)}</h3><p>Search current shoe results on the web.</p><button onclick="window.open('https://www.google.com/search?tbm=shop&q='+encodeURIComponent(q),'_blank')">Search Shoes</button></div>`}
+function pokeSearch(){let q=$('pokeSearch').value.trim()||'Pokemon';$('pokeResults').innerHTML=`<div class="card"><h3>⚡ ${esc(q)}</h3><p>Search Pokémon information.</p><button onclick="window.open('https://www.google.com/search?q='+encodeURIComponent(q+' Pokemon'),'_blank')">Search Pokémon</button></div>`}
+function savePoke(){let n=$('favPoke').value.trim();if(n)localStorage.setItem('foxiePoke',n);renderFavs()}function randomPoke(){let a=['Pikachu','Eevee','Charizard','Lucario','Gengar','Greninja','Mewtwo','Bulbasaur','Squirtle','Jigglypuff'];$('randomPokeOut').textContent=a[Math.floor(Math.random()*a.length)]}
 
-let highWins=0;
-function resetHighCard(){$('playerCard').textContent='?';$('foxieCard').textContent='?';$('highInfo').textContent='Draw a card.';highWins=0}
-function cardText(n){return n===1?'A':n===11?'J':n===12?'Q':n===13?'K':n}
-function playHighCard(){const a=1+Math.floor(Math.random()*13),b=1+Math.floor(Math.random()*13);$('playerCard').textContent=cardText(a);$('foxieCard').textContent=cardText(b);if(a>b){$('highInfo').textContent='You win! 🎉';highWins++;addXP(15)}else if(a<b)$('highInfo').textContent='Foxie wins 🤖';else $('highInfo').textContent='Draw!';}
+function collection(key,title,textKey){let a=get(key,[]);$(''+textKey+'List').innerHTML=a.map((x,i)=>`<div class="item"><h3>${esc(x.title)}</h3><p>${esc(x.text||'')}</p><button class="danger" onclick="del('${key}',${i},${textKey}Render)">Delete</button></div>`).join('')||'<div class="muted">Nothing saved yet.</div>'}
+function addNote(){let t=$('noteTitle').value.trim(),x=$('noteText').value.trim();if(!t)return;push('foxieNotes',{title:t,text:x});$('noteTitle').value=$('noteText').value='';renderNotes()}function renderNotes(){collection('foxieNotes','Notes','notes')}
+function addIdea(){let t=$('ideaTitle').value.trim(),x=$('ideaText').value.trim();if(!t)return;push('foxieIdeas',{title:t,text:x});$('ideaTitle').value=$('ideaText').value='';renderIdeas()}function renderIdeas(){collection('foxieIdeas','Ideas','ideas')}
+function addBook(){let t=$('bookTitle').value.trim(),a=$('bookAuthor').value.trim(),x=$('bookNotes').value.trim();if(!t)return;push('foxieBooks',{title:t,text:(a?'Author: '+a+'\n':'')+x});$('bookTitle').value=$('bookAuthor').value=$('bookNotes').value='';renderBooks()}function renderBooks(){collection('foxieBooks','Books','books')}
+function addRecipe(){let t=$('recipeTitle').value.trim(),i=$('recipeIngredients').value.trim(),x=$('recipeSteps').value.trim();if(!t)return;push('foxieRecipes',{title:t,text:'Ingredients: '+i+'\nSteps: '+x});$('recipeTitle').value=$('recipeIngredients').value=$('recipeSteps').value='';renderRecipes()}function renderRecipes(){collection('foxieRecipes','Recipes','recipes')}
+function addMovie(){let t=$('movieTitle').value.trim(),y=$('movieYear').value.trim(),x=$('movieNotes').value.trim();if(!t)return;push('foxieMovies',{title:t,text:(y?'Year: '+y+'\n':'')+x});$('movieTitle').value=$('movieYear').value=$('movieNotes').value='';renderMovies()}function renderMovies(){collection('foxieMovies','Movies','movies')}
+function push(k,v){let a=get(k,[]);a.push(v);set(k,a)}function del(k,i,fn){let a=get(k,[]);a.splice(i,1);set(k,a);fn()}
+function notesRender(){renderNotes()}function ideasRender(){renderIdeas()}function booksRender(){renderBooks()}function recipesRender(){renderRecipes()}function moviesRender(){renderMovies()}
 
-let racerTimer=null,racerScoreVal=0,racerX=50,enemies=[];
-function startRacer(){
-  clearInterval(racerTimer);racerScoreVal=0;racerX=50;enemies=[];$('racerScore').textContent='0';$('playerCar').style.left='50%';
-  const arena=$('racerArena');arena.querySelectorAll('.enemyCar').forEach(e=>e.remove());
-  racerTimer=setInterval(()=>{
-    racerScoreVal++;$('racerScore').textContent=racerScoreVal;
-    if(racerScoreVal%35===0)addXP(10);
-    if(Math.random()<.12){const e=document.createElement('div');e.className='enemyCar';e.textContent='🚗';e.style.left=(10+Math.random()*80)+'%';arena.appendChild(e);enemies.push({el:e,y:-60,x:parseFloat(e.style.left)})}
-    enemies.forEach(o=>{o.y+=5;o.el.style.top=o.y+'px';if(o.y>330){o.el.remove()}});
-    enemies=enemies.filter(o=>o.y<=330);
-    if(enemies.some(o=>o.y>270&&o.x>racerX-9&&o.x<racerX+9)){clearInterval(racerTimer);toast('💥 Crash! Score '+racerScoreVal);addXP(Math.min(25,racerScoreVal));}
-  },100);
-}
-document.addEventListener('keydown',e=>{
-  if(!['ArrowLeft','ArrowRight','a','d','A','D'].includes(e.key))return;
-  if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A')racerX=Math.max(8,racerX-4);
-  else racerX=Math.min(92,racerX+4);
-  if($('playerCar'))$('playerCar').style.left=racerX+'%';
-});
-$('racerArena')?.addEventListener('pointerdown',e=>{const r=$('racerArena').getBoundingClientRect();racerX=((e.clientX-r.left)/r.width)*100;$('playerCar').style.left=racerX+'%'});
+function calculate(){let x=$('calc').value.trim();if(!/^[0-9+\-*/().\s%]+$/.test(x))return $('calcOut').textContent='Invalid expression';try{$('calcOut').textContent=Function('return '+x)()}catch{$('calcOut').textContent='Error'}}
+function webSearch(s){let q=$('searchQ').value.trim();if(!q)return;let base=s==='Google'?'https://www.google.com/search?q=':s==='YouTube'?'https://www.youtube.com/results?search_query=':'https://en.wikipedia.org/w/index.php?search=';window.open(base+encodeURIComponent(q),'_blank')}
+let stream=null;async function startCamera(){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});$('camera').srcObject=stream;$('selfieStatus').textContent='Camera ready.'}catch(e){$('selfieStatus').textContent='Camera permission was not granted.'}}function stopCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('camera').srcObject=null}function takePhoto(){let c=$('photo'),v=$('camera');if(!stream)return alert('Start camera first.');c.getContext('2d').drawImage(v,0,0,c.width,c.height);$('selfieStatus').textContent='Photo captured locally.'}function uploadPhoto(e){let f=e.target.files[0];if(f)$('selfieStatus').textContent='Uploaded '+f.name+' locally for preview.'}
 
-let pHP=100,eHP=100;
-function resetFighter(){pHP=100;eHP=100;renderFighter();$('fighterInfo').textContent='Fight!'}
-function renderFighter(){$('playerHP').style.width=pHP+'%';$('enemyHP').style.width=eHP+'%';$('playerHPText').textContent=pHP+' HP';$('enemyHPText').textContent=eHP+' HP'}
-function fighterAttack(){
-  if(pHP<=0||eHP<=0)return;let dmg=8+Math.floor(Math.random()*13);eHP=Math.max(0,eHP-dmg);renderFighter();
-  if(eHP===0){$('fighterInfo').textContent='YOU WIN! 🦊🔥';addXP(35);return}
-  setTimeout(fighterEnemyTurn,250)
-}
-function fighterHeal(){if(pHP<=0||eHP<=0)return;pHP=Math.min(100,pHP+12);renderFighter();setTimeout(fighterEnemyTurn,250)}
-function fighterEnemyTurn(){
-  const d=$('fighterDifficulty').value, max=d==='Hard'?22:d==='Easy'?12:17;
-  pHP=Math.max(0,pHP-(6+Math.floor(Math.random()*max)));renderFighter();if(pHP===0)$('fighterInfo').textContent='Foxie Bot wins. Try again!';else $('fighterInfo').textContent='Your turn!'
-}
+function theme(g,b){document.documentElement.style.setProperty('--g',g);document.documentElement.style.setProperty('--bg',b);document.body.style.background='radial-gradient(circle at 50% 0,#102014 0,'+b+' 55%,#000 100%)';localStorage.setItem('foxieTheme',JSON.stringify({g,b}))}
+function postAnnouncement(){let a=$('announcement').value.trim();if(!a)return;$('adminNotice').innerHTML='<div class="notice">📢 '+esc(a)+'</div>';localStorage.setItem('foxieAnnouncement',a)}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
-function createRoom(){
-  const name=$('roomName').value.trim()||'Foxie Room',game=$('roomGame').value;
-  const rooms=JSON.parse(localStorage.getItem('foxieRooms')||'[]');rooms.push({id:Date.now(),name,game,host:foxieUserName||'Player',players:1});localStorage.setItem('foxieRooms',JSON.stringify(rooms));renderRooms();$('roomName').value='';addXP(5)
-}
-function joinRoom(id){const rooms=JSON.parse(localStorage.getItem('foxieRooms')||'[]');const r=rooms.find(x=>x.id===id);if(r){r.players++;localStorage.setItem('foxieRooms',JSON.stringify(rooms));renderRooms();toast('Joined '+r.name)}}
-function renderRooms(){const rooms=JSON.parse(localStorage.getItem('foxieRooms')||'[]');$('roomList').innerHTML=rooms.length?rooms.map(r=>`<div class="room"><div class="row between"><b>${esc(r.name)}</b><span class="pill">${esc(r.game)}</span></div><p class="muted small">Host: ${esc(r.host)} · ${r.players} player(s)</p><button class="btn" onclick="joinRoom(${r.id})">Join</button></div>`).join(''):'<div class="muted">No rooms. Create one!</div>'}
-function renderSpectator(){
-  const rooms=JSON.parse(localStorage.getItem('foxieRooms')||'[]');$('spectatorFeed').innerHTML=rooms.length?rooms.map(r=>`<div class="listItem">👀 <b>${esc(r.name)}</b><br><span class="muted small">${esc(r.game)} · ${r.players} player(s)</span></div>`).join(''):'<div class="muted">No live rooms yet.</div>';
-  const msgs=JSON.parse(localStorage.getItem('foxieSpecChat')||'[]');$('specChat').innerHTML=msgs.map(m=>`<div class="msg"><b>${esc(m.name)}</b> ${esc(m.text)}</div>`).join('');
-}
-function sendSpecChat(){const t=$('specInput').value.trim();if(!t)return;const a=JSON.parse(localStorage.getItem('foxieSpecChat')||'[]');a.push({name:foxieUserName||'Player',text:t});localStorage.setItem('foxieSpecChat',JSON.stringify(a.slice(-80)));$('specInput').value='';renderSpectator()}
-
-let calc='0';
-function calcPress(x){if(calc==='0'&&/[0-9.]/.test(x))calc='';calc+=x;$('calcDisplay').value=calc}
-function calcClear(){calc='0';$('calcDisplay').value=calc}
-function calcBack(){calc=calc.length>1?calc.slice(0,-1):'0';$('calcDisplay').value=calc}
-function calcEquals(){try{if(!/^[0-9+\-*/.() ]+$/.test(calc))throw Error();calc=String(Function('return '+calc)());if(!Number.isFinite(+calc))throw Error();$('calcDisplay').value=calc}catch{calc='0';$('calcDisplay').value='Error';setTimeout(calcClear,800)}}
-
-let cameraStream=null;
-async function startCamera(){try{cameraStream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});$('cameraVideo').srcObject=cameraStream;$('cameraInfo').textContent='Camera is on.'}catch(e){$('cameraInfo').textContent='Camera could not start. Check browser permission.'}}
-function stopCamera(){if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;$('cameraVideo').srcObject=null}
-function takePhoto(){if(!$('cameraVideo').srcObject)return toast('Start the camera first.');const v=$('cameraVideo'),c=$('photoCanvas');c.width=v.videoWidth||640;c.height=v.videoHeight||480;c.getContext('2d').drawImage(v,0,0,c.width,c.height);$('photoPreview').src=c.toDataURL('image/png');$('photoPreview').classList.remove('hidden');addXP(10)}
-function previewUpload(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('photoPreview').src=r.result;$('photoPreview').classList.remove('hidden')};r.readAsDataURL(f);addXP(5)}
-
-function webSearch(){const q=$('searchInput').value.trim();if(q)window.open('https://www.google.com/search?q='+encodeURIComponent(q),'_blank')}
-function quickSearch(site){const q=prompt('What do you want to search?');if(!q)return;const urls={Google:'https://www.google.com/search?q=',YouTube:'https://www.youtube.com/results?search_query=',Wikipedia:'https://en.wikipedia.org/w/index.php?search='};window.open(urls[site]+encodeURIComponent(q),'_blank')}
-function openMap(url){window.open(url,'_blank')}
-
-const themes={
-  green:{g:'#00ff66',g2:'#19c85a',bg:'#020504',panel:'#07110b'},
-  blue:{g:'#39a9ff',g2:'#1976d2',bg:'#02050a',panel:'#07101a'},
-  purple:{g:'#d35cff',g2:'#8e32c7',bg:'#07020a',panel:'#11071a'},
-  red:{g:'#ff405d',g2:'#c51e3b',bg:'#090203',panel:'#180609'},
-  gold:{g:'#ffd34d',g2:'#b9951e',bg:'#080702',panel:'#151107'}
-};
-function setTheme(name){
-  if(name==='reset')name='green';const t=themes[name]||themes.green;
-  for(const [k,v] of Object.entries({'--green':t.g,'--green2':t.g2,'--bg':t.bg,'--panel':t.panel}))document.documentElement.style.setProperty(k,v);
-  localStorage.setItem('foxieTheme',name);toast('Theme changed ✨')
-}
-function loadTheme(){setTheme(localStorage.getItem('foxieTheme')||'green')}
-
-function dailyReward(){
-  const today=new Date().toISOString().slice(0,10),last=localStorage.getItem('foxieDaily');
-  if(last===today)return toast('You already collected today’s reward!');
-  localStorage.setItem('foxieDaily',today);coins+=100;xp+=25;saveStats();toast('🎁 +100 coins and +25 XP!')
-}
-function achievements(){
-  const arr=[];
-  if(gamesPlayed>=1)arr.push('🎮 First Game');
-  if(gamesPlayed>=10)arr.push('🔥 10 Games');
-  if(xp>=100)arr.push('⭐ Level 2');
-  if(coins>=500)arr.push('💰 Coin Collector');
-  if(foxieUserName)arr.push('🦊 Foxie Member');
-  $('achievementList').innerHTML=(arr.length?arr:['🔒 Play games to unlock achievements']).map(x=>`<div class="listItem">${x}</div>`).join('');
-}
-
-function leaderboardSeed(){
-  return [
-    {name:'NovaFox',xp:1280,games:41},{name:'Pixel',xp:930,games:31},{name:'Glitch',xp:710,games:27},
-    {name:foxieUserName||'Player',xp,games:gamesPlayed},{name:'StarByte',xp:540,games:19},{name:'Rex',xp:420,games:16}
-  ];
-}
-function renderLeaderboard(period='week'){
-  const arr=leaderboardSeed().sort((a,b)=>b.xp-a.xp);$('leaderboardBody').innerHTML=arr.map((x,i)=>`<tr><td>${i+1}</td><td>🦊 ${esc(x.name)}</td><td>${x.xp}</td><td>${x.games}</td></tr>`).join('');
-}
-function renderAdmin(){$('adminStats').innerHTML=`<div class="list"><div class="listItem">👤 User: <b>${esc(foxieUserName||'Player')}</b></div><div class="listItem">⭐ XP: <b>${xp}</b></div><div class="listItem">💰 Coins: <b>${coins}</b></div><div class="listItem">🎮 Games played: <b>${gamesPlayed}</b></div><div class="listItem">🏆 Level: <b>${level()}</b></div></div>`}
-function adminAnnounce(){const m=prompt('Announcement text?');if(m){localStorage.setItem('foxieAnnouncement',m);toast('Announcement saved.');}}
-
-function resetLocalFoxie(){
-  if(!confirm('Reset Foxie data on this device?'))return;
-  ['foxieUserName','foxieXP','foxieCoins','foxieGamesPlayed','foxieChat','foxieFriends','foxieVideos','foxieRooms','foxieSpecChat','foxieDaily'].forEach(k=>localStorage.removeItem(k));
-  location.reload();
-}
-
-function startGame(game){
-  document.querySelectorAll('.game').forEach(x=>x.classList.remove('active'));
-  const el=$(game+'Game');if(el)el.classList.add('active');
-  $('gameStatus').textContent='Playing '+game;
-  gamesPlayed++;localStorage.setItem('foxieGamesPlayed',gamesPlayed);updateStats();achievements();
-  if(game==='ttt')resetTTT();if(game==='chess')resetChess();if(game==='drawing')setupDrawing();if(game==='solitaire')resetSolitaire();if(game==='highcard')resetHighCard();if(game==='racer')startRacer();if(game==='fighter')resetFighter();
-  el?.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-window.addEventListener('storage',()=>{renderChat();renderFriends();renderRooms();renderUsers();renderSpectator()});
-
-document.addEventListener('DOMContentLoaded',()=>{
-  particles();updateFoxieNameUI();updateStats();achievements();renderChat();renderUsers();renderFriends();renderVideos();renderRooms();renderSpectator();renderLeaderboard('week');setupDrawing();loadTheme();resetTTT();resetChess();resetSolitaire();resetHighCard();resetFighter();renderAdmin();
-  if(!foxieUserName){$('nameModal').classList.add('show');setTimeout(()=>$('nameInput').focus(),100)}
-  $('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')saveFoxieName()});
-});
+function spawnParticles(){let p=$('particles');for(let i=0;i<180;i++){let s=document.createElement('span');s.className='particle';s.style.left=Math.random()*100+'%';s.style.animationDuration=(5+Math.random()*12)+'s';s.style.animationDelay=(-Math.random()*15)+'s';s.style.width=s.style.height=(1+Math.random()*4)+'px';s.style.setProperty('--drift',(Math.random()*120-60)+'px');p.appendChild(s)}}
+spawnParticles();refresh();
 </script>
 </body>
 </html>
-'''
-
-path="/mnt/data/index.html"
-with open(path,"w",encoding="utf-8") as f:
-    f.write(html)
-print(f"Created {path} ({len(html):,} characters).")
