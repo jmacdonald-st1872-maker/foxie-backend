@@ -1,1 +1,1101 @@
-<!doctype html> <html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width,initial-scale=1"> <title>Foxie — JJ's AI</title> <style> :root{   --green:#39ff88;   --bg:#05080a;   --panel:#0b1115;   --panel2:#0e171d;   --text:#eafff1;   --muted:#8ba398;   --line:#1b2a31;   --danger:#ff526d;   --gold:#ffd85c; } *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif} body{   background-image:     linear-gradient(rgba(57,255,136,.025) 1px,transparent 1px),     linear-gradient(90deg,rgba(57,255,136,.025) 1px,transparent 1px);   background-size:32px 32px; } button,input,select,textarea{font:inherit} button{cursor:pointer} a{color:var(--green)} .app{display:flex;min-height:100vh} .sidebar{   width:245px;position:fixed;left:0;top:0;bottom:0;   background:rgba(5,9,11,.96);border-right:1px solid var(--line);   padding:18px 12px;z-index:20;overflow:auto } .logo{font-size:27px;font-weight:900;letter-spacing:.5px;margin:2px 8px 18px} .logo span{color:var(--green);text-shadow:0 0 14px rgba(57,255,136,.5)} .nav{display:grid;gap:6px} .nav button{   border:1px solid transparent;background:transparent;color:#cfe2d7;   padding:11px 12px;border-radius:10px;text-align:left } .nav button:hover,.nav button.active{   background:#0b1713;border-color:#214832;color:var(--green);   box-shadow:0 0 14px rgba(57,255,136,.06) } .creator{   position:fixed;right:18px;top:14px;font-size:11px;color:#789086;z-index:30;   display:flex;align-items:center;gap:8px } .main{margin-left:245px;width:calc(100% - 245px);padding:25px;max-width:1500px} .topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px} .clock{font-variant-numeric:tabular-nums;color:var(--green);font-weight:800} .page{display:none}.page.active{display:block} .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px} h1,h2,h3,h4{margin-top:0} .box{   background:linear-gradient(180deg,rgba(15,23,28,.97),rgba(8,13,16,.97));   border:1px solid var(--line);border-radius:16px;padding:17px;   box-shadow:0 0 25px rgba(0,0,0,.2) } .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px} .card{padding:16px;border:1px solid #1c3037;border-radius:14px;background:#091014} .card h3{margin-bottom:7px}.muted{color:var(--muted)} .btn{   border:1px solid #277241;background:#0b2115;color:var(--green);   padding:10px 14px;border-radius:9px;font-weight:800 } .btn:hover{filter:brightness(1.2);box-shadow:0 0 15px rgba(57,255,136,.12)} .btn.secondary{background:#11191e;color:#d7e4dc;border-color:#2a3941} .btn.danger{background:#260d13;color:#ff7b8d;border-color:#67303b} .btn.small{padding:7px 10px;font-size:12px} .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center} .input,.select,textarea{   width:100%;background:#05090b;border:1px solid #26363e;color:#eafff1;   border-radius:9px;padding:11px;outline:none } .input:focus,.select:focus,textarea:focus{border-color:var(--green)} .form{display:flex;gap:8px}.form>*:first-child{flex:1} .badge{   display:inline-block;border:1px solid #2a5b3b;background:#0b2115;color:var(--green);   padding:4px 8px;border-radius:999px;font-size:11px;font-weight:900 } .badge.red{color:#ff7588;background:#270c12;border-color:#66303b} .spacer{height:12px} .chat{height:320px;overflow:auto;background:#05090b;border:1px solid #1b2a31;border-radius:12px;padding:12px} .msg{margin-bottom:10px}.msg b{color:var(--green)} .video{min-height:120px;display:grid;place-items:center;border:1px dashed #2c4540;border-radius:12px;background:#06100b} .calc{max-width:480px}.calcDisplay{font-size:28px;text-align:right;margin-bottom:10px} .calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px} .calcgrid button{padding:17px;border-radius:10px;border:1px solid #26363e;background:#0b1419;color:#eafff1;font-weight:800} .calcgrid button:hover{border-color:var(--green);color:var(--green)} .calcgrid .op{color:var(--green);background:#0b1c13} .board{display:grid;grid-template-columns:repeat(8,1fr);max-width:560px} .board button{aspect-ratio:1;border:0;font-size:clamp(24px,5vw,48px)} .board button.light{background:#c9e0cc}.board button.dark{background:#3a6047} .board button.selected{outline:4px solid var(--green);outline-offset:-4px} canvas{max-width:100%;border:1px solid #24353c;border-radius:12px;background:#05090b} .room{padding:13px;border:1px solid #22353c;border-radius:12px;background:#091116} .roomhead{display:flex;justify-content:space-between;gap:8px;align-items:center} .spectatorbar{display:flex;gap:6px;flex-wrap:wrap} .spectator{padding:5px 8px;background:#101b20;border:1px solid #2a3940;border-radius:999px;font-size:11px} .chatmini{height:160px;overflow:auto;background:#05090b;border:1px solid #1b2a31;border-radius:10px;padding:9px} .gameTabs{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.game{display:none}.game.active{display:block} .chessWrap{display:grid;grid-template-columns:minmax(320px,650px) minmax(250px,1fr);gap:18px;align-items:start} .chessShell{background:#090e12;border:1px solid #27343d;border-radius:18px;padding:14px;box-shadow:0 0 30px rgba(57,255,136,.08)} .chessTop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px} .chessPlayer{display:flex;align-items:center;gap:9px;font-weight:800}.chessDot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)} .chessClock{font-variant-numeric:tabular-nums;background:#05080a;border:1px solid #26343d;border-radius:9px;padding:8px 11px;color:#fff} .chessBoardOuter{position:relative;max-width:650px;margin:auto;padding:26px 26px 26px 26px;background:#05080a;border:1px solid #25313a;border-radius:14px} .chessBoard{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden;border-radius:4px;box-shadow:0 0 0 2px rgba(255,255,255,.05),0 0 30px rgba(57,255,136,.12)} .chessSq{position:relative;display:grid;place-items:center;cursor:pointer;user-select:none;aspect-ratio:1;transition:filter .12s} .chessSq.light{background:var(--chess-light,#d9ead7);color:#111}.chessSq.dark{background:var(--chess-dark,#315b42);color:#fff} .chessSq:hover{filter:brightness(1.08)}.chessSq.selected{box-shadow:inset 0 0 0 4px var(--green)} .chessSq.move::after{content:"";width:22%;height:22%;border-radius:50%;background:rgba(57,255,136,.65);box-shadow:0 0 12px rgba(57,255,136,.6)} .chessSq.capture::after{content:"";position:absolute;inset:6%;border:4px solid rgba(255,90,110,.8);border-radius:50%} .chessSq.check{animation:chessPulse .8s infinite alternate} @keyframes chessPulse{from{box-shadow:inset 0 0 0 4px rgba(255,60,80,.25)}to{box-shadow:inset 0 0 0 5px rgba(255,60,80,.9),inset 0 0 25px rgba(255,60,80,.35)}} .chessPiece{font-size:clamp(29px,6vw,62px);line-height:1;text-shadow:0 2px 2px rgba(0,0,0,.38),0 0 10px rgba(255,255,255,.08);z-index:2} .chessPiece.white{color:#fff}.chessPiece.black{color:#111} .coordFile,.coordRank{position:absolute;font-size:10px;font-weight:900;opacity:.72;z-index:3}.coordFile{right:4px;bottom:2px}.coordRank{left:4px;top:2px} .chessSide{display:grid;gap:12px}.chessPanel{background:#0d1419;border:1px solid #27343d;border-radius:15px;padding:15px} .chessPanel h4{margin:0 0 10px}.colorGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.colorGrid label{font-size:12px;color:var(--muted)}.colorGrid input[type=color]{width:100%;height:42px;margin-top:5px;border:1px solid #33414a;border-radius:8px;background:#080b0e;padding:3px} .themePresets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.themePresets button{min-height:55px;border-radius:10px;border:1px solid #33414a;cursor:pointer;color:#fff;font-weight:800} .chessMoves{height:150px;overflow:auto;background:#070b0e;border:1px solid #202b33;border-radius:10px;padding:9px;font-size:13px} .chessBottom{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap} .nameModal{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px} .nameCard{width:min(460px,100%);background:#0b1115;border:1px solid #39ff88;border-radius:20px;padding:28px;box-shadow:0 0 45px rgba(57,255,136,.2);text-align:center} .nameCard h2{font-size:28px;margin:0 0 8px}.nameCard p{color:var(--muted);margin:0 0 18px} .nameInput{width:100%;box-sizing:border-box;background:#05080a;border:1px solid #2b3942;color:#fff;padding:14px;border-radius:11px;font-size:16px;outline:none} .nameInput:focus{border-color:#39ff88;box-shadow:0 0 14px rgba(57,255,136,.16)} .nameError{color:#ff6478;font-size:13px;min-height:18px;margin:8px 0} .userBadge{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid #26353e;border-radius:999px;background:#091015;font-size:12px} @media(max-width:950px){.chessWrap{grid-template-columns:1fr}} @media(max-width:800px){ .sidebar{width:72px;padding:12px 8px}.logo{font-size:0;text-align:center}.logo:first-letter{font-size:28px} .nav button{font-size:0;text-align:center}.nav button::first-letter{font-size:20px} .main{margin-left:72px;width:calc(100% - 72px);padding:15px}.creator{display:none} } </style> </head> <body> <div id="nameModal" class="nameModal">   <div class="nameCard">     <div style="font-size:48px">🦊</div>     <h2>Welcome to Foxie</h2>     <p>What should we call you?</p>     <input id="nameInput" class="nameInput" maxlength="24" autocomplete="nickname" placeholder="Enter your name..." />     <div id="nameError" class="nameError"></div>     <button class="btn" style="width:100%" onclick="saveFoxieName()">Enter Foxie 🚀</button>     <div class="muted" style="font-size:11px;margin-top:12px">Your name is saved on this device only.</div>   </div> </div>  <div class="creator">   Jayden Wayne Macdonald created this   <span class="userBadge">🦊 <span data-foxie-name>Player</span></span> </div>  <div class="app"> <aside class="sidebar">   <div class="logo">🦊 <span>FOXIE</span></div>   <div class="nav">     <button class="active" onclick="showPage('home',this)">🏠 Home</button>     <button onclick="showPage('users',this)">👥 Users</button>     <button onclick="showPage('friends',this)">🤝 Friends</button>     <button onclick="showPage('vids',this)">🎬 Foxie Vids</button>     <button onclick="showPage('games',this)">🎮 Games</button>     <button onclick="showPage('multiplayer',this)">🌐 Multiplayer</button>     <button onclick="showPage('spectator',this)">👀 Spectator Room</button>     <button onclick="showPage('calculator',this)">🧮 Calculator</button>     <button onclick="showPage('selfies',this)">📸 Selfies</button>     <button onclick="showPage('search',this)">🔎 Search</button>     <button onclick="showPage('maps',this)">🗺️ Maps & Traffic</button>     <button onclick="showPage('themes',this)">🎨 Themes</button>     <button onclick="showPage('admin',this)">👑 JJ Admin</button>   </div> </aside>  <main class="main">   <div class="topbar">     <div>       <h1 style="margin-bottom:3px">🦊 Foxie</h1>       <div class="muted">Your hacker-style Foxie hub.</div>     </div>     <div class="clock" id="clock">--:--:--</div>   </div>    <section id="home" class="page active">     <div class="box">       <div class="section-title">         <div>           <h2>Welcome to Foxie 🦊</h2>           <p class="muted">Games, chat, friends, videos, tools and more.</p>         </div>         <span class="badge">ONLINE</span>       </div>       <div class="grid" style="margin-top:15px">         <div class="card"><h3>🎮 Games</h3><p class="muted">Chess, Tic-Tac-Toe, Racer, Foxie Fighter, cards and more.</p><button class="btn" onclick="showPage('games')">Play games</button></div>         <div class="card"><h3>🌐 Multiplayer</h3><p class="muted">Create rooms and prepare for real online multiplayer.</p><button class="btn" onclick="showPage('multiplayer')">Open lobby</button></div>         <div class="card"><h3>👀 Spectator Room</h3><p class="muted">Watch rooms and chat with spectators.</p><button class="btn" onclick="showPage('spectator')">Spectate</button></div>         <div class="card"><h3>🧮 Calculator</h3><p class="muted">Quick calculator built into Foxie.</p><button class="btn" onclick="showPage('calculator')">Calculate</button></div>       </div>     </div>      <div class="grid" style="margin-top:14px">       <div class="box">         <h3>💬 Foxie Chat</h3>         <div id="chat" class="chat"></div>         <div class="form" style="margin-top:8px">           <input id="chatInput" class="input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()">           <button class="btn" onclick="sendChat()">Send</button>         </div>       </div>       <div class="box">         <h3>⚡ Quick links</h3>         <div class="grid">           <button class="btn" onclick="showPage('games')">🎮 Games</button>           <button class="btn" onclick="showPage('search')">🔎 Search</button>           <button class="btn" onclick="showPage('maps')">🗺️ Maps</button>           <button class="btn" onclick="showPage('selfies')">📸 Selfies</button>         </div>       </div>     </div>   </section>    <section id="users" class="page">     <h2>👥 Users</h2>     <div class="box">       <div class="grid" id="usersGrid">         <div class="card"><h3>🦊 Foxie</h3><p class="muted">AI assistant</p><span class="badge">ONLINE</span></div>         <div class="card"><h3 data-foxie-name>Player</h3><p class="muted">You</p><span class="badge">ONLINE</span></div>       </div>     </div>   </section>    <section id="friends" class="page">     <h2>🤝 Friends</h2>     <div class="box">       <div class="form">         <input id="friendInput" class="input" placeholder="Enter a friend's username...">         <button class="btn" onclick="addFriend()">Add friend</button>       </div>       <div id="friendsList" class="grid" style="margin-top:13px"></div>     </div>   </section>    <section id="vids" class="page">     <h2>🎬 Foxie Vids</h2>     <div class="grid">       <div class="card video">🎬 Video 1<br><span class="muted">Your videos can go here.</span></div>       <div class="card video">🎬 Video 2<br><span class="muted">Add your own video links later.</span></div>       <div class="card video">🎬 Video 3<br><span class="muted">Foxie Vids area.</span></div>     </div>   </section>    <section id="games" class="page">     <div class="section-title">       <div><h2>🎮 Foxie Games</h2><p class="muted">Pick a game and play.</p></div>       <span class="badge">LEADERBOARDS</span>     </div>     <div class="gameTabs">       <button class="btn small" onclick="openGame('tictactoe')">⭕ Tic-Tac-Toe</button>       <button class="btn small" onclick="openGame('chess')">♟ Chess</button>       <button class="btn small" onclick="openGame('draw')">🎨 Drawing</button>       <button class="btn small" onclick="openGame('solitaire')">🃏 Solitaire</button>       <button class="btn small" onclick="openGame('cards')">🂡 High Card</button>       <button class="btn small" onclick="openGame('racer')">🏎 Racer</button>       <button class="btn small" onclick="openGame('fighter')">🥊 Foxie Fighter</button>     </div>      <div id="game-tictactoe" class="game active">       <div class="box">         <div class="section-title"><h3>⭕ Tic-Tac-Toe</h3><span class="badge">AI</span></div>         <div class="row"><label>Difficulty</label><select id="tttDifficulty" class="select" style="width:auto"><option>Easy</option><option selected>Medium</option><option>Hard</option></select><button class="btn" onclick="resetTTT()">Reset</button></div>         <div id="tttBoard" class="board" style="grid-template-columns:repeat(3,1fr);max-width:330px;margin-top:13px"></div>         <p id="tttStatus" class="muted"></p>       </div>     </div>      <div id="game-chess" class="game">       <div class="section-title"><div><h2 style="margin-bottom:4px">♟ Foxie Chess</h2><p class="muted">Chess.com-inspired layout with your own Foxie hacker theme. Customize every board colour.</p></div><span class="badge">FOXIE CHESS</span></div>       <div class="chessWrap">         <div class="chessShell">           <div class="chessTop">             <div class="chessPlayer"><span class="chessDot"></span> Foxie AI</div>             <div class="chessClock" id="aiClock">10:00</div>           </div>           <div class="chessBoardOuter">             <div id="chessBoard" class="chessBoard"></div>           </div>           <div class="chessTop" style="margin-top:10px">             <div class="chessPlayer"><span class="chessDot"></span> <span id="playerNameLabel">Player</span></div>             <div class="chessClock" id="playerClock">10:00</div>           </div>           <div class="chessBottom">             <span id="chessStatus" class="muted">Your move — White.</span>             <div class="row">               <button class="btn small" onclick="resetChess()">↻ New game</button>               <button class="btn small secondary" onclick="flipChess()">⇅ Flip board</button>             </div>           </div>         </div>         <div class="chessSide">           <div class="chessPanel">             <h4>🤖 AI difficulty</h4>             <select class="select" id="chessDifficulty" onchange="resetChess()">               <option>Easy</option><option selected>Medium</option><option>Hard</option>             </select>           </div>           <div class="chessPanel">             <h4>🎨 Board colours</h4>             <div class="colorGrid">               <label>Light square<input type="color" id="chessLight" value="#d9ead7" onchange="applyChessColors()"></label>               <label>Dark square<input type="color" id="chessDark" value="#315b42" onchange="applyChessColors()"></label>               <label>Glow / moves<input type="color" id="chessGlow" value="#39ff88" onchange="applyChessColors()"></label>               <label>Board frame<input type="color" id="chessFrame" value="#05080a" onchange="applyChessColors()"></label>             </div>             <div class="themePresets" style="margin-top:10px">               <button onclick="chessPreset('#d9ead7','#315b42','#39ff88','#05080a')">🟢 Hacker</button>               <button onclick="chessPreset('#d8e8ff','#24507a','#55a8ff','#07101a')">🔵 Cyber</button>               <button onclick="chessPreset('#eadcff','#593b78','#c27aff','#100719')">🟣 Glitch</button>               <button onclick="chessPreset('#ffe1e1','#7a2630','#ff5470','#16080b')">🔴 Red</button>               <button onclick="chessPreset('#eeeeee','#444444','#ffffff','#080808')">⚪ Classic</button>               <button onclick="chessPreset('#ffd8ef','#7a2856','#ff70c8','#160812')">🩷 Neon</button>             </div>           </div>           <div class="chessPanel">             <div class="section-title"><h4>📜 Moves</h4><span class="badge" id="moveCount">0</span></div>             <div class="chessMoves" id="chessMoves">No moves yet.</div>           </div>           <div class="chessPanel">             <h4>🧩 Hacker mode</h4>             <div class="row">               <button class="btn small" onclick="toggleChessGlow()">✨ Toggle glow</button>               <button class="btn small secondary" onclick="toggleChessCoords()">🔢 Coordinates</button>             </div>           </div>         </div>       </div>     </div>      <div id="game-draw" class="game">       <div class="box">         <h3>🎨 Foxie Drawing Pad</h3>         <div class="row">           <label>Brush <input id="brushSize" type="range" min="1" max="30" value="5"></label>           <label>Colour <input id="drawColor" type="color" value="#39ff88"></label>           <button class="btn small" onclick="clearCanvas()">Clear</button>         </div>         <canvas id="drawCanvas" width="800" height="500" style="margin-top:12px"></canvas>       </div>     </div>      <div id="game-solitaire" class="game">       <div class="box">         <h3>🃏 Foxie Solitaire</h3>         <p class="muted">Mini solitaire-style card challenge.</p>         <div class="row"><button class="btn" onclick="newSolitaire()">New game</button><span id="solitaireStatus" class="muted"></span></div>         <div id="solitaireCards" class="grid" style="margin-top:13px"></div>       </div>     </div>      <div id="game-cards" class="game">       <div class="box">         <h3>🂡 High Card</h3>         <p class="muted">Draw a card against Foxie AI.</p>         <div class="row">           <button class="btn" onclick="playHighCard()">Draw cards</button>           <span id="highCardResult" class="muted">Ready.</span>         </div>         <div class="grid" style="margin-top:14px">           <div class="card"><h3 id="yourCard">?</h3><p class="muted">You</p></div>           <div class="card"><h3 id="aiCard">?</h3><p class="muted">Foxie AI</p></div>         </div>       </div>     </div>      <div id="game-racer" class="game">       <div class="box">         <div class="section-title"><h3>🏎 Foxie Racer</h3><span class="badge">ARCADE</span></div>         <p class="muted">Use ← → or A/D to move. Avoid the blocks.</p>         <canvas id="racerCanvas" width="600" height="420"></canvas>         <div class="row" style="margin-top:10px"><button class="btn" onclick="startRacer()">Start race</button><span id="racerScore" class="muted">Score: 0</span></div>       </div>     </div>      <div id="game-fighter" class="game">       <div class="box">         <div class="section-title"><h3>🥊 Foxie Fighter</h3><span class="badge">ORIGINAL</span></div>         <p class="muted">Original arcade-style fighter. No copied characters or assets.</p>         <div class="row">           <label>AI <select id="fighterDifficulty" class="select" style="width:auto"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></label>           <button class="btn" onclick="resetFighter()">Start fight</button>         </div>         <canvas id="fighterCanvas" width="760" height="400" style="margin-top:12px"></canvas>         <p class="muted">Controls: A/D move · W jump · J punch · K kick</p>       </div>     </div>   </section>    <section id="multiplayer" class="page">     <div class="section-title"><div><h2>🌐 Multiplayer Lobby</h2><p class="muted">Room system prototype. Real cross-device multiplayer needs a backend/WebSocket server.</p></div><span class="badge">DEMO</span></div>     <div class="grid">       <div class="box">         <h3>Create room</h3>         <input id="roomName" class="input" placeholder="Room name">         <select id="roomGame" class="select" style="margin-top:8px">           <option>Chess</option><option>Tic-Tac-Toe</option><option>Foxie Fighter</option><option>Racer</option><option>Cards</option>         </select>         <button class="btn" style="margin-top:8px" onclick="createRoom()">Create room</button>       </div>       <div class="box">         <h3>Join by code</h3>         <input id="joinCode" class="input" placeholder="Room code">         <button class="btn" style="margin-top:8px" onclick="joinRoom()">Join room</button>       </div>     </div>     <div class="box" style="margin-top:13px">       <div class="section-title"><h3>Rooms</h3><button class="btn small secondary" onclick="renderRooms()">Refresh</button></div>       <div id="roomsList" class="grid"></div>     </div>   </section>    <section id="spectator" class="page">     <div class="section-title"><div><h2>👀 Spectator Room</h2><p class="muted">Watch a room and chat with other spectators.</p></div><span class="badge">LIVE</span></div>     <div class="grid">       <div class="box">         <div id="spectatorMatch" class="room live"><div class="roomhead"><b>No live match selected</b><span class="badge red">WAITING</span></div><p class="muted">Create a multiplayer room, then choose “Spectate”.</p></div>         <div class="spacer"></div>         <div class="spectatorbar" id="spectatorList"></div>       </div>       <div class="box">         <h3>💬 Spectator Chat</h3>         <div id="spectatorChat" class="chatmini"></div>         <div class="form"><input id="spectatorInput" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendSpectator()"><button onclick="sendSpectator()">Send</button></div>       </div>     </div>   </section>    <section id="calculator" class="page">     <h2>🧮 Calculator</h2>     <div class="box calc">       <input id="calcDisplay" class="input calcDisplay" readonly value="0">       <div class="calcgrid">         <button onclick="calc('7')">7</button><button onclick="calc('8')">8</button><button onclick="calc('9')">9</button><button class="op" onclick="calc('/')">÷</button>         <button onclick="calc('4')">4</button><button onclick="calc('5')">5</button><button onclick="calc('6')">6</button><button class="op" onclick="calc('*')">×</button>         <button onclick="calc('1')">1</button><button onclick="calc('2')">2</button><button onclick="calc('3')">3</button><button class="op" onclick="calc('-')">−</button>         <button onclick="calc('0')">0</button><button onclick="calc('.')">.</button><button onclick="calc('C')">C</button><button class="op" onclick="calc('+')">+</button>         <button style="grid-column:span 4" class="op" onclick="calc('=')">=</button>       </div>     </div>   </section>    <section id="selfies" class="page">     <h2>📸 Selfies</h2>     <div class="grid">       <div class="box">         <h3>Camera</h3>         <video id="camera" autoplay playsinline style="width:100%;border-radius:12px;background:#000"></video>         <div class="row" style="margin-top:8px"><button class="btn" onclick="startCamera()">Start camera</button><button class="btn" onclick="takeSelfie()">Take selfie</button></div>         <canvas id="selfieCanvas" style="display:none"></canvas>       </div>       <div class="box">         <h3>Upload selfie</h3>         <input id="selfieUpload" type="file" accept="image/*" class="input" onchange="loadSelfie(event)">         <div id="selfieGallery" class="grid" style="margin-top:12px"></div>       </div>     </div>   </section>    <section id="search" class="page">     <h2>🔎 Search</h2>     <div class="box">       <div class="form"><input id="searchInput" class="input" placeholder="Search the web..."><button class="btn" onclick="webSearch()">Search</button></div>       <p class="muted" style="margin-top:12px">Foxie can open your search in a new tab. A real built-in search API can be connected later.</p>     </div>   </section>    <section id="maps" class="page">     <h2>🗺️ Maps & Traffic</h2>     <div class="box">       <p class="muted">Open maps or search for a place.</p>       <div class="form"><input id="mapInput" class="input" placeholder="Place or address"><button class="btn" onclick="openMaps()">Open maps</button></div>     </div>   </section>    <section id="themes" class="page">     <h2>🎨 Themes</h2>     <div class="box">       <div class="grid">         <button class="card" onclick="setTheme('#39ff88','#05080a')">🟢 Hacker Green</button>         <button class="card" onclick="setTheme('#55a8ff','#06101a')">🔵 Cyber Blue</button>         <button class="card" onclick="setTheme('#c27aff','#100719')">🟣 Purple Glitch</button>         <button class="card" onclick="setTheme('#ff5470','#16080b')">🔴 Red Hacker</button>         <button class="card" onclick="setTheme('#ff70c8','#160812')">🩷 Neon Pink</button>         <button class="card" onclick="setTheme('#ffffff','#080808')">⚪ White Mode</button>       </div>     </div>   </section>    <section id="admin" class="page">     <h2>👑 JJ Admin</h2>     <div class="box">       <p class="muted">Owner/admin controls are shown here for this front-end demo. Secure admin permissions must be enforced on a backend before going public.</p>       <div class="grid">         <div class="card"><h3>👥 User controls</h3><button class="btn" onclick="adminDemo('User management opened')">Manage users</button></div>         <div class="card"><h3>🎬 Video controls</h3><button class="btn" onclick="adminDemo('Video management opened')">Manage videos</button></div>         <div class="card"><h3>🎮 Game controls</h3><button class="btn" onclick="adminDemo('Game management opened')">Manage games</button></div>         <div class="card"><h3>🏆 Leaderboards</h3><button class="btn" onclick="adminDemo('Leaderboard controls opened')">Manage leaderboards</button></div>       </div>       <div class="box" style="margin-top:13px;background:#07100b">         <h3>Leaderboard periods</h3>         <div class="row"><button class="btn small" onclick="showLeaderboard('week')">Weekly</button><button class="btn small" onclick="showLeaderboard('month')">Monthly</button><button class="btn small" onclick="showLeaderboard('year')">Yearly</button></div>         <div id="leaderboard" class="grid" style="margin-top:12px"></div>       </div>       <button class="btn danger" onclick="clearRooms()">Clear demo rooms</button>     </div>   </section> </main> </div>  <script> function $(id){return document.getElementById(id)} function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}  let foxieUserName=localStorage.getItem('foxieUserName')||'';  function saveFoxieName(){   const input=$('nameInput'),err=$('nameError');   const name=(input.value||'').trim();   if(!name){err.textContent='Please enter a name.';return}   foxieUserName=name.slice(0,24);   localStorage.setItem('foxieUserName',foxieUserName);   updateFoxieNameUI(); } function updateFoxieNameUI(){   const modal=$('nameModal');   if(modal) modal.style.display=foxieUserName?'none':'flex';   const label=$('playerNameLabel');   if(label) label.textContent=foxieUserName||'Player';   document.querySelectorAll('[data-foxie-name]').forEach(el=>el.textContent=foxieUserName||'Player');   const input=$('nameInput');   if(input&&foxieUserName)input.value=foxieUserName; } document.addEventListener('DOMContentLoaded',()=>{   const input=$('nameInput');   if(input){     input.addEventListener('keydown',e=>{if(e.key==='Enter')saveFoxieName()});     if(foxieUserName)input.value=foxieUserName;   }   updateFoxieNameUI(); });  function showPage(id,btn){   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));   const page=$(id);if(page)page.classList.add('active');   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));   if(btn)btn.classList.add('active'); } function openGame(id){   document.querySelectorAll('#games .game').forEach(g=>g.classList.remove('active'));   const g=$('game-'+id);if(g)g.classList.add('active'); } function updateClock(){   const d=new Date();   $('clock').textContent=d.toLocaleTimeString(); } setInterval(updateClock,1000);updateClock();  let chatMessages=[   {name:'Foxie',text:'Welcome to Foxie! 🦊'},   {name:'System',text:'Your local Foxie chat is ready.'} ]; function renderChat(){   $('chat').innerHTML=chatMessages.map(m=>`<div class="msg"><b>${esc(m.name)}:</b> ${esc(m.text)}</div>`).join('');   $('chat').scrollTop=$('chat').scrollHeight; } function sendChat(){   const input=$('chatInput'),text=(input.value||'').trim();if(!text)return;   chatMessages.push({name:foxieUserName||'Player',text});input.value='';renderChat(); } renderChat();  let friends=JSON.parse(localStorage.getItem('foxieFriends')||'[]'); function renderFriends(){   $('friendsList').innerHTML=friends.length?friends.map((f,i)=>`<div class="card"><h3>👤 ${esc(f)}</h3><p class="muted">Friend</p><button class="btn small danger" onclick="removeFriend(${i})">Remove</button></div>`).join(''):'<p class="muted">No friends added yet.</p>'; } function addFriend(){   const input=$('friendInput'),name=(input.value||'').trim();if(!name)return;   if(!friends.includes(name))friends.push(name);   localStorage.setItem('foxieFriends',JSON.stringify(friends));input.value='';renderFriends(); } function removeFriend(i){friends.splice(i,1);localStorage.setItem('foxieFriends',JSON.stringify(friends));renderFriends()} renderFriends();  /* TIC TAC TOE */ let ttt=Array(9).fill(''),tttOver=false; function resetTTT(){ttt=Array(9).fill('');tttOver=false;$('tttStatus').textContent='Your turn — X';drawTTT()} function drawTTT(){   $('tttBoard').innerHTML=ttt.map((v,i)=>`<button class="${i%2?'dark':'light'}" onclick="tttClick(${i})">${v}</button>`).join(''); } function tttWinner(a){   const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];   for(const [x,y,z] of lines)if(a[x]&&a[x]===a[y]&&a[y]===a[z])return a[x];   return a.every(Boolean)?'draw':null; } function tttClick(i){   if(tttOver||ttt[i])return;   ttt[i]='X';drawTTT();   let w=tttWinner(ttt);if(w)return endTTT(w);   $('tttStatus').textContent='Foxie is thinking…';   setTimeout(tttAI,250); } function tttAI(){   if(tttOver)return;   const empty=ttt.map((v,i)=>v?null:i).filter(v=>v!==null);   let move;   const diff=$('tttDifficulty').value;   if(diff==='Hard'){     move=minimaxTTT(ttt,'O').index;   }else if(diff==='Medium'){     move=findWinningMove('O') ?? findWinningMove('X') ?? empty[Math.floor(Math.random()*empty.length)];   }else move=empty[Math.floor(Math.random()*empty.length)];   if(move==null)return;   ttt[move]='O';drawTTT();const w=tttWinner(ttt);if(w)endTTT(w);else $('tttStatus').textContent='Your turn — X'; } function findWinningMove(player){   for(const i of ttt.map((v,i)=>v?null:i).filter(v=>v!==null)){ttt[i]=player;if(tttWinner(ttt)===player){ttt[i]='';return i}ttt[i]=''}   return null; } function minimaxTTT(board,player){   const w=tttWinner(board);   if(w==='O')return {score:10};if(w==='X')return {score:-10};if(w==='draw')return {score:0};   const avail=board.map((v,i)=>v?null:i).filter(v=>v!==null),moves=[];   for(const i of avail){     board[i]=player;     const r=minimaxTTT(board,player==='O'?'X':'O');     board[i]='';moves.push({index:i,score:r.score});   }   if(player==='O')return moves.reduce((a,b)=>b.score>a.score?b:a);   return moves.reduce((a,b)=>b.score<a.score?b:a); } function endTTT(w){tttOver=true;$('tttStatus').textContent=w==='draw'?'Draw!':w==='X'?'You win! 🎉':'Foxie wins! 🦊'} resetTTT();  /* CHESS */ const chessStart=[ 'r','n','b','q','k','b','n','r', 'p','p','p','p','p','p','p','p', '','','','','','','', '','','','','','','', '','','','','','','', '','','','','','','', 'P','P','P','P','P','P','P','P', 'R','N','B','Q','K','B','N','R' ]; let chess=chessStart.slice(),chTurn='w',chSel=-1,chMoves=[],chFlipped=false,chGameOver=false; let chessCastle={K:true,Q:true,k:true,q:true},chEp=-1,chGlow=true,chCoords=true; let playerSeconds=600,aiSeconds=600,chTimer=null;  const chessUnicode={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞'}; const cName={p:'Pawn',n:'Knight',b:'Bishop',r:'Rook',q:'Queen',k:'King'};  function chessColor(p){return p&&p===p.toUpperCase()?'w':'b'} function chessType(p){return p.toLowerCase()} function sqRC(i){return [Math.floor(i/8),i%8]} function rcSq(r,c){return r*8+c} function inBoard(r,c){return r>=0&&r<8&&c>=0&&c<8} function algebraic(i){let [r,c]=sqRC(i);return 'abcdefgh'[c]+(8-r)} function cloneState(){return {board:chess.slice(),turn:chTurn,castle:{...chessCastle},ep:chEp}} function restoreState(s){chess=s.board.slice();chTurn=s.turn;chessCastle={...s.castle};chEp=s.ep}  function findKing(board,color){return board.indexOf(color==='w'?'K':'k')}  function attacked(board,target,byColor){   const [tr,tc]=sqRC(target);   for(let i=0;i<64;i++){     const p=board[i]; if(!p||chessColor(p)!==byColor) continue;     const [r,c]=sqRC(i),t=chessType(p),dr=tr-r,dc=tc-c;     if(t==='p'){       const dir=byColor==='w'?-1:1;       if(dr===dir&&Math.abs(dc)===1)return true;     } else if(t==='n'){       if((Math.abs(dr)===2&&Math.abs(dc)===1)||(Math.abs(dr)===1&&Math.abs(dc)===2))return true;     } else if(t==='k'){       if(Math.max(Math.abs(dr),Math.abs(dc))===1)return true;     } else {       const diag=Math.abs(dr)===Math.abs(dc), straight=(dr===0||dc===0);       if((t==='b'&&diag)||(t==='r'&&straight)||(t==='q'&&(diag||straight))){         const sr=Math.sign(dr),sc=Math.sign(dc),steps=Math.max(Math.abs(dr),Math.abs(dc));let clear=true;         for(let n=1;n<steps;n++){if(board[rcSq(r+sr*n,c+sc*n)]){clear=false;break}}         if(clear)return true;       }     }   }   return false; }  function inCheck(color,board=chess){   const k=findKing(board,color); return k<0||attacked(board,k,color==='w'?'b':'w') }  function pseudoMoves(i, includeCastle=true){   const p=chess[i]; if(!p)return [];   const color=chessColor(p),enemy=color==='w'?'b':'w',t=chessType(p),[r,c]=sqRC(i),out=[];   const add=(to,extra={})=>{if(to<0||to>=64)return;const q=chess[to];if(!q||chessColor(q)===enemy)out.push({from:i,to,...extra})}   if(t==='p'){     const dir=color==='w'?-1:1,start=color==='w'?6:1,promo=color==='w'?0:7;     const one=rcSq(r+dir,c); if(inBoard(r+dir,c)&&!chess[one]){       add(one,r+dir===promo?{promotion:true}:{});       const two=rcSq(r+2*dir,c); if(r===start&&!chess[two])add(two,{doublePawn:true});     }     for(const dc of [-1,1])if(inBoard(r+dir,c+dc)){       const to=rcSq(r+dir,c+dc),q=chess[to];       if(q&&chessColor(q)===enemy)add(to,r+dir===promo?{promotion:true}:{});       else if(to===chEp)add(to,{enPassant:true});     }   } else if(t==='n'){     [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]].forEach(([dr,dc])=>inBoard(r+dr,c+dc)&&add(rcSq(r+dr,c+dc)));   } else if(['b','r','q'].includes(t)){     const dirs=t==='b'?[[1,1],[1,-1],[-1,1],[-1,-1]]:t==='r'?[[1,0],[-1,0],[0,1],[0,-1]]:[[1,1],[1,-1],[-1,1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];     dirs.forEach(([dr,dc])=>{let rr=r+dr,cc=c+dc;while(inBoard(rr,cc)){const to=rcSq(rr,cc);if(!chess[to])add(to);else{add(to);break}rr+=dr;cc+=dc}});   } else if(t==='k'){     for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++)if((dr||dc)&&inBoard(r+dr,c+dc))add(rcSq(r+dr,c+dc));     if(includeCastle&&!inCheck(color)){       if(color==='w'&&i===60){         if(chessCastle.K&&!chess[61]&&!chess[62]&&!attacked(chess,61,'b')&&!attacked(chess,62,'b')&&chess[63]==='R')out.push({from:60,to:62,castle:'K'});         if(chessCastle.Q&&!chess[59]&&!chess[58]&&!chess[57]&&!attacked(chess,59,'b')&&!attacked(chess,58,'b')&&chess[56]==='R')out.push({from:60,to:58,castle:'Q'});       }       if(color==='b'&&i===4){         if(chessCastle.k&&!chess[5]&&!chess[6]&&!attacked(chess,5,'w')&&!attacked(chess,6,'w')&&chess[7]==='r')out.push({from:4,to:6,castle:'k'});         if(chessCastle.q&&!chess[3]&&!chess[2]&&!chess[1]&&!attacked(chess,3,'w')&&!attacked(chess,2,'w')&&chess[0]==='r')out.push({from:4,to:2,castle:'q'});       }     }   }   return out; }  function applyMove(m){   const p=chess[m.from],color=chessColor(p),oldEp=chEp;   const captured=chess[m.to];   chess[m.to]=p; chess[m.from]='';   if(m.enPassant){const [r,c]=sqRC(m.to);chess[rcSq(r+(color==='w'?1:-1),c)]=''}   if(m.castle){     if(m.to===62){chess[61]=chess[63];chess[63]=''}     if(m.to===58){chess[59]=chess[56];chess[56]=''}     if(m.to===6){chess[5]=chess[7];chess[7]=''}     if(m.to===2){chess[3]=chess[0];chess[0]=''}   }   if(m.promotion)chess[m.to]=color==='w'?'Q':'q';   if(p==='K')chessCastle.K=chessCastle.Q=false;   if(p==='k')chessCastle.k=chessCastle.q=false;   if(m.from===63||m.to===63)chessCastle.K=false;   if(m.from===56||m.to===56)chessCastle.Q=false;   if(m.from===7||m.to===7)chessCastle.k=false;   if(m.from===0||m.to===0)chessCastle.q=false;   chEp=(m.doublePawn?m.from+(color==='w'?-8:8):-1);   chTurn=color==='w'?'b':'w';   return captured||oldEp>=0; }  function legalMoves(color=chTurn){   const result=[];   for(let i=0;i<64;i++){     if(!chess[i]||chessColor(chess[i])!==color)continue;     for(const m of pseudoMoves(i)){       const saved=cloneState();applyMove(m);       if(!inCheck(color))result.push(m);       restoreState(saved);     }   }   return result; }  function makeChessMove(m,record=true){   const moving=chess[m.from],from=algebraic(m.from),to=algebraic(m.to),cap=chess[m.to]||m.enPassant;   applyMove(m);   if(record){     let note=(cName[chessType(moving)]||'Piece')+' '+from+(cap?'×':'-')+to+(m.promotion?'=Q':'');     if(m.castle)note=m.castle.toUpperCase()==='K'?'O-O':'O-O-O';     chMoves.push(note);   } }  function drawChess(){   const b=$('chessBoard');b.innerHTML='';   const legal=chSel>=0?legalMoves(chTurn).filter(m=>m.from===chSel):[];   const targetSet=new Set(legal.map(m=>m.to));   const checked=inCheck(chTurn);   const king=findKing(chess,chTurn);   for(let visual=0;visual<64;visual++){     const i=chFlipped?63-visual:visual,[r,c]=sqRC(i),x=document.createElement('div');     x.className='chessSq '+(((r+c)%2)?'dark':'light');     if(i===chSel)x.classList.add('selected');     if(targetSet.has(i))x.classList.add(chess[i]?'capture':'move');     if(checked&&i===king)x.classList.add('check');     const p=chess[i];     if(p){const s=document.createElement('span');s.className='chessPiece '+(chessColor(p)==='w'?'white':'black');s.textContent=chessUnicode[p];x.appendChild(s)}     if(chCoords){       if((!chFlipped&&r===7)||(chFlipped&&r===0)){const f=document.createElement('span');f.className='coordFile';f.textContent='abcdefgh'[c];x.appendChild(f)}       if((!chFlipped&&c===0)||(chFlipped&&c===7)){const rr=document.createElement('span');rr.className='coordRank';rr.textContent=8-r;x.appendChild(rr)}     }     x.onclick=()=>chessClick(i);b.appendChild(x);   }   $('moveCount').textContent=String(chMoves.length);   $('chessMoves').innerHTML=chMoves.length?chMoves.map((m,i)=>`<div><b>${i+1}.</b> ${esc(m)}</div>`).join(''):'No moves yet.';   $('chessMoves').scrollTop=$('chessMoves').scrollHeight; }  function chessClick(i){   if(chGameOver||chTurn!=='w')return;   const p=chess[i];   if(chSel<0){if(p&&chessColor(p)==='w'){chSel=i;drawChess()}return}   const moves=legalMoves('w').filter(m=>m.from===chSel&&m.to===i);   if(moves.length){makeChessMove(moves[0]);chSel=-1;afterChessMove()}   else if(p&&chessColor(p)==='w'){chSel=i;drawChess()}   else{chSel=-1;drawChess()} }  function afterChessMove(){   const next=legalMoves(chTurn);   if(!next.length){     chGameOver=true;     $('chessStatus').textContent=inCheck(chTurn)?(chTurn==='b'?'🏆 Checkmate — JJ wins!':'🦊 Checkmate — Foxie wins!'):'🤝 Stalemate — draw.';     drawChess();stopChessClock();return;   }   $('chessStatus').textContent=inCheck(chTurn)?'⚠ Check! Foxie is in check.':'Foxie is thinking…';   drawChess();   if(chTurn==='b')setTimeout(chessAI,280); }  function chessAI(){   if(chGameOver||chTurn!=='b')return;   const moves=legalMoves('b');if(!moves.length)return;   const diff=$('chessDifficulty').value;   let chosen;   if(diff==='Easy')chosen=moves[Math.floor(Math.random()*moves.length)];   else{     const scored=moves.map(m=>{       const saved=cloneState(),cap=chess[m.to],piece=chess[m.from];       makeChessMove(m,false);let score=(cap?({p:100,n:320,b:330,r:500,q:900,k:20000}[chessType(cap)]||0):0);       score+=inCheck('w')?80:0;       restoreState(saved);return {m,score};     }).sort((a,b)=>b.score-a.score);     chosen=diff==='Hard'?scored[0].m:scored[Math.floor(Math.random()*Math.min(3,scored.length))].m;   }   makeChessMove(chosen);chSel=-1;   const next=legalMoves(chTurn);   if(!next.length){chGameOver=true;$('chessStatus').textContent=inCheck(chTurn)?'🏆 Checkmate — Foxie wins!':'🤝 Stalemate — draw.';stopChessClock()}   else $('chessStatus').textContent=inCheck(chTurn)?'⚠ Check! Your king is in check.':'Your move.';   drawChess(); }  function resetChess(){   chess=chessStart.slice();chTurn='w';chSel=-1;chMoves=[];chGameOver=false;chessCastle={K:true,Q:true,k:true,q:true};chEp=-1;   playerSeconds=600;aiSeconds=600;$('chessStatus').textContent='Your move — White.';startChessClock();drawChess(); } function formatChessTime(s){s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')} function startChessClock(){   stopChessClock();chTimer=setInterval(()=>{     if(chGameOver)return;     if(chTurn==='w')playerSeconds--;else aiSeconds--;     $('playerClock').textContent=formatChessTime(playerSeconds);$('aiClock').textContent=formatChessTime(aiSeconds);     if(playerSeconds<=0||aiSeconds<=0){chGameOver=true;$('chessStatus').textContent=playerSeconds<=0?'⏱ Time — Foxie wins!':'⏱ Time — JJ wins!';stopChessClock()}   },1000);   $('playerClock').textContent=formatChessTime(playerSeconds);$('aiClock').textContent=formatChessTime(aiSeconds); } function stopChessClock(){if(chTimer){clearInterval(chTimer);chTimer=null}} function flipChess(){chFlipped=!chFlipped;drawChess()} function toggleChessGlow(){chGlow=!chGlow;document.documentElement.style.setProperty('--green',chGlow?'#39ff88':'#55a8ff');drawChess()} function toggleChessCoords(){chCoords=!chCoords;drawChess()} function applyChessColors(){   document.documentElement.style.setProperty('--chess-light',$('chessLight').value);   document.documentElement.style.setProperty('--chess-dark',$('chessDark').value);   document.documentElement.style.setProperty('--green',$('chessGlow').value);   document.documentElement.style.setProperty('--chess-frame',$('chessFrame').value);   document.querySelector('.chessBoardOuter')?.style.setProperty('background',$('chessFrame').value); } function chessPreset(light,dark,glow,frame){   $('chessLight').value=light;$('chessDark').value=dark;$('chessGlow').value=glow;$('chessFrame').value=frame;applyChessColors(); } applyChessColors();resetChess();  /* DRAWING */ let drawing=false; const dc=$('drawCanvas'),dctx=dc.getContext('2d'); function drawPos(e){   const r=dc.getBoundingClientRect();   return [(e.clientX-r.left)*dc.width/r.width,(e.clientY-r.top)*dc.height/r.height] } dc.addEventListener('pointerdown',e=>{drawing=true;dc.setPointerCapture(e.pointerId);const [x,y]=drawPos(e);dctx.beginPath();dctx.moveTo(x,y)}); dc.addEventListener('pointerup',()=>drawing=false); dc.addEventListener('pointermove',e=>{   if(!drawing)return;const [x,y]=drawPos(e);dctx.lineWidth=+$('brushSize').value;dctx.lineCap='round';dctx.strokeStyle=$('drawColor').value;dctx.lineTo(x,y);dctx.stroke(); }); function clearCanvas(){dctx.clearRect(0,0,dc.width,dc.height)}  /* SOLITAIRE */ let solitaire=[]; function newSolitaire(){   const suits=['♠','♥','♦','♣'],vals=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];   solitaire=[];   for(const s of suits)for(const v of vals)solitaire.push(v+s);   solitaire.sort(()=>Math.random()-.5);   solitaire=solitaire.slice(0,12);   $('solitaireStatus').textContent='Match cards to build points.';   $('solitaireCards').innerHTML=solitaire.map((c,i)=>`<button class="card" onclick="solitairePick(${i})" style="font-size:28px">${c}</button>`).join(''); } function solitairePick(i){   const card=solitaire[i];if(!card)return;   $('solitaireStatus').textContent=`You picked ${card}!`; }  /* HIGH CARD */ function randomCard(){   const suits=['♠','♥','♦','♣'],vals=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];   const v=vals[Math.floor(Math.random()*13)],s=suits[Math.floor(Math.random()*4)];   return {text:v+s,value:vals.indexOf(v)+1}; } function playHighCard(){   const a=randomCard(),b=randomCard();$('yourCard').textContent=a.text;$('aiCard').textContent=b.text;   $('highCardResult').textContent=a.value>b.value?'You win! 🎉':a.value<b.value?'Foxie wins! 🦊':'Draw!'; }  /* ROOMS */ let rooms=JSON.parse(localStorage.getItem('foxieRooms')||'[]'); function saveRooms(){localStorage.setItem('foxieRooms',JSON.stringify(rooms))} function roomCode(){return Math.random().toString(36).slice(2,7).toUpperCase()} function createRoom(){   const name=($('roomName').value||'Foxie Room').trim(),game=$('roomGame').value;   const room={id:roomCode(),name,game,players:1,spectators:0,host:foxieUserName||'Player',created:Date.now()};   rooms.push(room);saveRooms();renderRooms();$('roomName').value=''; } function renderRooms(){   $('roomsList').innerHTML=rooms.length?rooms.map(r=>`     <div class="room">       <div class="roomhead"><b>${esc(r.name)}</b><span class="badge">${esc(r.game)}</span></div>       <p class="muted">Code: <b>${esc(r.id)}</b> · ${r.players} player(s) · ${r.spectators} spectator(s)</p>       <div class="row">         <button class="btn small" onclick="joinRoomById('${r.id}')">Join</button>         <button class="btn small secondary" onclick="spectateRoom('${r.id}')">Spectate</button>       </div>     </div>`).join(''):'<p class="muted">No rooms yet. Create one!</p>'; } function joinRoom(){   joinRoomById(($('joinCode').value||'').trim().toUpperCase()); } function joinRoomById(id){   const r=rooms.find(x=>x.id===id);if(!r){alert('Room not found.');return}   r.players=Math.min(2,r.players+1);saveRooms();renderRooms();alert(`Joined ${r.name}!`); } function spectateRoom(id){   const r=rooms.find(x=>x.id===id);if(!r)return;   r.spectators++;saveRooms();renderRooms();   showPage('spectator');   $('spectatorMatch').innerHTML=`<div class="roomhead"><b>${esc(r.name)}</b><span class="badge">${esc(r.game)}</span></div><p class="muted">Players: ${r.players} · Spectators: ${r.spectators}</p>`;   $('spectatorList').innerHTML=Array.from({length:r.spectators},(_,i)=>`<span class="spectator">👀 Spectator ${i+1}</span>`).join(''); } function clearRooms(){rooms=[];saveRooms();renderRooms()} renderRooms();  /* SPECTATOR CHAT */ let spectatorMessages=[]; function sendSpectator(){   const input=$('spectatorInput'),text=(input.value||'').trim();if(!text)return;   spectatorMessages.push({name:foxieUserName||'Player',text});input.value='';   $('spectatorChat').innerHTML=spectatorMessages.map(m=>`<div class="msg"><b>${esc(m.name)}:</b> ${esc(m.text)}</div>`).join(''); }  /* CALCULATOR */ let calcExpr=''; function calc(v){   if(v==='C'){calcExpr='';$('calcDisplay').value='0';return}   if(v==='='){     try{       if(!/^[0-9+\-*/().\s]+$/.test(calcExpr))throw 0;       const result=Function('"use strict";return ('+calcExpr+')')();       calcExpr=String(result);$('calcDisplay').value=calcExpr;     }catch{calcExpr='';$('calcDisplay').value='Error'}     return;   }   calcExpr+=v;$('calcDisplay').value=calcExpr; }  /* SELFIES */ let selfieStream=null; async function startCamera(){   try{     selfieStream=await navigator.mediaDevices.getUserMedia({video:true});     $('camera').srcObject=selfieStream;   }catch(e){alert('Camera permission was not available. You can still upload a selfie.')} } function takeSelfie(){   const video=$('camera'),canvas=$('selfieCanvas');   if(!video.videoWidth){alert('Start the camera first.');return}   canvas.width=video.videoWidth;canvas.height=video.videoHeight;   canvas.getContext('2d').drawImage(video,0,0);   addSelfie(canvas.toDataURL('image/png')); } function loadSelfie(e){   const file=e.target.files?.[0];if(!file)return;   const reader=new FileReader();reader.onload=()=>addSelfie(reader.result);reader.readAsDataURL(file); } function addSelfie(src){   const wrap=document.createElement('div');wrap.className='card';   wrap.innerHTML=`<img src="${src}" style="width:100%;border-radius:10px"><button class="btn small danger" style="margin-top:7px">Remove</button>`;   wrap.querySelector('button').onclick=()=>wrap.remove();$('selfieGallery').prepend(wrap); }  /* SEARCH / MAPS */ function webSearch(){   const q=($('searchInput').value||'').trim();if(!q)return;   window.open('https://www.google.com/search?q='+encodeURIComponent(q),'_blank'); } function openMaps(){   const q=($('mapInput').value||'').trim();if(!q)return;   window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q),'_blank'); }  /* THEMES */ function setTheme(green,bg){   document.documentElement.style.setProperty('--green',green);   document.documentElement.style.setProperty('--bg',bg); } function adminDemo(msg){alert('JJ Admin: '+msg)} function showLeaderboard(period){   const names=[foxieUserName||'Player','Foxie','Guest'];   const scores=names.map(n=>({n,s:Math.floor(Math.random()*900)+100})).sort((a,b)=>b.s-a.s);   $('leaderboard').innerHTML=scores.map((x,i)=>`<div class="card"><h3>#${i+1} ${esc(x.n)}</h3><p class="muted">${x.s} points · ${period}</p></div>`).join(''); } showLeaderboard('week');  /* RACER */ let racerRunning=false,racerScore=0,racerX=280,racerKeys={},racerAnim; const rc=$('racerCanvas'),rctx=rc.getContext('2d'); document.addEventListener('keydown',e=>{racerKeys[e.key.toLowerCase()]=true}); document.addEventListener('keyup',e=>{racerKeys[e.key.toLowerCase()]=false}); function startRacer(){   racerRunning=true;racerScore=0;racerX=280;   if(racerAnim)cancelAnimationFrame(racerAnim);racerLoop(); } function racerLoop(){   if(!racerRunning)return;   racerScore+=1;   if(racerKeys['arrowleft']||racerKeys['a'])racerX-=5;   if(racerKeys['arrowright']||racerKeys['d'])racerX+=5;   racerX=Math.max(35,Math.min(rc.width-65,racerX));   rctx.fillStyle='#070b0e';rctx.fillRect(0,0,rc.width,rc.height);   rctx.fillStyle='#1b2429';rctx.fillRect(100,0,400,rc.height);   rctx.strokeStyle='#eafff1';rctx.setLineDash([25,25]);rctx.lineWidth=3;rctx.lineDashOffset=-racerScore*2;rctx.beginPath();rctx.moveTo(300,0);rctx.lineTo(300,420);rctx.stroke();rctx.setLineDash([]);   rctx.fillStyle='#39ff88';rctx.fillRect(racerX,350,30,55);   rctx.fillStyle='#ff526d';const ox=120+((racerScore*3)%330);rctx.fillRect(ox,80,30,50);   $('racerScore').textContent='Score: '+racerScore;   racerAnim=requestAnimationFrame(racerLoop); }  /* FIGHTER */ let fighterRunning=false,fighterAnim,fighterKeys={}; let fighter={x:150,y:300,vx:0,vy:0,hp:100,attack:0},fighterAI={x:560,y:300,vx:0,vy:0,hp:100,attack:0}; const fc=$('fighterCanvas'),fctx=fc.getContext('2d'); document.addEventListener('keydown',e=>{   fighterKeys[e.key.toLowerCase()]=true;   if(['j','k'].includes(e.key.toLowerCase())&&fighterRunning)fighter.attack=12; }); document.addEventListener('keyup',e=>fighterKeys[e.key.toLowerCase()]=false); function resetFighter(){   fighterRunning=true;fighter={x:150,y:300,vx:0,vy:0,hp:100,attack:0};fighterAI={x:560,y:300,vx:0,vy:0,hp:100,attack:0};   if(fighterAnim)cancelAnimationFrame(fighterAnim);fighterLoop(); } function fighterLoop(){   if(!fighterRunning)return;   const speed=4;   if(fighterKeys['a'])fighter.x-=speed;if(fighterKeys['d'])fighter.x+=speed;   if(fighterKeys['w']&&fighter.y>=300)fighter.vy=-11;   fighter.vy+=.5;fighter.y+=fighter.vy;if(fighter.y>300){fighter.y=300;fighter.vy=0}   fighter.x=Math.max(30,Math.min(700,fighter.x));   const dist=fighter.x-fighterAI.x;   fighterAI.x+=dist>0?2.1:-2.1;   if(Math.abs(dist)<85&&Math.random()<.03)fighterAI.attack=12;   if(fighter.attack>0)fighter.attack--;   if(fighterAI.attack>0)fighterAI.attack--;   if(fighter.attack===11&&Math.abs(fighter.x-fighterAI.x)<100)fighterAI.hp=Math.max(0,fighterAI.hp-8);   if(fighterAI.attack===11&&Math.abs(fighter.x-fighterAI.x)<100)fighter.hp=Math.max(0,fighter.hp-7);   fctx.fillStyle='#05090b';fctx.fillRect(0,0,760,400);   fctx.fillStyle='#101b20';fctx.fillRect(0,330,760,70);   drawFighter(fighter,'#39ff88');drawFighter(fighterAI,'#ff526d');   fctx.fillStyle='#fff';fctx.font='bold 16px Arial';fctx.fillText('YOU',40,28);fctx.fillText('FOXIE',650,28);   fctx.fillStyle='#39ff88';fctx.fillRect(40,38,250*fighter.hp/100,15);   fctx.fillStyle='#ff526d';fctx.fillRect(470,38,250*fighterAI.hp/100,15);   if(fighter.hp<=0||fighterAI.hp<=0){fighterRunning=false;fctx.fillStyle='#fff';fctx.font='bold 30px Arial';fctx.fillText(fighterAI.hp<=0?'YOU WIN!':'FOXIE WINS!',270,180);return}   fighterAnim=requestAnimationFrame(fighterLoop); } function drawFighter(p,color){   fctx.fillStyle=color;fctx.fillRect(p.x,p.y-85,45,85);   fctx.beginPath();fctx.arc(p.x+22,p.y-100,22,0,Math.PI*2);fctx.fill();   if(p.attack>0){fctx.fillRect(p.x+(p===fighter?38:-38),p.y-70,45,12)} } </script> </body> </html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Foxie — JJ's AI</title>
+<style>
+:root{
+  --green:#39ff88;
+  --bg:#05080a;
+  --panel:#0b1115;
+  --panel2:#0e171d;
+  --text:#eafff1;
+  --muted:#8ba398;
+  --line:#1b2a31;
+  --danger:#ff526d;
+  --gold:#ffd85c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+body{
+  background-image:
+    linear-gradient(rgba(57,255,136,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,255,136,.025) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:var(--green)}
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:245px;position:fixed;left:0;top:0;bottom:0;
+  background:rgba(5,9,11,.96);border-right:1px solid var(--line);
+  padding:18px 12px;z-index:20;overflow:auto
+}
+.logo{font-size:27px;font-weight:900;letter-spacing:.5px;margin:2px 8px 18px}
+.logo span{color:var(--green);text-shadow:0 0 14px rgba(57,255,136,.5)}
+.nav{display:grid;gap:6px}
+.nav button{
+  border:1px solid transparent;background:transparent;color:#cfe2d7;
+  padding:11px 12px;border-radius:10px;text-align:left
+}
+.nav button:hover,.nav button.active{
+  background:#0b1713;border-color:#214832;color:var(--green);
+  box-shadow:0 0 14px rgba(57,255,136,.06)
+}
+.creator{
+  position:fixed;right:18px;top:14px;font-size:11px;color:#789086;z-index:30;
+  display:flex;align-items:center;gap:8px
+}
+.main{margin-left:245px;width:calc(100% - 245px);padding:25px;max-width:1500px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+.clock{font-variant-numeric:tabular-nums;color:var(--green);font-weight:800}
+.page{display:none}.page.active{display:block}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+h1,h2,h3,h4{margin-top:0}
+.box{
+  background:linear-gradient(180deg,rgba(15,23,28,.97),rgba(8,13,16,.97));
+  border:1px solid var(--line);border-radius:16px;padding:17px;
+  box-shadow:0 0 25px rgba(0,0,0,.2)
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}
+.card{padding:16px;border:1px solid #1c3037;border-radius:14px;background:#091014}
+.card h3{margin-bottom:7px}.muted{color:var(--muted)}
+.btn{
+  border:1px solid #277241;background:#0b2115;color:var(--green);
+  padding:10px 14px;border-radius:9px;font-weight:800
+}
+.btn:hover{filter:brightness(1.2);box-shadow:0 0 15px rgba(57,255,136,.12)}
+.btn.secondary{background:#11191e;color:#d7e4dc;border-color:#2a3941}
+.btn.danger{background:#260d13;color:#ff7b8d;border-color:#67303b}
+.btn.small{padding:7px 10px;font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.input,.select,textarea{
+  width:100%;background:#05090b;border:1px solid #26363e;color:#eafff1;
+  border-radius:9px;padding:11px;outline:none
+}
+.input:focus,.select:focus,textarea:focus{border-color:var(--green)}
+.form{display:flex;gap:8px}.form>*:first-child{flex:1}
+.badge{
+  display:inline-block;border:1px solid #2a5b3b;background:#0b2115;color:var(--green);
+  padding:4px 8px;border-radius:999px;font-size:11px;font-weight:900
+}
+.badge.red{color:#ff7588;background:#270c12;border-color:#66303b}
+.spacer{height:12px}
+.chat{height:320px;overflow:auto;background:#05090b;border:1px solid #1b2a31;border-radius:12px;padding:12px}
+.msg{margin-bottom:10px}.msg b{color:var(--green)}
+.video{min-height:120px;display:grid;place-items:center;border:1px dashed #2c4540;border-radius:12px;background:#06100b}
+.calc{max-width:480px}.calcDisplay{font-size:28px;text-align:right;margin-bottom:10px}
+.calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.calcgrid button{padding:17px;border-radius:10px;border:1px solid #26363e;background:#0b1419;color:#eafff1;font-weight:800}
+.calcgrid button:hover{border-color:var(--green);color:var(--green)}
+.calcgrid .op{color:var(--green);background:#0b1c13}
+.board{display:grid;grid-template-columns:repeat(8,1fr);max-width:560px}
+.board button{aspect-ratio:1;border:0;font-size:clamp(24px,5vw,48px)}
+.board button.light{background:#c9e0cc}.board button.dark{background:#3a6047}
+.board button.selected{outline:4px solid var(--green);outline-offset:-4px}
+canvas{max-width:100%;border:1px solid #24353c;border-radius:12px;background:#05090b}
+.room{padding:13px;border:1px solid #22353c;border-radius:12px;background:#091116}
+.roomhead{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.spectatorbar{display:flex;gap:6px;flex-wrap:wrap}
+.spectator{padding:5px 8px;background:#101b20;border:1px solid #2a3940;border-radius:999px;font-size:11px}
+.chatmini{height:160px;overflow:auto;background:#05090b;border:1px solid #1b2a31;border-radius:10px;padding:9px}
+.gameTabs{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.game{display:none}.game.active{display:block}
+.chessWrap{display:grid;grid-template-columns:minmax(320px,650px) minmax(250px,1fr);gap:18px;align-items:start}
+.chessShell{background:#090e12;border:1px solid #27343d;border-radius:18px;padding:14px;box-shadow:0 0 30px rgba(57,255,136,.08)}
+.chessTop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.chessPlayer{display:flex;align-items:center;gap:9px;font-weight:800}.chessDot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+.chessClock{font-variant-numeric:tabular-nums;background:#05080a;border:1px solid #26343d;border-radius:9px;padding:8px 11px;color:#fff}
+.chessBoardOuter{position:relative;max-width:650px;margin:auto;padding:26px 26px 26px 26px;background:#05080a;border:1px solid #25313a;border-radius:14px}
+.chessBoard{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;width:100%;overflow:hidden;border-radius:4px;box-shadow:0 0 0 2px rgba(255,255,255,.05),0 0 30px rgba(57,255,136,.12)}
+.chessSq{position:relative;display:grid;place-items:center;cursor:pointer;user-select:none;aspect-ratio:1;transition:filter .12s}
+.chessSq.light{background:var(--chess-light,#d9ead7);color:#111}.chessSq.dark{background:var(--chess-dark,#315b42);color:#fff}
+.chessSq:hover{filter:brightness(1.08)}.chessSq.selected{box-shadow:inset 0 0 0 4px var(--green)}
+.chessSq.move::after{content:"";width:22%;height:22%;border-radius:50%;background:rgba(57,255,136,.65);box-shadow:0 0 12px rgba(57,255,136,.6)}
+.chessSq.capture::after{content:"";position:absolute;inset:6%;border:4px solid rgba(255,90,110,.8);border-radius:50%}
+.chessSq.check{animation:chessPulse .8s infinite alternate}
+@keyframes chessPulse{from{box-shadow:inset 0 0 0 4px rgba(255,60,80,.25)}to{box-shadow:inset 0 0 0 5px rgba(255,60,80,.9),inset 0 0 25px rgba(255,60,80,.35)}}
+.chessPiece{font-size:clamp(29px,6vw,62px);line-height:1;text-shadow:0 2px 2px rgba(0,0,0,.38),0 0 10px rgba(255,255,255,.08);z-index:2}
+.chessPiece.white{color:#fff}.chessPiece.black{color:#111}
+.coordFile,.coordRank{position:absolute;font-size:10px;font-weight:900;opacity:.72;z-index:3}.coordFile{right:4px;bottom:2px}.coordRank{left:4px;top:2px}
+.chessSide{display:grid;gap:12px}.chessPanel{background:#0d1419;border:1px solid #27343d;border-radius:15px;padding:15px}
+.chessPanel h4{margin:0 0 10px}.colorGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.colorGrid label{font-size:12px;color:var(--muted)}.colorGrid input[type=color]{width:100%;height:42px;margin-top:5px;border:1px solid #33414a;border-radius:8px;background:#080b0e;padding:3px}
+.themePresets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.themePresets button{min-height:55px;border-radius:10px;border:1px solid #33414a;cursor:pointer;color:#fff;font-weight:800}
+.chessMoves{height:150px;overflow:auto;background:#070b0e;border:1px solid #202b33;border-radius:10px;padding:9px;font-size:13px}
+.chessBottom{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.nameModal{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.nameCard{width:min(460px,100%);background:#0b1115;border:1px solid #39ff88;border-radius:20px;padding:28px;box-shadow:0 0 45px rgba(57,255,136,.2);text-align:center}
+.nameCard h2{font-size:28px;margin:0 0 8px}.nameCard p{color:var(--muted);margin:0 0 18px}
+.nameInput{width:100%;box-sizing:border-box;background:#05080a;border:1px solid #2b3942;color:#fff;padding:14px;border-radius:11px;font-size:16px;outline:none}
+.nameInput:focus{border-color:#39ff88;box-shadow:0 0 14px rgba(57,255,136,.16)}
+.nameError{color:#ff6478;font-size:13px;min-height:18px;margin:8px 0}
+.userBadge{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid #26353e;border-radius:999px;background:#091015;font-size:12px}
+@media(max-width:950px){.chessWrap{grid-template-columns:1fr}}
+@media(max-width:800px){
+.sidebar{width:72px;padding:12px 8px}.logo{font-size:0;text-align:center}.logo:first-letter{font-size:28px}
+.nav button{font-size:0;text-align:center}.nav button::first-letter{font-size:20px}
+.main{margin-left:72px;width:calc(100% - 72px);padding:15px}.creator{display:none}
+}
+</style>
+</head>
+<body>
+<div id="nameModal" class="nameModal">
+  <div class="nameCard">
+    <div style="font-size:48px">🦊</div>
+    <h2>Welcome to Foxie</h2>
+    <p>What should we call you?</p>
+    <input id="nameInput" class="nameInput" maxlength="24" autocomplete="nickname" placeholder="Enter your name..." />
+    <div id="nameError" class="nameError"></div>
+    <button class="btn" style="width:100%" onclick="saveFoxieName()">Enter Foxie 🚀</button>
+    <div class="muted" style="font-size:11px;margin-top:12px">Your name is saved on this device only.</div>
+  </div>
+</div>
+
+<div class="creator">
+  Jayden Wayne Macdonald created this
+  <span class="userBadge">🦊 <span data-foxie-name>Player</span></span>
+</div>
+
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">🦊 <span>FOXIE</span></div>
+  <div class="nav">
+    <button class="active" onclick="showPage('home',this)">🏠 Home</button>
+    <button onclick="showPage('users',this)">👥 Users</button>
+    <button onclick="showPage('friends',this)">🤝 Friends</button>
+    <button onclick="showPage('vids',this)">🎬 Foxie Vids</button>
+    <button onclick="showPage('games',this)">🎮 Games</button>
+    <button onclick="showPage('multiplayer',this)">🌐 Multiplayer</button>
+    <button onclick="showPage('spectator',this)">👀 Spectator Room</button>
+    <button onclick="showPage('calculator',this)">🧮 Calculator</button>
+    <button onclick="showPage('selfies',this)">📸 Selfies</button>
+    <button onclick="showPage('search',this)">🔎 Search</button>
+    <button onclick="showPage('maps',this)">🗺️ Maps & Traffic</button>
+    <button onclick="showPage('themes',this)">🎨 Themes</button>
+    <button onclick="showPage('admin',this)">👑 JJ Admin</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1 style="margin-bottom:3px">🦊 Foxie</h1>
+      <div class="muted">Your hacker-style Foxie hub.</div>
+    </div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+
+  <section id="home" class="page active">
+    <div class="box">
+      <div class="section-title">
+        <div>
+          <h2>Welcome to Foxie 🦊</h2>
+          <p class="muted">Games, chat, friends, videos, tools and more.</p>
+        </div>
+        <span class="badge">ONLINE</span>
+      </div>
+      <div class="grid" style="margin-top:15px">
+        <div class="card"><h3>🎮 Games</h3><p class="muted">Chess, Tic-Tac-Toe, Racer, Foxie Fighter, cards and more.</p><button class="btn" onclick="showPage('games')">Play games</button></div>
+        <div class="card"><h3>🌐 Multiplayer</h3><p class="muted">Create rooms and prepare for real online multiplayer.</p><button class="btn" onclick="showPage('multiplayer')">Open lobby</button></div>
+        <div class="card"><h3>👀 Spectator Room</h3><p class="muted">Watch rooms and chat with spectators.</p><button class="btn" onclick="showPage('spectator')">Spectate</button></div>
+        <div class="card"><h3>🧮 Calculator</h3><p class="muted">Quick calculator built into Foxie.</p><button class="btn" onclick="showPage('calculator')">Calculate</button></div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:14px">
+      <div class="box">
+        <h3>💬 Foxie Chat</h3>
+        <div id="chat" class="chat"></div>
+        <div class="form" style="margin-top:8px">
+          <input id="chatInput" class="input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="btn" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+      <div class="box">
+        <h3>⚡ Quick links</h3>
+        <div class="grid">
+          <button class="btn" onclick="showPage('games')">🎮 Games</button>
+          <button class="btn" onclick="showPage('search')">🔎 Search</button>
+          <button class="btn" onclick="showPage('maps')">🗺️ Maps</button>
+          <button class="btn" onclick="showPage('selfies')">📸 Selfies</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="users" class="page">
+    <h2>👥 Users</h2>
+    <div class="box">
+      <div class="grid" id="usersGrid">
+        <div class="card"><h3>🦊 Foxie</h3><p class="muted">AI assistant</p><span class="badge">ONLINE</span></div>
+        <div class="card"><h3 data-foxie-name>Player</h3><p class="muted">You</p><span class="badge">ONLINE</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="friends" class="page">
+    <h2>🤝 Friends</h2>
+    <div class="box">
+      <div class="form">
+        <input id="friendInput" class="input" placeholder="Enter a friend's username...">
+        <button class="btn" onclick="addFriend()">Add friend</button>
+      </div>
+      <div id="friendsList" class="grid" style="margin-top:13px"></div>
+    </div>
+  </section>
+
+  <section id="vids" class="page">
+    <h2>🎬 Foxie Vids</h2>
+    <div class="grid">
+      <div class="card video">🎬 Video 1<br><span class="muted">Your videos can go here.</span></div>
+      <div class="card video">🎬 Video 2<br><span class="muted">Add your own video links later.</span></div>
+      <div class="card video">🎬 Video 3<br><span class="muted">Foxie Vids area.</span></div>
+    </div>
+  </section>
+
+  <section id="games" class="page">
+    <div class="section-title">
+      <div><h2>🎮 Foxie Games</h2><p class="muted">Pick a game and play.</p></div>
+      <span class="badge">LEADERBOARDS</span>
+    </div>
+    <div class="gameTabs">
+      <button class="btn small" onclick="openGame('tictactoe')">⭕ Tic-Tac-Toe</button>
+      <button class="btn small" onclick="openGame('chess')">♟ Chess</button>
+      <button class="btn small" onclick="openGame('draw')">🎨 Drawing</button>
+      <button class="btn small" onclick="openGame('solitaire')">🃏 Solitaire</button>
+      <button class="btn small" onclick="openGame('cards')">🂡 High Card</button>
+      <button class="btn small" onclick="openGame('racer')">🏎 Racer</button>
+      <button class="btn small" onclick="openGame('fighter')">🥊 Foxie Fighter</button>
+    </div>
+
+    <div id="game-tictactoe" class="game active">
+      <div class="box">
+        <div class="section-title"><h3>⭕ Tic-Tac-Toe</h3><span class="badge">AI</span></div>
+        <div class="row"><label>Difficulty</label><select id="tttDifficulty" class="select" style="width:auto"><option>Easy</option><option selected>Medium</option><option>Hard</option></select><button class="btn" onclick="resetTTT()">Reset</button></div>
+        <div id="tttBoard" class="board" style="grid-template-columns:repeat(3,1fr);max-width:330px;margin-top:13px"></div>
+        <p id="tttStatus" class="muted"></p>
+      </div>
+    </div>
+
+    <div id="game-chess" class="game">
+      <div class="section-title"><div><h2 style="margin-bottom:4px">♟ Foxie Chess</h2><p class="muted">Chess.com-inspired layout with your own Foxie hacker theme. Customize every board colour.</p></div><span class="badge">FOXIE CHESS</span></div>
+      <div class="chessWrap">
+        <div class="chessShell">
+          <div class="chessTop">
+            <div class="chessPlayer"><span class="chessDot"></span> Foxie AI</div>
+            <div class="chessClock" id="aiClock">10:00</div>
+          </div>
+          <div class="chessBoardOuter">
+            <div id="chessBoard" class="chessBoard"></div>
+          </div>
+          <div class="chessTop" style="margin-top:10px">
+            <div class="chessPlayer"><span class="chessDot"></span> <span id="playerNameLabel">Player</span></div>
+            <div class="chessClock" id="playerClock">10:00</div>
+          </div>
+          <div class="chessBottom">
+            <span id="chessStatus" class="muted">Your move — White.</span>
+            <div class="row">
+              <button class="btn small" onclick="resetChess()">↻ New game</button>
+              <button class="btn small secondary" onclick="flipChess()">⇅ Flip board</button>
+            </div>
+          </div>
+        </div>
+        <div class="chessSide">
+          <div class="chessPanel">
+            <h4>🤖 AI difficulty</h4>
+            <select class="select" id="chessDifficulty" onchange="resetChess()">
+              <option>Easy</option><option selected>Medium</option><option>Hard</option>
+            </select>
+          </div>
+          <div class="chessPanel">
+            <h4>🎨 Board colours</h4>
+            <div class="colorGrid">
+              <label>Light square<input type="color" id="chessLight" value="#d9ead7" onchange="applyChessColors()"></label>
+              <label>Dark square<input type="color" id="chessDark" value="#315b42" onchange="applyChessColors()"></label>
+              <label>Glow / moves<input type="color" id="chessGlow" value="#39ff88" onchange="applyChessColors()"></label>
+              <label>Board frame<input type="color" id="chessFrame" value="#05080a" onchange="applyChessColors()"></label>
+            </div>
+            <div class="themePresets" style="margin-top:10px">
+              <button onclick="chessPreset('#d9ead7','#315b42','#39ff88','#05080a')">🟢 Hacker</button>
+              <button onclick="chessPreset('#d8e8ff','#24507a','#55a8ff','#07101a')">🔵 Cyber</button>
+              <button onclick="chessPreset('#eadcff','#593b78','#c27aff','#100719')">🟣 Glitch</button>
+              <button onclick="chessPreset('#ffe1e1','#7a2630','#ff5470','#16080b')">🔴 Red</button>
+              <button onclick="chessPreset('#eeeeee','#444444','#ffffff','#080808')">⚪ Classic</button>
+              <button onclick="chessPreset('#ffd8ef','#7a2856','#ff70c8','#160812')">🩷 Neon</button>
+            </div>
+          </div>
+          <div class="chessPanel">
+            <div class="section-title"><h4>📜 Moves</h4><span class="badge" id="moveCount">0</span></div>
+            <div class="chessMoves" id="chessMoves">No moves yet.</div>
+          </div>
+          <div class="chessPanel">
+            <h4>🧩 Hacker mode</h4>
+            <div class="row">
+              <button class="btn small" onclick="toggleChessGlow()">✨ Toggle glow</button>
+              <button class="btn small secondary" onclick="toggleChessCoords()">🔢 Coordinates</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-draw" class="game">
+      <div class="box">
+        <h3>🎨 Foxie Drawing Pad</h3>
+        <div class="row">
+          <label>Brush <input id="brushSize" type="range" min="1" max="30" value="5"></label>
+          <label>Colour <input id="drawColor" type="color" value="#39ff88"></label>
+          <button class="btn small" onclick="clearCanvas()">Clear</button>
+        </div>
+        <canvas id="drawCanvas" width="800" height="500" style="margin-top:12px"></canvas>
+      </div>
+    </div>
+
+    <div id="game-solitaire" class="game">
+      <div class="box">
+        <h3>🃏 Foxie Solitaire</h3>
+        <p class="muted">Mini solitaire-style card challenge.</p>
+        <div class="row"><button class="btn" onclick="newSolitaire()">New game</button><span id="solitaireStatus" class="muted"></span></div>
+        <div id="solitaireCards" class="grid" style="margin-top:13px"></div>
+      </div>
+    </div>
+
+    <div id="game-cards" class="game">
+      <div class="box">
+        <h3>🂡 High Card</h3>
+        <p class="muted">Draw a card against Foxie AI.</p>
+        <div class="row">
+          <button class="btn" onclick="playHighCard()">Draw cards</button>
+          <span id="highCardResult" class="muted">Ready.</span>
+        </div>
+        <div class="grid" style="margin-top:14px">
+          <div class="card"><h3 id="yourCard">?</h3><p class="muted">You</p></div>
+          <div class="card"><h3 id="aiCard">?</h3><p class="muted">Foxie AI</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-racer" class="game">
+      <div class="box">
+        <div class="section-title"><h3>🏎 Foxie Racer</h3><span class="badge">ARCADE</span></div>
+        <p class="muted">Use ← → or A/D to move. Avoid the blocks.</p>
+        <canvas id="racerCanvas" width="600" height="420"></canvas>
+        <div class="row" style="margin-top:10px"><button class="btn" onclick="startRacer()">Start race</button><span id="racerScore" class="muted">Score: 0</span></div>
+      </div>
+    </div>
+
+    <div id="game-fighter" class="game">
+      <div class="box">
+        <div class="section-title"><h3>🥊 Foxie Fighter</h3><span class="badge">ORIGINAL</span></div>
+        <p class="muted">Original arcade-style fighter. No copied characters or assets.</p>
+        <div class="row">
+          <label>AI <select id="fighterDifficulty" class="select" style="width:auto"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></label>
+          <button class="btn" onclick="resetFighter()">Start fight</button>
+        </div>
+        <canvas id="fighterCanvas" width="760" height="400" style="margin-top:12px"></canvas>
+        <p class="muted">Controls: A/D move · W jump · J punch · K kick</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="multiplayer" class="page">
+    <div class="section-title"><div><h2>🌐 Multiplayer Lobby</h2><p class="muted">Room system prototype. Real cross-device multiplayer needs a backend/WebSocket server.</p></div><span class="badge">DEMO</span></div>
+    <div class="grid">
+      <div class="box">
+        <h3>Create room</h3>
+        <input id="roomName" class="input" placeholder="Room name">
+        <select id="roomGame" class="select" style="margin-top:8px">
+          <option>Chess</option><option>Tic-Tac-Toe</option><option>Foxie Fighter</option><option>Racer</option><option>Cards</option>
+        </select>
+        <button class="btn" style="margin-top:8px" onclick="createRoom()">Create room</button>
+      </div>
+      <div class="box">
+        <h3>Join by code</h3>
+        <input id="joinCode" class="input" placeholder="Room code">
+        <button class="btn" style="margin-top:8px" onclick="joinRoom()">Join room</button>
+      </div>
+    </div>
+    <div class="box" style="margin-top:13px">
+      <div class="section-title"><h3>Rooms</h3><button class="btn small secondary" onclick="renderRooms()">Refresh</button></div>
+      <div id="roomsList" class="grid"></div>
+    </div>
+  </section>
+
+  <section id="spectator" class="page">
+    <div class="section-title"><div><h2>👀 Spectator Room</h2><p class="muted">Watch a room and chat with other spectators.</p></div><span class="badge">LIVE</span></div>
+    <div class="grid">
+      <div class="box">
+        <div id="spectatorMatch" class="room live"><div class="roomhead"><b>No live match selected</b><span class="badge red">WAITING</span></div><p class="muted">Create a multiplayer room, then choose “Spectate”.</p></div>
+        <div class="spacer"></div>
+        <div class="spectatorbar" id="spectatorList"></div>
+      </div>
+      <div class="box">
+        <h3>💬 Spectator Chat</h3>
+        <div id="spectatorChat" class="chatmini"></div>
+        <div class="form"><input id="spectatorInput" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendSpectator()"><button onclick="sendSpectator()">Send</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="calculator" class="page">
+    <h2>🧮 Calculator</h2>
+    <div class="box calc">
+      <input id="calcDisplay" class="input calcDisplay" readonly value="0">
+      <div class="calcgrid">
+        <button onclick="calc('7')">7</button><button onclick="calc('8')">8</button><button onclick="calc('9')">9</button><button class="op" onclick="calc('/')">÷</button>
+        <button onclick="calc('4')">4</button><button onclick="calc('5')">5</button><button onclick="calc('6')">6</button><button class="op" onclick="calc('*')">×</button>
+        <button onclick="calc('1')">1</button><button onclick="calc('2')">2</button><button onclick="calc('3')">3</button><button class="op" onclick="calc('-')">−</button>
+        <button onclick="calc('0')">0</button><button onclick="calc('.')">.</button><button onclick="calc('C')">C</button><button class="op" onclick="calc('+')">+</button>
+        <button style="grid-column:span 4" class="op" onclick="calc('=')">=</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="selfies" class="page">
+    <h2>📸 Selfies</h2>
+    <div class="grid">
+      <div class="box">
+        <h3>Camera</h3>
+        <video id="camera" autoplay playsinline style="width:100%;border-radius:12px;background:#000"></video>
+        <div class="row" style="margin-top:8px"><button class="btn" onclick="startCamera()">Start camera</button><button class="btn" onclick="takeSelfie()">Take selfie</button></div>
+        <canvas id="selfieCanvas" style="display:none"></canvas>
+      </div>
+      <div class="box">
+        <h3>Upload selfie</h3>
+        <input id="selfieUpload" type="file" accept="image/*" class="input" onchange="loadSelfie(event)">
+        <div id="selfieGallery" class="grid" style="margin-top:12px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="search" class="page">
+    <h2>🔎 Search</h2>
+    <div class="box">
+      <div class="form"><input id="searchInput" class="input" placeholder="Search the web..."><button class="btn" onclick="webSearch()">Search</button></div>
+      <p class="muted" style="margin-top:12px">Foxie can open your search in a new tab. A real built-in search API can be connected later.</p>
+    </div>
+  </section>
+
+  <section id="maps" class="page">
+    <h2>🗺️ Maps & Traffic</h2>
+    <div class="box">
+      <p class="muted">Open maps or search for a place.</p>
+      <div class="form"><input id="mapInput" class="input" placeholder="Place or address"><button class="btn" onclick="openMaps()">Open maps</button></div>
+    </div>
+  </section>
+
+  <section id="themes" class="page">
+    <h2>🎨 Themes</h2>
+    <div class="box">
+      <div class="grid">
+        <button class="card" onclick="setTheme('#39ff88','#05080a')">🟢 Hacker Green</button>
+        <button class="card" onclick="setTheme('#55a8ff','#06101a')">🔵 Cyber Blue</button>
+        <button class="card" onclick="setTheme('#c27aff','#100719')">🟣 Purple Glitch</button>
+        <button class="card" onclick="setTheme('#ff5470','#16080b')">🔴 Red Hacker</button>
+        <button class="card" onclick="setTheme('#ff70c8','#160812')">🩷 Neon Pink</button>
+        <button class="card" onclick="setTheme('#ffffff','#080808')">⚪ White Mode</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="admin" class="page">
+    <h2>👑 JJ Admin</h2>
+    <div class="box">
+      <p class="muted">Owner/admin controls are shown here for this front-end demo. Secure admin permissions must be enforced on a backend before going public.</p>
+      <div class="grid">
+        <div class="card"><h3>👥 User controls</h3><button class="btn" onclick="adminDemo('User management opened')">Manage users</button></div>
+        <div class="card"><h3>🎬 Video controls</h3><button class="btn" onclick="adminDemo('Video management opened')">Manage videos</button></div>
+        <div class="card"><h3>🎮 Game controls</h3><button class="btn" onclick="adminDemo('Game management opened')">Manage games</button></div>
+        <div class="card"><h3>🏆 Leaderboards</h3><button class="btn" onclick="adminDemo('Leaderboard controls opened')">Manage leaderboards</button></div>
+      </div>
+      <div class="box" style="margin-top:13px;background:#07100b">
+        <h3>Leaderboard periods</h3>
+        <div class="row"><button class="btn small" onclick="showLeaderboard('week')">Weekly</button><button class="btn small" onclick="showLeaderboard('month')">Monthly</button><button class="btn small" onclick="showLeaderboard('year')">Yearly</button></div>
+        <div id="leaderboard" class="grid" style="margin-top:12px"></div>
+      </div>
+      <button class="btn danger" onclick="clearRooms()">Clear demo rooms</button>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+let foxieUserName=localStorage.getItem('foxieUserName')||'';
+
+function saveFoxieName(){
+  const input=$('nameInput'),err=$('nameError');
+  const name=(input.value||'').trim();
+  if(!name){err.textContent='Please enter a name.';return}
+  foxieUserName=name.slice(0,24);
+  localStorage.setItem('foxieUserName',foxieUserName);
+  updateFoxieNameUI();
+}
+function updateFoxieNameUI(){
+  const modal=$('nameModal');
+  if(modal) modal.style.display=foxieUserName?'none':'flex';
+  const label=$('playerNameLabel');
+  if(label) label.textContent=foxieUserName||'Player';
+  document.querySelectorAll('[data-foxie-name]').forEach(el=>el.textContent=foxieUserName||'Player');
+  const input=$('nameInput');
+  if(input&&foxieUserName)input.value=foxieUserName;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const input=$('nameInput');
+  if(input){
+    input.addEventListener('keydown',e=>{if(e.key==='Enter')saveFoxieName()});
+    if(foxieUserName)input.value=foxieUserName;
+  }
+  updateFoxieNameUI();
+});
+
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page=$(id);if(page)page.classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+function openGame(id){
+  document.querySelectorAll('#games .game').forEach(g=>g.classList.remove('active'));
+  const g=$('game-'+id);if(g)g.classList.add('active');
+}
+function updateClock(){
+  const d=new Date();
+  $('clock').textContent=d.toLocaleTimeString();
+}
+setInterval(updateClock,1000);updateClock();
+
+let chatMessages=[
+  {name:'Foxie',text:'Welcome to Foxie! 🦊'},
+  {name:'System',text:'Your local Foxie chat is ready.'}
+];
+function renderChat(){
+  $('chat').innerHTML=chatMessages.map(m=>`<div class="msg"><b>${esc(m.name)}:</b> ${esc(m.text)}</div>`).join('');
+  $('chat').scrollTop=$('chat').scrollHeight;
+}
+function sendChat(){
+  const input=$('chatInput'),text=(input.value||'').trim();if(!text)return;
+  chatMessages.push({name:foxieUserName||'Player',text});input.value='';renderChat();
+}
+renderChat();
+
+let friends=JSON.parse(localStorage.getItem('foxieFriends')||'[]');
+function renderFriends(){
+  $('friendsList').innerHTML=friends.length?friends.map((f,i)=>`<div class="card"><h3>👤 ${esc(f)}</h3><p class="muted">Friend</p><button class="btn small danger" onclick="removeFriend(${i})">Remove</button></div>`).join(''):'<p class="muted">No friends added yet.</p>';
+}
+function addFriend(){
+  const input=$('friendInput'),name=(input.value||'').trim();if(!name)return;
+  if(!friends.includes(name))friends.push(name);
+  localStorage.setItem('foxieFriends',JSON.stringify(friends));input.value='';renderFriends();
+}
+function removeFriend(i){friends.splice(i,1);localStorage.setItem('foxieFriends',JSON.stringify(friends));renderFriends()}
+renderFriends();
+
+/* TIC TAC TOE */
+let ttt=Array(9).fill(''),tttOver=false;
+function resetTTT(){ttt=Array(9).fill('');tttOver=false;$('tttStatus').textContent='Your turn — X';drawTTT()}
+function drawTTT(){
+  $('tttBoard').innerHTML=ttt.map((v,i)=>`<button class="${i%2?'dark':'light'}" onclick="tttClick(${i})">${v}</button>`).join('');
+}
+function tttWinner(a){
+  const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  for(const [x,y,z] of lines)if(a[x]&&a[x]===a[y]&&a[y]===a[z])return a[x];
+  return a.every(Boolean)?'draw':null;
+}
+function tttClick(i){
+  if(tttOver||ttt[i])return;
+  ttt[i]='X';drawTTT();
+  let w=tttWinner(ttt);if(w)return endTTT(w);
+  $('tttStatus').textContent='Foxie is thinking…';
+  setTimeout(tttAI,250);
+}
+function tttAI(){
+  if(tttOver)return;
+  const empty=ttt.map((v,i)=>v?null:i).filter(v=>v!==null);
+  let move;
+  const diff=$('tttDifficulty').value;
+  if(diff==='Hard'){
+    move=minimaxTTT(ttt,'O').index;
+  }else if(diff==='Medium'){
+    move=findWinningMove('O') ?? findWinningMove('X') ?? empty[Math.floor(Math.random()*empty.length)];
+  }else move=empty[Math.floor(Math.random()*empty.length)];
+  if(move==null)return;
+  ttt[move]='O';drawTTT();const w=tttWinner(ttt);if(w)endTTT(w);else $('tttStatus').textContent='Your turn — X';
+}
+function findWinningMove(player){
+  for(const i of ttt.map((v,i)=>v?null:i).filter(v=>v!==null)){ttt[i]=player;if(tttWinner(ttt)===player){ttt[i]='';return i}ttt[i]=''}
+  return null;
+}
+function minimaxTTT(board,player){
+  const w=tttWinner(board);
+  if(w==='O')return {score:10};if(w==='X')return {score:-10};if(w==='draw')return {score:0};
+  const avail=board.map((v,i)=>v?null:i).filter(v=>v!==null),moves=[];
+  for(const i of avail){
+    board[i]=player;
+    const r=minimaxTTT(board,player==='O'?'X':'O');
+    board[i]='';moves.push({index:i,score:r.score});
+  }
+  if(player==='O')return moves.reduce((a,b)=>b.score>a.score?b:a);
+  return moves.reduce((a,b)=>b.score<a.score?b:a);
+}
+function endTTT(w){tttOver=true;$('tttStatus').textContent=w==='draw'?'Draw!':w==='X'?'You win! 🎉':'Foxie wins! 🦊'}
+resetTTT();
+
+/* CHESS */
+const chessStart=[
+'r','n','b','q','k','b','n','r',
+'p','p','p','p','p','p','p','p',
+'','','','','','','',
+'','','','','','','',
+'','','','','','','',
+'','','','','','','',
+'P','P','P','P','P','P','P','P',
+'R','N','B','Q','K','B','N','R'
+];
+let chess=chessStart.slice(),chTurn='w',chSel=-1,chMoves=[],chFlipped=false,chGameOver=false;
+let chessCastle={K:true,Q:true,k:true,q:true},chEp=-1,chGlow=true,chCoords=true;
+let playerSeconds=600,aiSeconds=600,chTimer=null;
+
+const chessUnicode={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞'};
+const cName={p:'Pawn',n:'Knight',b:'Bishop',r:'Rook',q:'Queen',k:'King'};
+
+function chessColor(p){return p&&p===p.toUpperCase()?'w':'b'}
+function chessType(p){return p.toLowerCase()}
+function sqRC(i){return [Math.floor(i/8),i%8]}
+function rcSq(r,c){return r*8+c}
+function inBoard(r,c){return r>=0&&r<8&&c>=0&&c<8}
+function algebraic(i){let [r,c]=sqRC(i);return 'abcdefgh'[c]+(8-r)}
+function cloneState(){return {board:chess.slice(),turn:chTurn,castle:{...chessCastle},ep:chEp}}
+function restoreState(s){chess=s.board.slice();chTurn=s.turn;chessCastle={...s.castle};chEp=s.ep}
+
+function findKing(board,color){return board.indexOf(color==='w'?'K':'k')}
+
+function attacked(board,target,byColor){
+  const [tr,tc]=sqRC(target);
+  for(let i=0;i<64;i++){
+    const p=board[i]; if(!p||chessColor(p)!==byColor) continue;
+    const [r,c]=sqRC(i),t=chessType(p),dr=tr-r,dc=tc-c;
+    if(t==='p'){
+      const dir=byColor==='w'?-1:1;
+      if(dr===dir&&Math.abs(dc)===1)return true;
+    } else if(t==='n'){
+      if((Math.abs(dr)===2&&Math.abs(dc)===1)||(Math.abs(dr)===1&&Math.abs(dc)===2))return true;
+    } else if(t==='k'){
+      if(Math.max(Math.abs(dr),Math.abs(dc))===1)return true;
+    } else {
+      const diag=Math.abs(dr)===Math.abs(dc), straight=(dr===0||dc===0);
+      if((t==='b'&&diag)||(t==='r'&&straight)||(t==='q'&&(diag||straight))){
+        const sr=Math.sign(dr),sc=Math.sign(dc),steps=Math.max(Math.abs(dr),Math.abs(dc));let clear=true;
+        for(let n=1;n<steps;n++){if(board[rcSq(r+sr*n,c+sc*n)]){clear=false;break}}
+        if(clear)return true;
+      }
+    }
+  }
+  return false;
+}
+
+function inCheck(color,board=chess){
+  const k=findKing(board,color); return k<0||attacked(board,k,color==='w'?'b':'w')
+}
+
+function pseudoMoves(i, includeCastle=true){
+  const p=chess[i]; if(!p)return [];
+  const color=chessColor(p),enemy=color==='w'?'b':'w',t=chessType(p),[r,c]=sqRC(i),out=[];
+  const add=(to,extra={})=>{if(to<0||to>=64)return;const q=chess[to];if(!q||chessColor(q)===enemy)out.push({from:i,to,...extra})}
+  if(t==='p'){
+    const dir=color==='w'?-1:1,start=color==='w'?6:1,promo=color==='w'?0:7;
+    const one=rcSq(r+dir,c); if(inBoard(r+dir,c)&&!chess[one]){
+      add(one,r+dir===promo?{promotion:true}:{});
+      const two=rcSq(r+2*dir,c); if(r===start&&!chess[two])add(two,{doublePawn:true});
+    }
+    for(const dc of [-1,1])if(inBoard(r+dir,c+dc)){
+      const to=rcSq(r+dir,c+dc),q=chess[to];
+      if(q&&chessColor(q)===enemy)add(to,r+dir===promo?{promotion:true}:{});
+      else if(to===chEp)add(to,{enPassant:true});
+    }
+  } else if(t==='n'){
+    [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]].forEach(([dr,dc])=>inBoard(r+dr,c+dc)&&add(rcSq(r+dr,c+dc)));
+  } else if(['b','r','q'].includes(t)){
+    const dirs=t==='b'?[[1,1],[1,-1],[-1,1],[-1,-1]]:t==='r'?[[1,0],[-1,0],[0,1],[0,-1]]:[[1,1],[1,-1],[-1,1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+    dirs.forEach(([dr,dc])=>{let rr=r+dr,cc=c+dc;while(inBoard(rr,cc)){const to=rcSq(rr,cc);if(!chess[to])add(to);else{add(to);break}rr+=dr;cc+=dc}});
+  } else if(t==='k'){
+    for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++)if((dr||dc)&&inBoard(r+dr,c+dc))add(rcSq(r+dr,c+dc));
+    if(includeCastle&&!inCheck(color)){
+      if(color==='w'&&i===60){
+        if(chessCastle.K&&!chess[61]&&!chess[62]&&!attacked(chess,61,'b')&&!attacked(chess,62,'b')&&chess[63]==='R')out.push({from:60,to:62,castle:'K'});
+        if(chessCastle.Q&&!chess[59]&&!chess[58]&&!chess[57]&&!attacked(chess,59,'b')&&!attacked(chess,58,'b')&&chess[56]==='R')out.push({from:60,to:58,castle:'Q'});
+      }
+      if(color==='b'&&i===4){
+        if(chessCastle.k&&!chess[5]&&!chess[6]&&!attacked(chess,5,'w')&&!attacked(chess,6,'w')&&chess[7]==='r')out.push({from:4,to:6,castle:'k'});
+        if(chessCastle.q&&!chess[3]&&!chess[2]&&!chess[1]&&!attacked(chess,3,'w')&&!attacked(chess,2,'w')&&chess[0]==='r')out.push({from:4,to:2,castle:'q'});
+      }
+    }
+  }
+  return out;
+}
+
+function applyMove(m){
+  const p=chess[m.from],color=chessColor(p),oldEp=chEp;
+  const captured=chess[m.to];
+  chess[m.to]=p; chess[m.from]='';
+  if(m.enPassant){const [r,c]=sqRC(m.to);chess[rcSq(r+(color==='w'?1:-1),c)]=''}
+  if(m.castle){
+    if(m.to===62){chess[61]=chess[63];chess[63]=''}
+    if(m.to===58){chess[59]=chess[56];chess[56]=''}
+    if(m.to===6){chess[5]=chess[7];chess[7]=''}
+    if(m.to===2){chess[3]=chess[0];chess[0]=''}
+  }
+  if(m.promotion)chess[m.to]=color==='w'?'Q':'q';
+  if(p==='K')chessCastle.K=chessCastle.Q=false;
+  if(p==='k')chessCastle.k=chessCastle.q=false;
+  if(m.from===63||m.to===63)chessCastle.K=false;
+  if(m.from===56||m.to===56)chessCastle.Q=false;
+  if(m.from===7||m.to===7)chessCastle.k=false;
+  if(m.from===0||m.to===0)chessCastle.q=false;
+  chEp=(m.doublePawn?m.from+(color==='w'?-8:8):-1);
+  chTurn=color==='w'?'b':'w';
+  return captured||oldEp>=0;
+}
+
+function legalMoves(color=chTurn){
+  const result=[];
+  for(let i=0;i<64;i++){
+    if(!chess[i]||chessColor(chess[i])!==color)continue;
+    for(const m of pseudoMoves(i)){
+      const saved=cloneState();applyMove(m);
+      if(!inCheck(color))result.push(m);
+      restoreState(saved);
+    }
+  }
+  return result;
+}
+
+function makeChessMove(m,record=true){
+  const moving=chess[m.from],from=algebraic(m.from),to=algebraic(m.to),cap=chess[m.to]||m.enPassant;
+  applyMove(m);
+  if(record){
+    let note=(cName[chessType(moving)]||'Piece')+' '+from+(cap?'×':'-')+to+(m.promotion?'=Q':'');
+    if(m.castle)note=m.castle.toUpperCase()==='K'?'O-O':'O-O-O';
+    chMoves.push(note);
+  }
+}
+
+function drawChess(){
+  const b=$('chessBoard');b.innerHTML='';
+  const legal=chSel>=0?legalMoves(chTurn).filter(m=>m.from===chSel):[];
+  const targetSet=new Set(legal.map(m=>m.to));
+  const checked=inCheck(chTurn);
+  const king=findKing(chess,chTurn);
+  for(let visual=0;visual<64;visual++){
+    const i=chFlipped?63-visual:visual,[r,c]=sqRC(i),x=document.createElement('div');
+    x.className='chessSq '+(((r+c)%2)?'dark':'light');
+    if(i===chSel)x.classList.add('selected');
+    if(targetSet.has(i))x.classList.add(chess[i]?'capture':'move');
+    if(checked&&i===king)x.classList.add('check');
+    const p=chess[i];
+    if(p){const s=document.createElement('span');s.className='chessPiece '+(chessColor(p)==='w'?'white':'black');s.textContent=chessUnicode[p];x.appendChild(s)}
+    if(chCoords){
+      if((!chFlipped&&r===7)||(chFlipped&&r===0)){const f=document.createElement('span');f.className='coordFile';f.textContent='abcdefgh'[c];x.appendChild(f)}
+      if((!chFlipped&&c===0)||(chFlipped&&c===7)){const rr=document.createElement('span');rr.className='coordRank';rr.textContent=8-r;x.appendChild(rr)}
+    }
+    x.onclick=()=>chessClick(i);b.appendChild(x);
+  }
+  $('moveCount').textContent=String(chMoves.length);
+  $('chessMoves').innerHTML=chMoves.length?chMoves.map((m,i)=>`<div><b>${i+1}.</b> ${esc(m)}</div>`).join(''):'No moves yet.';
+  $('chessMoves').scrollTop=$('chessMoves').scrollHeight;
+}
+
+function chessClick(i){
+  if(chGameOver||chTurn!=='w')return;
+  const p=chess[i];
+  if(chSel<0){if(p&&chessColor(p)==='w'){chSel=i;drawChess()}return}
+  const moves=legalMoves('w').filter(m=>m.from===chSel&&m.to===i);
+  if(moves.length){makeChessMove(moves[0]);chSel=-1;afterChessMove()}
+  else if(p&&chessColor(p)==='w'){chSel=i;drawChess()}
+  else{chSel=-1;drawChess()}
+}
+
+function afterChessMove(){
+  const next=legalMoves(chTurn);
+  if(!next.length){
+    chGameOver=true;
+    $('chessStatus').textContent=inCheck(chTurn)?(chTurn==='b'?'🏆 Checkmate — JJ wins!':'🦊 Checkmate — Foxie wins!'):'🤝 Stalemate — draw.';
+    drawChess();stopChessClock();return;
+  }
+  $('chessStatus').textContent=inCheck(chTurn)?'⚠ Check! Foxie is in check.':'Foxie is thinking…';
+  drawChess();
+  if(chTurn==='b')setTimeout(chessAI,280);
+}
+
+function chessAI(){
+  if(chGameOver||chTurn!=='b')return;
+  const moves=legalMoves('b');if(!moves.length)return;
+  const diff=$('chessDifficulty').value;
+  let chosen;
+  if(diff==='Easy')chosen=moves[Math.floor(Math.random()*moves.length)];
+  else{
+    const scored=moves.map(m=>{
+      const saved=cloneState(),cap=chess[m.to],piece=chess[m.from];
+      makeChessMove(m,false);let score=(cap?({p:100,n:320,b:330,r:500,q:900,k:20000}[chessType(cap)]||0):0);
+      score+=inCheck('w')?80:0;
+      restoreState(saved);return {m,score};
+    }).sort((a,b)=>b.score-a.score);
+    chosen=diff==='Hard'?scored[0].m:scored[Math.floor(Math.random()*Math.min(3,scored.length))].m;
+  }
+  makeChessMove(chosen);chSel=-1;
+  const next=legalMoves(chTurn);
+  if(!next.length){chGameOver=true;$('chessStatus').textContent=inCheck(chTurn)?'🏆 Checkmate — Foxie wins!':'🤝 Stalemate — draw.';stopChessClock()}
+  else $('chessStatus').textContent=inCheck(chTurn)?'⚠ Check! Your king is in check.':'Your move.';
+  drawChess();
+}
+
+function resetChess(){
+  chess=chessStart.slice();chTurn='w';chSel=-1;chMoves=[];chGameOver=false;chessCastle={K:true,Q:true,k:true,q:true};chEp=-1;
+  playerSeconds=600;aiSeconds=600;$('chessStatus').textContent='Your move — White.';startChessClock();drawChess();
+}
+function formatChessTime(s){s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function startChessClock(){
+  stopChessClock();chTimer=setInterval(()=>{
+    if(chGameOver)return;
+    if(chTurn==='w')playerSeconds--;else aiSeconds--;
+    $('playerClock').textContent=formatChessTime(playerSeconds);$('aiClock').textContent=formatChessTime(aiSeconds);
+    if(playerSeconds<=0||aiSeconds<=0){chGameOver=true;$('chessStatus').textContent=playerSeconds<=0?'⏱ Time — Foxie wins!':'⏱ Time — JJ wins!';stopChessClock()}
+  },1000);
+  $('playerClock').textContent=formatChessTime(playerSeconds);$('aiClock').textContent=formatChessTime(aiSeconds);
+}
+function stopChessClock(){if(chTimer){clearInterval(chTimer);chTimer=null}}
+function flipChess(){chFlipped=!chFlipped;drawChess()}
+function toggleChessGlow(){chGlow=!chGlow;document.documentElement.style.setProperty('--green',chGlow?'#39ff88':'#55a8ff');drawChess()}
+function toggleChessCoords(){chCoords=!chCoords;drawChess()}
+function applyChessColors(){
+  document.documentElement.style.setProperty('--chess-light',$('chessLight').value);
+  document.documentElement.style.setProperty('--chess-dark',$('chessDark').value);
+  document.documentElement.style.setProperty('--green',$('chessGlow').value);
+  document.documentElement.style.setProperty('--chess-frame',$('chessFrame').value);
+  document.querySelector('.chessBoardOuter')?.style.setProperty('background',$('chessFrame').value);
+}
+function chessPreset(light,dark,glow,frame){
+  $('chessLight').value=light;$('chessDark').value=dark;$('chessGlow').value=glow;$('chessFrame').value=frame;applyChessColors();
+}
+applyChessColors();resetChess();
+
+/* DRAWING */
+let drawing=false;
+const dc=$('drawCanvas'),dctx=dc.getContext('2d');
+function drawPos(e){
+  const r=dc.getBoundingClientRect();
+  return [(e.clientX-r.left)*dc.width/r.width,(e.clientY-r.top)*dc.height/r.height]
+}
+dc.addEventListener('pointerdown',e=>{drawing=true;dc.setPointerCapture(e.pointerId);const [x,y]=drawPos(e);dctx.beginPath();dctx.moveTo(x,y)});
+dc.addEventListener('pointerup',()=>drawing=false);
+dc.addEventListener('pointermove',e=>{
+  if(!drawing)return;const [x,y]=drawPos(e);dctx.lineWidth=+$('brushSize').value;dctx.lineCap='round';dctx.strokeStyle=$('drawColor').value;dctx.lineTo(x,y);dctx.stroke();
+});
+function clearCanvas(){dctx.clearRect(0,0,dc.width,dc.height)}
+
+/* SOLITAIRE */
+let solitaire=[];
+function newSolitaire(){
+  const suits=['♠','♥','♦','♣'],vals=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+  solitaire=[];
+  for(const s of suits)for(const v of vals)solitaire.push(v+s);
+  solitaire.sort(()=>Math.random()-.5);
+  solitaire=solitaire.slice(0,12);
+  $('solitaireStatus').textContent='Match cards to build points.';
+  $('solitaireCards').innerHTML=solitaire.map((c,i)=>`<button class="card" onclick="solitairePick(${i})" style="font-size:28px">${c}</button>`).join('');
+}
+function solitairePick(i){
+  const card=solitaire[i];if(!card)return;
+  $('solitaireStatus').textContent=`You picked ${card}!`;
+}
+
+/* HIGH CARD */
+function randomCard(){
+  const suits=['♠','♥','♦','♣'],vals=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+  const v=vals[Math.floor(Math.random()*13)],s=suits[Math.floor(Math.random()*4)];
+  return {text:v+s,value:vals.indexOf(v)+1};
+}
+function playHighCard(){
+  const a=randomCard(),b=randomCard();$('yourCard').textContent=a.text;$('aiCard').textContent=b.text;
+  $('highCardResult').textContent=a.value>b.value?'You win! 🎉':a.value<b.value?'Foxie wins! 🦊':'Draw!';
+}
+
+/* ROOMS */
+let rooms=JSON.parse(localStorage.getItem('foxieRooms')||'[]');
+function saveRooms(){localStorage.setItem('foxieRooms',JSON.stringify(rooms))}
+function roomCode(){return Math.random().toString(36).slice(2,7).toUpperCase()}
+function createRoom(){
+  const name=($('roomName').value||'Foxie Room').trim(),game=$('roomGame').value;
+  const room={id:roomCode(),name,game,players:1,spectators:0,host:foxieUserName||'Player',created:Date.now()};
+  rooms.push(room);saveRooms();renderRooms();$('roomName').value='';
+}
+function renderRooms(){
+  $('roomsList').innerHTML=rooms.length?rooms.map(r=>`
+    <div class="room">
+      <div class="roomhead"><b>${esc(r.name)}</b><span class="badge">${esc(r.game)}</span></div>
+      <p class="muted">Code: <b>${esc(r.id)}</b> · ${r.players} player(s) · ${r.spectators} spectator(s)</p>
+      <div class="row">
+        <button class="btn small" onclick="joinRoomById('${r.id}')">Join</button>
+        <button class="btn small secondary" onclick="spectateRoom('${r.id}')">Spectate</button>
+      </div>
+    </div>`).join(''):'<p class="muted">No rooms yet. Create one!</p>';
+}
+function joinRoom(){
+  joinRoomById(($('joinCode').value||'').trim().toUpperCase());
+}
+function joinRoomById(id){
+  const r=rooms.find(x=>x.id===id);if(!r){alert('Room not found.');return}
+  r.players=Math.min(2,r.players+1);saveRooms();renderRooms();alert(`Joined ${r.name}!`);
+}
+function spectateRoom(id){
+  const r=rooms.find(x=>x.id===id);if(!r)return;
+  r.spectators++;saveRooms();renderRooms();
+  showPage('spectator');
+  $('spectatorMatch').innerHTML=`<div class="roomhead"><b>${esc(r.name)}</b><span class="badge">${esc(r.game)}</span></div><p class="muted">Players: ${r.players} · Spectators: ${r.spectators}</p>`;
+  $('spectatorList').innerHTML=Array.from({length:r.spectators},(_,i)=>`<span class="spectator">👀 Spectator ${i+1}</span>`).join('');
+}
+function clearRooms(){rooms=[];saveRooms();renderRooms()}
+renderRooms();
+
+/* SPECTATOR CHAT */
+let spectatorMessages=[];
+function sendSpectator(){
+  const input=$('spectatorInput'),text=(input.value||'').trim();if(!text)return;
+  spectatorMessages.push({name:foxieUserName||'Player',text});input.value='';
+  $('spectatorChat').innerHTML=spectatorMessages.map(m=>`<div class="msg"><b>${esc(m.name)}:</b> ${esc(m.text)}</div>`).join('');
+}
+
+/* CALCULATOR */
+let calcExpr='';
+function calc(v){
+  if(v==='C'){calcExpr='';$('calcDisplay').value='0';return}
+  if(v==='='){
+    try{
+      if(!/^[0-9+\-*/().\s]+$/.test(calcExpr))throw 0;
+      const result=Function('"use strict";return ('+calcExpr+')')();
+      calcExpr=String(result);$('calcDisplay').value=calcExpr;
+    }catch{calcExpr='';$('calcDisplay').value='Error'}
+    return;
+  }
+  calcExpr+=v;$('calcDisplay').value=calcExpr;
+}
+
+/* SELFIES */
+let selfieStream=null;
+async function startCamera(){
+  try{
+    selfieStream=await navigator.mediaDevices.getUserMedia({video:true});
+    $('camera').srcObject=selfieStream;
+  }catch(e){alert('Camera permission was not available. You can still upload a selfie.')}
+}
+function takeSelfie(){
+  const video=$('camera'),canvas=$('selfieCanvas');
+  if(!video.videoWidth){alert('Start the camera first.');return}
+  canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+  canvas.getContext('2d').drawImage(video,0,0);
+  addSelfie(canvas.toDataURL('image/png'));
+}
+function loadSelfie(e){
+  const file=e.target.files?.[0];if(!file)return;
+  const reader=new FileReader();reader.onload=()=>addSelfie(reader.result);reader.readAsDataURL(file);
+}
+function addSelfie(src){
+  const wrap=document.createElement('div');wrap.className='card';
+  wrap.innerHTML=`<img src="${src}" style="width:100%;border-radius:10px"><button class="btn small danger" style="margin-top:7px">Remove</button>`;
+  wrap.querySelector('button').onclick=()=>wrap.remove();$('selfieGallery').prepend(wrap);
+}
+
+/* SEARCH / MAPS */
+function webSearch(){
+  const q=($('searchInput').value||'').trim();if(!q)return;
+  window.open('https://www.google.com/search?q='+encodeURIComponent(q),'_blank');
+}
+function openMaps(){
+  const q=($('mapInput').value||'').trim();if(!q)return;
+  window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q),'_blank');
+}
+
+/* THEMES */
+function setTheme(green,bg){
+  document.documentElement.style.setProperty('--green',green);
+  document.documentElement.style.setProperty('--bg',bg);
+}
+function adminDemo(msg){alert('JJ Admin: '+msg)}
+function showLeaderboard(period){
+  const names=[foxieUserName||'Player','Foxie','Guest'];
+  const scores=names.map(n=>({n,s:Math.floor(Math.random()*900)+100})).sort((a,b)=>b.s-a.s);
+  $('leaderboard').innerHTML=scores.map((x,i)=>`<div class="card"><h3>#${i+1} ${esc(x.n)}</h3><p class="muted">${x.s} points · ${period}</p></div>`).join('');
+}
+showLeaderboard('week');
+
+/* RACER */
+let racerRunning=false,racerScore=0,racerX=280,racerKeys={},racerAnim;
+const rc=$('racerCanvas'),rctx=rc.getContext('2d');
+document.addEventListener('keydown',e=>{racerKeys[e.key.toLowerCase()]=true});
+document.addEventListener('keyup',e=>{racerKeys[e.key.toLowerCase()]=false});
+function startRacer(){
+  racerRunning=true;racerScore=0;racerX=280;
+  if(racerAnim)cancelAnimationFrame(racerAnim);racerLoop();
+}
+function racerLoop(){
+  if(!racerRunning)return;
+  racerScore+=1;
+  if(racerKeys['arrowleft']||racerKeys['a'])racerX-=5;
+  if(racerKeys['arrowright']||racerKeys['d'])racerX+=5;
+  racerX=Math.max(35,Math.min(rc.width-65,racerX));
+  rctx.fillStyle='#070b0e';rctx.fillRect(0,0,rc.width,rc.height);
+  rctx.fillStyle='#1b2429';rctx.fillRect(100,0,400,rc.height);
+  rctx.strokeStyle='#eafff1';rctx.setLineDash([25,25]);rctx.lineWidth=3;rctx.lineDashOffset=-racerScore*2;rctx.beginPath();rctx.moveTo(300,0);rctx.lineTo(300,420);rctx.stroke();rctx.setLineDash([]);
+  rctx.fillStyle='#39ff88';rctx.fillRect(racerX,350,30,55);
+  rctx.fillStyle='#ff526d';const ox=120+((racerScore*3)%330);rctx.fillRect(ox,80,30,50);
+  $('racerScore').textContent='Score: '+racerScore;
+  racerAnim=requestAnimationFrame(racerLoop);
+}
+
+/* FIGHTER */
+let fighterRunning=false,fighterAnim,fighterKeys={};
+let fighter={x:150,y:300,vx:0,vy:0,hp:100,attack:0},fighterAI={x:560,y:300,vx:0,vy:0,hp:100,attack:0};
+const fc=$('fighterCanvas'),fctx=fc.getContext('2d');
+document.addEventListener('keydown',e=>{
+  fighterKeys[e.key.toLowerCase()]=true;
+  if(['j','k'].includes(e.key.toLowerCase())&&fighterRunning)fighter.attack=12;
+});
+document.addEventListener('keyup',e=>fighterKeys[e.key.toLowerCase()]=false);
+function resetFighter(){
+  fighterRunning=true;fighter={x:150,y:300,vx:0,vy:0,hp:100,attack:0};fighterAI={x:560,y:300,vx:0,vy:0,hp:100,attack:0};
+  if(fighterAnim)cancelAnimationFrame(fighterAnim);fighterLoop();
+}
+function fighterLoop(){
+  if(!fighterRunning)return;
+  const speed=4;
+  if(fighterKeys['a'])fighter.x-=speed;if(fighterKeys['d'])fighter.x+=speed;
+  if(fighterKeys['w']&&fighter.y>=300)fighter.vy=-11;
+  fighter.vy+=.5;fighter.y+=fighter.vy;if(fighter.y>300){fighter.y=300;fighter.vy=0}
+  fighter.x=Math.max(30,Math.min(700,fighter.x));
+  const dist=fighter.x-fighterAI.x;
+  fighterAI.x+=dist>0?2.1:-2.1;
+  if(Math.abs(dist)<85&&Math.random()<.03)fighterAI.attack=12;
+  if(fighter.attack>0)fighter.attack--;
+  if(fighterAI.attack>0)fighterAI.attack--;
+  if(fighter.attack===11&&Math.abs(fighter.x-fighterAI.x)<100)fighterAI.hp=Math.max(0,fighterAI.hp-8);
+  if(fighterAI.attack===11&&Math.abs(fighter.x-fighterAI.x)<100)fighter.hp=Math.max(0,fighter.hp-7);
+  fctx.fillStyle='#05090b';fctx.fillRect(0,0,760,400);
+  fctx.fillStyle='#101b20';fctx.fillRect(0,330,760,70);
+  drawFighter(fighter,'#39ff88');drawFighter(fighterAI,'#ff526d');
+  fctx.fillStyle='#fff';fctx.font='bold 16px Arial';fctx.fillText('YOU',40,28);fctx.fillText('FOXIE',650,28);
+  fctx.fillStyle='#39ff88';fctx.fillRect(40,38,250*fighter.hp/100,15);
+  fctx.fillStyle='#ff526d';fctx.fillRect(470,38,250*fighterAI.hp/100,15);
+  if(fighter.hp<=0||fighterAI.hp<=0){fighterRunning=false;fctx.fillStyle='#fff';fctx.font='bold 30px Arial';fctx.fillText(fighterAI.hp<=0?'YOU WIN!':'FOXIE WINS!',270,180);return}
+  fighterAnim=requestAnimationFrame(fighterLoop);
+}
+function drawFighter(p,color){
+  fctx.fillStyle=color;fctx.fillRect(p.x,p.y-85,45,85);
+  fctx.beginPath();fctx.arc(p.x+22,p.y-100,22,0,Math.PI*2);fctx.fill();
+  if(p.attack>0){fctx.fillRect(p.x+(p===fighter?38:-38),p.y-70,45,12)}
+}
+</script>
+</body>
+</html>
