@@ -8,14 +8,13 @@
 <style>
 :root{
   --green:#39ff14;
-  --green2:#20c900;
   --bg:#020604;
   --panel:#07120b;
   --panel2:#0a190e;
   --line:#174d25;
   --text:#d9ffe0;
   --muted:#79a982;
-  --red:#ff4d4d;
+  --red:#ff5555;
 }
 
 *{
@@ -32,13 +31,15 @@ html,body{
   overflow:hidden;
 }
 
-body{
-  position:relative;
+button,input{
+  font:inherit;
 }
 
-/* =========================
-   BACKGROUND
-========================= */
+button{
+  cursor:pointer;
+}
+
+/* BACKGROUND */
 
 .bg{
   position:fixed;
@@ -77,9 +78,7 @@ body{
   }
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* SIDEBAR */
 
 .sidebar{
   position:fixed;
@@ -147,7 +146,6 @@ body{
   padding:12px 13px;
   margin:2px 0;
   border-radius:10px;
-  cursor:pointer;
   display:flex;
   align-items:center;
   gap:12px;
@@ -166,7 +164,6 @@ body{
   background:rgba(57,255,20,.10);
   color:var(--green);
   border:1px solid rgba(57,255,20,.22);
-  box-shadow:0 0 14px rgba(57,255,20,.06);
 }
 
 .nav-icon{
@@ -187,9 +184,7 @@ body{
   margin-top:8px;
 }
 
-/* =========================
-   MAIN
-========================= */
+/* MAIN */
 
 .main{
   position:fixed;
@@ -250,9 +245,7 @@ body{
   border-radius:10px;
 }
 
-/* =========================
-   PAGES
-========================= */
+/* PAGES */
 
 .page{
   display:none;
@@ -328,7 +321,7 @@ body{
   color:var(--green);
 }
 
-input,textarea,select{
+input{
   width:100%;
   padding:12px;
   background:#020604;
@@ -338,13 +331,8 @@ input,textarea,select{
   outline:none;
 }
 
-input:focus,textarea:focus,select:focus{
+input:focus{
   border-color:var(--green);
-}
-
-textarea{
-  resize:vertical;
-  min-height:100px;
 }
 
 .btn{
@@ -353,7 +341,6 @@ textarea{
   color:var(--green);
   padding:11px 16px;
   border-radius:9px;
-  cursor:pointer;
   font-weight:bold;
   transition:.18s;
 }
@@ -366,7 +353,6 @@ textarea{
 .btn-danger{
   border-color:var(--red);
   color:var(--red);
-  background:rgba(255,77,77,.06);
 }
 
 .muted{
@@ -384,9 +370,7 @@ textarea{
   font-weight:bold;
 }
 
-/* =========================
-   CHAT
-========================= */
+/* CHAT */
 
 .chat-box{
   height:55vh;
@@ -422,9 +406,24 @@ textarea{
   margin-top:12px;
 }
 
-/* =========================
-   GAME
-========================= */
+/* ACCOUNT */
+
+.account-status{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.online-dot{
+  width:10px;
+  height:10px;
+  background:var(--green);
+  border-radius:50%;
+  box-shadow:0 0 10px var(--green);
+}
+
+/* GAME */
 
 .game-wrap{
   display:flex;
@@ -439,64 +438,105 @@ canvas{
   box-shadow:0 0 20px rgba(57,255,20,.12);
 }
 
-/* =========================
-   NAME MODAL
-========================= */
+/* MODAL */
 
-.name-modal{
+.modal{
   position:fixed;
   inset:0;
   z-index:9999;
-  display:flex;
+  display:none;
   align-items:center;
   justify-content:center;
   background:rgba(0,0,0,.90);
   backdrop-filter:blur(12px);
 }
 
-.name-box{
-  width:min(430px,90%);
-  padding:35px;
-  text-align:center;
+.modal-box{
+  width:min(440px,92%);
+  padding:32px;
   background:linear-gradient(145deg,#07120b,#0a190e);
   border:1px solid var(--green);
   border-radius:18px;
-  box-shadow:
-    0 0 35px rgba(57,255,20,.2),
-    inset 0 0 30px rgba(57,255,20,.03);
+  box-shadow:0 0 35px rgba(57,255,20,.2);
 }
 
-.name-logo{
-  font-size:65px;
+.modal-logo{
+  text-align:center;
+  font-size:60px;
   filter:drop-shadow(0 0 12px var(--green));
 }
 
-.name-box h1{
+.modal-box h1{
+  text-align:center;
   color:var(--green);
   margin:10px 0;
 }
 
-.name-box p{
+.modal-box p{
+  text-align:center;
   color:var(--muted);
-  margin-bottom:20px;
 }
 
-.name-box input{
-  margin-bottom:12px;
-}
-
-.name-error{
+.modal-error{
   min-height:20px;
-  margin-top:8px;
+  margin-top:10px;
+  color:var(--red);
+  text-align:center;
   font-size:13px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+.modal-tabs{
+  display:flex;
+  gap:8px;
+  margin:20px 0;
+}
+
+.modal-tab{
+  flex:1;
+  padding:10px;
+  background:#030805;
+  border:1px solid var(--line);
+  color:var(--muted);
+  border-radius:8px;
+}
+
+.modal-tab.active{
+  color:var(--green);
+  border-color:var(--green);
+}
+
+.auth-form{
+  display:none;
+}
+
+.auth-form.active{
+  display:block;
+}
+
+.auth-form input{
+  margin-bottom:10px;
+}
+
+.auth-actions{
+  display:flex;
+  gap:10px;
+  margin-top:5px;
+}
+
+.auth-actions .btn{
+  flex:1;
+}
+
+/* MOBILE */
 
 .mobile-menu{
   display:none;
+  background:transparent;
+  border:1px solid var(--line);
+  color:var(--green);
+  padding:8px 11px;
+  border-radius:8px;
+  margin-right:10px;
 }
 
 @media(max-width:800px){
@@ -517,13 +557,6 @@ canvas{
 
   .mobile-menu{
     display:block;
-    background:transparent;
-    border:1px solid var(--line);
-    color:var(--green);
-    padding:8px 11px;
-    border-radius:8px;
-    cursor:pointer;
-    margin-right:10px;
   }
 
   .topbar{
@@ -548,8 +581,10 @@ canvas{
 <body>
 
 <!-- BACKGROUND -->
+
 <div class="bg">
   <div class="grid"></div>
+
   <div class="particle" style="left:5%;animation-duration:11s"></div>
   <div class="particle" style="left:13%;animation-duration:15s"></div>
   <div class="particle" style="left:22%;animation-duration:9s"></div>
@@ -562,11 +597,14 @@ canvas{
   <div class="particle" style="left:94%;animation-duration:18s"></div>
 </div>
 
-<!-- DISPLAY NAME MODAL -->
-<div id="nameModal" class="name-modal">
-  <div class="name-box">
 
-    <div class="name-logo">🦊</div>
+<!-- DISPLAY NAME MODAL -->
+
+<div id="nameModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-logo">🦊</div>
 
     <h1>Welcome to Foxie</h1>
 
@@ -574,28 +612,140 @@ canvas{
 
     <input
       id="displayNameInput"
-      type="text"
       maxlength="24"
       placeholder="Your display name"
-      onkeydown="if(event.key==='Enter') saveDisplayName()"
+      onkeydown="if(event.key==='Enter')saveDisplayName()"
     >
 
-    <button class="btn" onclick="saveDisplayName()">
+    <br><br>
+
+    <button class="btn" style="width:100%" onclick="saveDisplayName()">
       Enter Foxie 🦊
     </button>
 
-    <div id="nameError" class="name-error"></div>
+    <div id="nameError" class="modal-error"></div>
 
   </div>
+
 </div>
 
+
+<!-- AUTH MODAL -->
+
+<div id="authModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-logo">🦊</div>
+
+    <h1>Foxie Account</h1>
+
+    <p>Save your Foxie progress and connect with players.</p>
+
+    <div class="modal-tabs">
+
+      <button
+        id="loginTab"
+        class="modal-tab active"
+        onclick="switchAuth('login')"
+      >
+        Login
+      </button>
+
+      <button
+        id="registerTab"
+        class="modal-tab"
+        onclick="switchAuth('register')"
+      >
+        Sign Up
+      </button>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div id="loginForm" class="auth-form active">
+
+      <input
+        id="loginUsername"
+        placeholder="Username"
+      >
+
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password"
+        onkeydown="if(event.key==='Enter')login()"
+      >
+
+      <div class="auth-actions">
+
+        <button class="btn" onclick="login()">
+          Login
+        </button>
+
+        <button class="btn" onclick="closeAuth()">
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- REGISTER -->
+
+    <div id="registerForm" class="auth-form">
+
+      <input
+        id="registerUsername"
+        placeholder="Username"
+      >
+
+      <input
+        id="registerDisplayName"
+        maxlength="24"
+        placeholder="Display name"
+      >
+
+      <input
+        id="registerPassword"
+        type="password"
+        placeholder="Password"
+        onkeydown="if(event.key==='Enter')register()"
+      >
+
+      <div class="auth-actions">
+
+        <button class="btn" onclick="register()">
+          Create Account
+        </button>
+
+        <button class="btn" onclick="closeAuth()">
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="authError" class="modal-error"></div>
+
+  </div>
+
+</div>
+
+
 <!-- SIDEBAR -->
+
 <aside class="sidebar" id="sidebar">
 
   <div class="logo">
     <div class="logo-icon">🦊</div>
     <div class="logo-text">FOXIE</div>
   </div>
+
 
   <div class="sidebar-content">
 
@@ -621,6 +771,7 @@ canvas{
       Images
     </button>
 
+
     <div class="nav-section">Community</div>
 
     <button class="nav-btn" onclick="showPage('profile',this)">
@@ -643,6 +794,7 @@ canvas{
       Foxie Vids
     </button>
 
+
     <div class="nav-section">Play</div>
 
     <button class="nav-btn" onclick="showPage('games',this)">
@@ -654,6 +806,7 @@ canvas{
       <span class="nav-icon">🏆</span>
       Leaderboard
     </button>
+
 
     <div class="nav-section">Tools</div>
 
@@ -668,6 +821,7 @@ canvas{
     </button>
 
   </div>
+
 
   <div class="sidebar-bottom">
 
@@ -684,7 +838,9 @@ canvas{
 
 </aside>
 
+
 <!-- MAIN -->
+
 <main class="main">
 
   <header class="topbar">
@@ -710,9 +866,12 @@ canvas{
 
   </header>
 
+
   <div class="page-container">
 
+
     <!-- HOME -->
+
     <section class="page active" id="page-home">
 
       <div class="hero">
@@ -720,61 +879,82 @@ canvas{
         <h1>Foxie 🦊</h1>
 
         <p>
-          Your own AI assistant, gaming platform and social world.
+          Your AI assistant, gaming platform and social world.
         </p>
 
-        <div class="welcome-name" id="welcomeName">
-        </div>
+        <div class="welcome-name" id="welcomeName"></div>
 
       </div>
+
 
       <div class="cards">
 
         <div class="card">
+
           <h3>💬 AI Chat</h3>
+
           <p>
             Talk to Foxie and ask questions.
           </p>
+
           <button class="btn" onclick="openPage('chat')">
             Open Chat
           </button>
+
         </div>
 
+
         <div class="card">
+
           <h3>🎮 Games</h3>
+
           <p>
-            Play Foxie games and compete for rewards.
+            Play games and compete for rewards.
           </p>
+
           <button class="btn" onclick="openPage('games')">
             Play
           </button>
+
         </div>
 
+
         <div class="card">
-          <h3>🏆 Tournaments</h3>
+
+          <h3>🏆 Leaderboards</h3>
+
           <p>
-            Compete for XP, coins, titles and badges.
+            Track XP, coins and player rankings.
           </p>
+
           <button class="btn" onclick="openPage('leaderboard')">
-            Leaderboard
+            View
           </button>
+
         </div>
 
+
         <div class="card">
+
           <h3>👥 Community</h3>
+
           <p>
-            Find players, add friends and build your Foxie profile.
+            Find players and make friends.
           </p>
+
           <button class="btn" onclick="openPage('users')">
-            Users
+            Explore
           </button>
+
         </div>
 
       </div>
 
     </section>
 
+
     <!-- CHAT -->
+
     <section class="page" id="page-chat">
 
       <div class="panel">
@@ -789,12 +969,13 @@ canvas{
 
         </div>
 
+
         <div class="chat-input">
 
           <input
             id="chatInput"
             placeholder="Message Foxie..."
-            onkeydown="if(event.key==='Enter') sendChat()"
+            onkeydown="if(event.key==='Enter')sendChat()"
           >
 
           <button class="btn" onclick="sendChat()">
@@ -807,7 +988,9 @@ canvas{
 
     </section>
 
+
     <!-- WEB -->
+
     <section class="page" id="page-web">
 
       <div class="panel">
@@ -820,8 +1003,8 @@ canvas{
 
         <input
           id="webSearch"
-          placeholder="Search the web..."
-          onkeydown="if(event.key==='Enter') webSearch()"
+          placeholder="Search..."
+          onkeydown="if(event.key==='Enter')webSearch()"
         >
 
         <br><br>
@@ -836,7 +1019,9 @@ canvas{
 
     </section>
 
+
     <!-- IMAGES -->
+
     <section class="page" id="page-images">
 
       <div class="panel">
@@ -847,7 +1032,7 @@ canvas{
           Image search and creation tools will live here.
         </p>
 
-        <input placeholder="What image are you looking for?">
+        <input placeholder="Search images...">
 
         <br><br>
 
@@ -859,15 +1044,23 @@ canvas{
 
     </section>
 
+
     <!-- PROFILE -->
+
     <section class="page" id="page-profile">
 
       <div class="panel">
 
         <h2>👤 Profile</h2>
 
-        <p>
-          Display name:
+        <div id="accountStatus">
+          Guest Mode
+        </div>
+
+        <br>
+
+        <p class="muted">
+          Display name
         </p>
 
         <div class="big-number" id="profileName">
@@ -894,11 +1087,23 @@ canvas{
           0
         </div>
 
+        <br>
+
+        <button
+          class="btn"
+          id="accountButton"
+          onclick="openAuth()"
+        >
+          Login / Sign Up
+        </button>
+
       </div>
 
     </section>
 
+
     <!-- USERS -->
+
     <section class="page" id="page-users">
 
       <div class="panel">
@@ -908,7 +1113,7 @@ canvas{
         <input
           id="userSearch"
           placeholder="Search users..."
-          onkeydown="if(event.key==='Enter') searchUsers()"
+          onkeydown="if(event.key==='Enter')searchUsers()"
         >
 
         <br><br>
@@ -923,26 +1128,26 @@ canvas{
 
     </section>
 
+
     <!-- FRIENDS -->
+
     <section class="page" id="page-friends">
 
       <div class="panel">
 
         <h2>🫂 Friends</h2>
 
-        <p class="muted">
-          Your Foxie friends will appear here.
-        </p>
-
-        <div id="friendsList">
-          No friends loaded yet.
+        <div id="friendsList" class="muted">
+          Log into your account to use Friends.
         </div>
 
       </div>
 
     </section>
 
+
     <!-- VIDS -->
+
     <section class="page" id="page-vids">
 
       <div class="panel">
@@ -950,7 +1155,7 @@ canvas{
         <h2>🎬 Foxie Vids</h2>
 
         <p class="muted">
-          A future home for short videos, gaming clips and creators.
+          Short videos, gaming clips and creator content.
         </p>
 
         <button class="btn">
@@ -961,54 +1166,80 @@ canvas{
 
     </section>
 
+
     <!-- GAMES -->
+
     <section class="page" id="page-games">
 
       <div class="panel">
 
         <h2>🎮 Foxie Games</h2>
 
-        <p class="muted">
-          Choose a game.
-        </p>
-
         <div class="cards">
 
           <div class="card">
+
             <h3>🐍 Snake</h3>
-            <p>Classic Snake.</p>
+
+            <p>
+              Classic Snake.
+            </p>
+
             <button class="btn" onclick="startSnake()">
               Play
             </button>
+
           </div>
 
+
           <div class="card">
+
             <h3>♟️ Chess</h3>
-            <p>Foxie Chess is planned here.</p>
+
+            <p>
+              Competitive Foxie Chess.
+            </p>
+
             <button class="btn">
               Coming Soon
             </button>
+
           </div>
 
+
           <div class="card">
+
             <h3>🚗 Foxie Drive</h3>
-            <p>Driving game inspired by realistic street driving.</p>
+
+            <p>
+              Realistic driving world.
+            </p>
+
             <button class="btn">
               Coming Soon
             </button>
+
           </div>
 
+
           <div class="card">
-            <h3>🟢 Foxie Worlds</h3>
-            <p>Create and explore player-made worlds.</p>
+
+            <h3>🌎 Foxie Worlds</h3>
+
+            <p>
+              Create and explore player worlds.
+            </p>
+
             <button class="btn">
               Coming Soon
             </button>
+
           </div>
 
         </div>
 
       </div>
+
 
       <div class="panel">
 
@@ -1024,17 +1255,17 @@ canvas{
 
         </div>
 
-        <br>
-
         <p class="muted">
-          Use the arrow keys to play.
+          Use the arrow keys.
         </p>
 
       </div>
 
     </section>
 
+
     <!-- LEADERBOARD -->
+
     <section class="page" id="page-leaderboard">
 
       <div class="panel">
@@ -1042,14 +1273,16 @@ canvas{
         <h2>🏆 Leaderboard</h2>
 
         <div id="leaderboard">
-          Loading leaderboard...
+          Loading...
         </div>
 
       </div>
 
     </section>
 
+
     <!-- CALCULATOR -->
+
     <section class="page" id="page-calculator">
 
       <div class="panel">
@@ -1059,7 +1292,7 @@ canvas{
         <input
           id="calcInput"
           placeholder="Example: 56575 + 9"
-          onkeydown="if(event.key==='Enter') calculate()"
+          onkeydown="if(event.key==='Enter')calculate()"
         >
 
         <br><br>
@@ -1074,7 +1307,9 @@ canvas{
 
     </section>
 
+
     <!-- CREATOR -->
+
     <section class="page" id="page-creator">
 
       <div class="panel">
@@ -1082,18 +1317,20 @@ canvas{
         <h2>🛠️ Creator Mode</h2>
 
         <p class="muted">
-          Creator Mode is protected separately from your display name.
+          Creator Mode uses secure account authentication.
         </p>
 
         <div id="creatorStatus">
-          Checking creator status...
+          Log into your account to check Creator Mode.
         </div>
 
       </div>
 
     </section>
 
+
     <!-- SETTINGS -->
+
     <section class="page" id="page-settings">
 
       <div class="panel">
@@ -1103,7 +1340,7 @@ canvas{
         <h3>Display Name</h3>
 
         <p class="muted">
-          Change the name Foxie uses on this device.
+          Your guest display name is saved on this device.
         </p>
 
         <input
@@ -1122,12 +1359,39 @@ canvas{
 
       </div>
 
+
+      <div class="panel">
+
+        <h2>🔐 Account</h2>
+
+        <div id="settingsAccount">
+          You are using Guest Mode.
+        </div>
+
+        <br>
+
+        <button class="btn" onclick="openAuth()">
+          Login / Sign Up
+        </button>
+
+        <button
+          class="btn btn-danger"
+          onclick="logout()"
+          style="display:none"
+          id="logoutButton"
+        >
+          Logout
+        </button>
+
+      </div>
+
+
       <div class="panel">
 
         <h2>🧹 Device Data</h2>
 
         <p class="muted">
-          Reset your saved Foxie display name on this device.
+          Remove your saved guest display name.
         </p>
 
         <button
@@ -1145,11 +1409,8 @@ canvas{
 
 </main>
 
-<script>
 
-/* =========================
-   FOXIE API
-========================= */
+<script>
 
 const FOXIE_API =
   "https://foxie-ai-backend.onrender.com";
@@ -1158,49 +1419,50 @@ let currentUser = null;
 
 
 /* =========================
-   PAGE NAVIGATION
+   NAVIGATION
 ========================= */
 
-function showPage(page, button){
+function showPage(page,button){
 
   document
     .querySelectorAll(".page")
-    .forEach(p => p.classList.remove("active"));
+    .forEach(p =>
+      p.classList.remove("active")
+    );
 
   const target =
-    document.getElementById("page-" + page);
+    document.getElementById(
+      "page-" + page
+    );
 
-  if(target){
+  if(target)
     target.classList.add("active");
-  }
 
   document
     .querySelectorAll(".nav-btn")
-    .forEach(b => b.classList.remove("active"));
+    .forEach(b =>
+      b.classList.remove("active")
+    );
 
-  if(button){
+  if(button)
     button.classList.add("active");
-  }
 
   document
     .getElementById("sidebar")
     .classList.remove("open");
 
-  if(page === "leaderboard"){
+  if(page === "leaderboard")
     loadLeaderboard();
-  }
 
-  if(page === "profile"){
+  if(page === "profile")
     loadProfile();
-  }
 
-  if(page === "creator"){
-    loadCreatorStatus();
-  }
-
-  if(page === "friends"){
+  if(page === "friends")
     loadFriends();
-  }
+
+  if(page === "creator")
+    loadCreatorStatus();
+
 }
 
 
@@ -1210,18 +1472,16 @@ function openPage(page){
     [...document.querySelectorAll(".nav-btn")]
       .find(b =>
         b.getAttribute("onclick") &&
-        b.getAttribute("onclick").includes(
-          "showPage('" + page + "'"
-        )
+        b.getAttribute("onclick")
+          .includes(
+            "showPage('" + page + "'"
+          )
       );
 
   showPage(page,button);
+
 }
 
-
-/* =========================
-   MOBILE SIDEBAR
-========================= */
 
 function toggleSidebar(){
 
@@ -1238,11 +1498,9 @@ function toggleSidebar(){
 
 function updateClock(){
 
-  const now = new Date();
-
   document.getElementById("clock")
     .textContent =
-      now.toLocaleTimeString();
+      new Date().toLocaleTimeString();
 
 }
 
@@ -1257,32 +1515,25 @@ updateClock();
 function saveDisplayName(){
 
   const input =
-    document.getElementById("displayNameInput");
+    document.getElementById(
+      "displayNameInput"
+    );
 
   const error =
-    document.getElementById("nameError");
+    document.getElementById(
+      "nameError"
+    );
 
   const name =
     input.value.trim();
 
-  if(!name){
-
-    error.textContent =
-      "Please enter a display name.";
-
-    error.style.color = "#ff5555";
-
-    return;
-  }
-
   if(name.length < 2){
 
     error.textContent =
-      "Display name must be at least 2 characters.";
-
-    error.style.color = "#ff5555";
+      "Name must be at least 2 characters.";
 
     return;
+
   }
 
   localStorage.setItem(
@@ -1297,32 +1548,28 @@ function saveDisplayName(){
     .style.display = "none";
 
   updateDisplayNameUI(name);
+
 }
 
 
 function updateDisplayNameUI(name){
 
-  const welcome =
-    document.getElementById("welcomeName");
+  document
+    .getElementById("welcomeName")
+    .textContent =
+      "Welcome to Foxie, " +
+      name +
+      " 🦊";
 
-  const profile =
-    document.getElementById("profileName");
+  document
+    .getElementById("profileName")
+    .textContent =
+      name;
 
-  const settings =
-    document.getElementById("settingsName");
-
-  if(welcome){
-    welcome.textContent =
-      "Welcome to Foxie, " + name + " 🦊";
-  }
-
-  if(profile && !currentUser){
-    profile.textContent = name;
-  }
-
-  if(settings){
-    settings.value = name;
-  }
+  document
+    .getElementById("settingsName")
+    .value =
+      name;
 
 }
 
@@ -1335,7 +1582,9 @@ function loadDisplayName(){
     );
 
   const modal =
-    document.getElementById("nameModal");
+    document.getElementById(
+      "nameModal"
+    );
 
   if(saved){
 
@@ -1350,7 +1599,9 @@ function loadDisplayName(){
     setTimeout(() => {
 
       document
-        .getElementById("displayNameInput")
+        .getElementById(
+          "displayNameInput"
+        )
         .focus();
 
     },100);
@@ -1363,10 +1614,14 @@ function loadDisplayName(){
 function changeDisplayName(){
 
   const input =
-    document.getElementById("settingsName");
+    document.getElementById(
+      "settingsName"
+    );
 
   const status =
-    document.getElementById("settingsStatus");
+    document.getElementById(
+      "settingsStatus"
+    );
 
   const name =
     input.value.trim();
@@ -1376,9 +1631,11 @@ function changeDisplayName(){
     status.textContent =
       "Name must be at least 2 characters.";
 
-    status.style.color = "#ff5555";
+    status.style.color =
+      "#ff5555";
 
     return;
+
   }
 
   localStorage.setItem(
@@ -1391,7 +1648,9 @@ function changeDisplayName(){
   status.textContent =
     "Display name saved ✓";
 
-  status.style.color = "#39ff14";
+  status.style.color =
+    "#39ff14";
+
 }
 
 
@@ -1407,21 +1666,466 @@ function resetDisplayName(){
 
 
 /* =========================
+   AUTH MODAL
+========================= */
+
+function openAuth(){
+
+  document
+    .getElementById("authModal")
+    .style.display =
+      "flex";
+
+}
+
+
+function closeAuth(){
+
+  document
+    .getElementById("authModal")
+    .style.display =
+      "none";
+
+  document
+    .getElementById("authError")
+    .textContent = "";
+
+}
+
+
+function switchAuth(type){
+
+  const login =
+    document.getElementById(
+      "loginForm"
+    );
+
+  const register =
+    document.getElementById(
+      "registerForm"
+    );
+
+  const loginTab =
+    document.getElementById(
+      "loginTab"
+    );
+
+  const registerTab =
+    document.getElementById(
+      "registerTab"
+    );
+
+  if(type === "login"){
+
+    login.classList.add("active");
+    register.classList.remove("active");
+
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+
+  }else{
+
+    register.classList.add("active");
+    login.classList.remove("active");
+
+    registerTab.classList.add("active");
+    loginTab.classList.remove("active");
+
+  }
+
+}
+
+
+/* =========================
+   REGISTER
+========================= */
+
+async function register(){
+
+  const username =
+    document.getElementById(
+      "registerUsername"
+    ).value.trim();
+
+  const displayName =
+    document.getElementById(
+      "registerDisplayName"
+    ).value.trim();
+
+  const password =
+    document.getElementById(
+      "registerPassword"
+    ).value;
+
+  const error =
+    document.getElementById(
+      "authError"
+    );
+
+  error.textContent =
+    "Creating account...";
+
+  try{
+
+    const response =
+      await fetch(
+        FOXIE_API +
+        "/api/auth/register",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            username,
+            display_name:
+              displayName ||
+              username,
+            password
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      error.textContent =
+        data.detail ||
+        data.message ||
+        "Could not create account.";
+
+      return;
+
+    }
+
+    if(data.token){
+
+      localStorage.setItem(
+        "foxie_session",
+        data.token
+      );
+
+    }
+
+    closeAuth();
+
+    await loadCurrentUser();
+
+  }catch(e){
+
+    error.textContent =
+      "Could not connect to Foxie.";
+
+  }
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+async function login(){
+
+  const username =
+    document.getElementById(
+      "loginUsername"
+    ).value.trim();
+
+  const password =
+    document.getElementById(
+      "loginPassword"
+    ).value;
+
+  const error =
+    document.getElementById(
+      "authError"
+    );
+
+  error.textContent =
+    "Logging in...";
+
+  try{
+
+    const response =
+      await fetch(
+        FOXIE_API +
+        "/api/auth/login",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            username,
+            password
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      error.textContent =
+        data.detail ||
+        data.message ||
+        "Login failed.";
+
+      return;
+
+    }
+
+    if(data.token){
+
+      localStorage.setItem(
+        "foxie_session",
+        data.token
+      );
+
+    }
+
+    closeAuth();
+
+    await loadCurrentUser();
+
+  }catch(e){
+
+    error.textContent =
+      "Could not connect to Foxie.";
+
+  }
+
+}
+
+
+/* =========================
+   CURRENT USER
+========================= */
+
+async function loadCurrentUser(){
+
+  const token =
+    localStorage.getItem(
+      "foxie_session"
+    );
+
+  if(!token){
+
+    currentUser = null;
+
+    updateAccountUI();
+
+    return;
+
+  }
+
+  try{
+
+    const response =
+      await fetch(
+        FOXIE_API +
+        "/api/auth/me",
+        {
+          headers:{
+            Authorization:
+              "Bearer " + token
+          }
+        }
+      );
+
+    if(!response.ok){
+
+      localStorage.removeItem(
+        "foxie_session"
+      );
+
+      currentUser = null;
+
+      updateAccountUI();
+
+      return;
+
+    }
+
+    currentUser =
+      await response.json();
+
+    updateAccountUI();
+
+  }catch(e){
+
+    console.log(
+      "Account check failed."
+    );
+
+  }
+
+}
+
+
+/* =========================
+   ACCOUNT UI
+========================= */
+
+function updateAccountUI(){
+
+  const accountStatus =
+    document.getElementById(
+      "accountStatus"
+    );
+
+  const accountButton =
+    document.getElementById(
+      "accountButton"
+    );
+
+  const settingsAccount =
+    document.getElementById(
+      "settingsAccount"
+    );
+
+  const logoutButton =
+    document.getElementById(
+      "logoutButton"
+    );
+
+  if(currentUser){
+
+    const name =
+      currentUser.display_name ||
+      currentUser.username ||
+      "Foxie User";
+
+    document.getElementById(
+      "profileName"
+    ).textContent =
+      name;
+
+    document.getElementById(
+      "welcomeName"
+    ).textContent =
+      "Welcome back, " +
+      name +
+      " 🦊";
+
+    accountStatus.innerHTML =
+      '<div class="account-status">' +
+      '<span class="online-dot"></span>' +
+      'Logged in as ' +
+      escapeHTML(name) +
+      '</div>';
+
+    accountButton.textContent =
+      "Account Connected ✓";
+
+    accountButton.onclick =
+      function(){
+        openPage("settings");
+      };
+
+    settingsAccount.innerHTML =
+      "Logged in as <strong>" +
+      escapeHTML(name) +
+      "</strong>";
+
+    logoutButton.style.display =
+      "inline-block";
+
+    loadProfile();
+
+  }else{
+
+    accountStatus.textContent =
+      "Guest Mode";
+
+    accountButton.textContent =
+      "Login / Sign Up";
+
+    accountButton.onclick =
+      openAuth;
+
+    settingsAccount.textContent =
+      "You are using Guest Mode.";
+
+    logoutButton.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+  const token =
+    localStorage.getItem(
+      "foxie_session"
+    );
+
+  if(token){
+
+    try{
+
+      await fetch(
+        FOXIE_API +
+        "/api/auth/logout",
+        {
+          method:"POST",
+          headers:{
+            Authorization:
+              "Bearer " + token
+          }
+        }
+      );
+
+    }catch(e){}
+
+  }
+
+  localStorage.removeItem(
+    "foxie_session"
+  );
+
+  currentUser = null;
+
+  updateAccountUI();
+
+  openPage("home");
+
+}
+
+
+/* =========================
    CHAT
 ========================= */
 
 async function sendChat(){
 
   const input =
-    document.getElementById("chatInput");
+    document.getElementById(
+      "chatInput"
+    );
 
   const box =
-    document.getElementById("chatBox");
+    document.getElementById(
+      "chatBox"
+    );
 
   const message =
     input.value.trim();
 
-  if(!message) return;
+  if(!message)
+    return;
 
   const userMessage =
     document.createElement("div");
@@ -1432,12 +2136,11 @@ async function sendChat(){
   userMessage.textContent =
     message;
 
-  box.appendChild(userMessage);
+  box.appendChild(
+    userMessage
+  );
 
   input.value = "";
-
-  box.scrollTop =
-    box.scrollHeight;
 
   const loading =
     document.createElement("div");
@@ -1448,13 +2151,19 @@ async function sendChat(){
   loading.textContent =
     "Foxie is thinking...";
 
-  box.appendChild(loading);
+  box.appendChild(
+    loading
+  );
+
+  box.scrollTop =
+    box.scrollHeight;
 
   try{
 
     const response =
       await fetch(
-        FOXIE_API + "/api/chat",
+        FOXIE_API +
+        "/api/chat",
         {
           method:"POST",
           headers:{
@@ -1462,7 +2171,7 @@ async function sendChat(){
               "application/json"
           },
           body:JSON.stringify({
-            message:message
+            message
           })
         }
       );
@@ -1475,7 +2184,7 @@ async function sendChat(){
       data.message ||
       "Foxie didn't return a response.";
 
-  }catch(error){
+  }catch(e){
 
     loading.textContent =
       "Foxie couldn't connect to the server.";
@@ -1484,36 +2193,6 @@ async function sendChat(){
 
   box.scrollTop =
     box.scrollHeight;
-}
-
-
-/* =========================
-   WEB
-========================= */
-
-function webSearch(){
-
-  const input =
-    document.getElementById("webSearch");
-
-  const results =
-    document.getElementById("webResults");
-
-  const query =
-    input.value.trim();
-
-  if(!query){
-
-    results.textContent =
-      "Enter something to search.";
-
-    return;
-  }
-
-  results.innerHTML =
-    "Searching for <b>" +
-    escapeHTML(query) +
-    "</b>...";
 
 }
 
@@ -1525,10 +2204,14 @@ function webSearch(){
 async function searchUsers(){
 
   const input =
-    document.getElementById("userSearch");
+    document.getElementById(
+      "userSearch"
+    );
 
   const results =
-    document.getElementById("userResults");
+    document.getElementById(
+      "userResults"
+    );
 
   const query =
     input.value.trim();
@@ -1539,6 +2222,7 @@ async function searchUsers(){
       "Enter a username.";
 
     return;
+
   }
 
   results.textContent =
@@ -1556,27 +2240,48 @@ async function searchUsers(){
     const data =
       await response.json();
 
-    if(!data.length){
+    if(!Array.isArray(data) ||
+       !data.length){
 
       results.textContent =
         "No users found.";
 
       return;
+
     }
 
     results.innerHTML =
-      data.map(user => `
-        <div class="card" style="margin-top:10px">
-          <strong>${escapeHTML(user.display_name || user.username)}</strong>
-          <br><br>
-          <button class="btn"
-            onclick="sendFriendRequest('${escapeHTML(user.username)}')">
-            Add Friend
-          </button>
-        </div>
-      `).join("");
+      data.map(user => {
 
-  }catch(error){
+        const username =
+          escapeHTML(
+            user.username || ""
+          );
+
+        const name =
+          escapeHTML(
+            user.display_name ||
+            user.username ||
+            "User"
+          );
+
+        return `
+          <div class="card" style="margin-top:10px">
+            <strong>${name}</strong>
+            <div class="muted">@${username}</div>
+            <br>
+            <button
+              class="btn"
+              onclick="sendFriendRequest('${username}')"
+            >
+              Add Friend
+            </button>
+          </div>
+        `;
+
+      }).join("");
+
+  }catch(e){
 
     results.textContent =
       "Could not search users.";
@@ -1588,9 +2293,55 @@ async function searchUsers(){
 
 async function sendFriendRequest(username){
 
-  alert(
-    "Friend request feature is connected to Foxie backend."
-  );
+  const token =
+    localStorage.getItem(
+      "foxie_session"
+    );
+
+  if(!token){
+
+    openAuth();
+
+    return;
+
+  }
+
+  try{
+
+    const response =
+      await fetch(
+        FOXIE_API +
+        "/api/friends/request",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json",
+            Authorization:
+              "Bearer " + token
+          },
+          body:JSON.stringify({
+            username
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    alert(
+      data.message ||
+      data.detail ||
+      "Friend request sent."
+    );
+
+  }catch(e){
+
+    alert(
+      "Could not send friend request."
+    );
+
+  }
 
 }
 
@@ -1602,10 +2353,9 @@ async function sendFriendRequest(username){
 async function loadFriends(){
 
   const box =
-    document.getElementById("friendsList");
-
-  box.textContent =
-    "Loading friends...";
+    document.getElementById(
+      "friendsList"
+    );
 
   const token =
     localStorage.getItem(
@@ -1615,16 +2365,21 @@ async function loadFriends(){
   if(!token){
 
     box.textContent =
-      "Log into a Foxie account to use friends.";
+      "Log into your account to use Friends.";
 
     return;
+
   }
+
+  box.textContent =
+    "Loading friends...";
 
   try{
 
     const response =
       await fetch(
-        FOXIE_API + "/api/friends",
+        FOXIE_API +
+        "/api/friends",
         {
           headers:{
             Authorization:
@@ -1636,87 +2391,37 @@ async function loadFriends(){
     const data =
       await response.json();
 
-    if(!data.length){
+    if(!Array.isArray(data) ||
+       !data.length){
 
       box.textContent =
         "No friends yet.";
 
       return;
+
     }
 
     box.innerHTML =
       data.map(friend => `
+
         <div class="card" style="margin-top:10px">
-          ${escapeHTML(friend.display_name || friend.username)}
-        </div>
-      `).join("");
-
-  }catch(error){
-
-    box.textContent =
-      "Could not load friends.";
-
-  }
-
-}
-
-
-/* =========================
-   LEADERBOARD
-========================= */
-
-async function loadLeaderboard(){
-
-  const box =
-    document.getElementById("leaderboard");
-
-  box.textContent =
-    "Loading leaderboard...";
-
-  try{
-
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/leaderboard"
-      );
-
-    const data =
-      await response.json();
-
-    if(!data.length){
-
-      box.textContent =
-        "No players yet.";
-
-      return;
-    }
-
-    box.innerHTML =
-      data.map((user,index) => `
-        <div class="card"
-          style="margin-top:10px">
 
           <strong>
-            #${index + 1}
             ${escapeHTML(
-              user.display_name ||
-              user.username ||
-              "Player"
+              friend.display_name ||
+              friend.username ||
+              "Friend"
             )}
           </strong>
 
-          <div class="muted">
-            XP: ${user.xp || 0}
-          </div>
-
         </div>
+
       `).join("");
 
-  }catch(error){
+  }catch(e){
 
     box.textContent =
-      "Could not load leaderboard.";
+      "Could not load friends.";
 
   }
 
@@ -1729,31 +2434,37 @@ async function loadLeaderboard(){
 
 async function loadProfile(){
 
-  const saved =
-    localStorage.getItem(
-      "foxie_display_name"
-    );
+  if(!currentUser){
 
-  if(saved){
+    const saved =
+      localStorage.getItem(
+        "foxie_display_name"
+      );
 
-    document.getElementById(
-      "profileName"
-    ).textContent = saved;
+    if(saved){
+
+      document.getElementById(
+        "profileName"
+      ).textContent =
+        saved;
+
+    }
+
+    return;
 
   }
 
-  const token =
-    localStorage.getItem(
-      "foxie_session"
-    );
-
-  if(!token) return;
-
   try{
+
+    const token =
+      localStorage.getItem(
+        "foxie_session"
+      );
 
     const response =
       await fetch(
-        FOXIE_API + "/api/profile",
+        FOXIE_API +
+        "/api/profile",
         {
           headers:{
             Authorization:
@@ -1762,12 +2473,13 @@ async function loadProfile(){
         }
       );
 
+    if(!response.ok)
+      return;
+
     const data =
       await response.json();
 
     if(data.display_name){
-
-      currentUser = data;
 
       document.getElementById(
         "profileName"
@@ -1794,7 +2506,77 @@ async function loadProfile(){
 
     }
 
-  }catch(error){}
+  }catch(e){}
+
+}
+
+
+/* =========================
+   LEADERBOARD
+========================= */
+
+async function loadLeaderboard(){
+
+  const box =
+    document.getElementById(
+      "leaderboard"
+    );
+
+  box.textContent =
+    "Loading leaderboard...";
+
+  try{
+
+    const response =
+      await fetch(
+        FOXIE_API +
+        "/api/leaderboard"
+      );
+
+    const data =
+      await response.json();
+
+    if(!Array.isArray(data) ||
+       !data.length){
+
+      box.textContent =
+        "No players yet.";
+
+      return;
+
+    }
+
+    box.innerHTML =
+      data.map(
+        (user,index) => `
+
+          <div class="card"
+               style="margin-top:10px">
+
+            <strong>
+              #${index + 1}
+              ${escapeHTML(
+                user.display_name ||
+                user.username ||
+                "Player"
+              )}
+            </strong>
+
+            <div class="muted">
+              XP: ${user.xp || 0}
+            </div>
+
+          </div>
+
+        `
+      ).join("");
+
+  }catch(e){
+
+    box.textContent =
+      "Could not load leaderboard.";
+
+  }
 
 }
 
@@ -1817,10 +2599,11 @@ async function loadCreatorStatus(){
 
   if(!token){
 
-    box.innerHTML =
-      "<span class='muted'>Log in to check Creator Mode.</span>";
+    box.textContent =
+      "Log into your account to check Creator Mode.";
 
     return;
+
   }
 
   try{
@@ -1847,12 +2630,12 @@ async function loadCreatorStatus(){
 
     }else{
 
-      box.innerHTML =
-        "<span class='muted'>Creator Mode is not enabled for this account.</span>";
+      box.textContent =
+        "Creator Mode is not enabled for this account.";
 
     }
 
-  }catch(error){
+  }catch(e){
 
     box.textContent =
       "Could not check Creator Mode.";
@@ -1883,22 +2666,19 @@ function calculate(){
     result.textContent = "";
 
     return;
+
+  }
+
+  if(!/^[0-9+\-*/().%\s]+$/.test(input)){
+
+    result.textContent =
+      "Invalid calculation.";
+
+    return;
+
   }
 
   try{
-
-    /*
-      Simple calculator.
-      Only mathematical characters are allowed.
-    */
-
-    if(!/^[0-9+\-*/().%\s]+$/.test(input)){
-
-      result.textContent =
-        "Invalid calculation.";
-
-      return;
-    }
 
     const answer =
       Function(
@@ -1910,12 +2690,48 @@ function calculate(){
     result.textContent =
       "= " + answer;
 
-  }catch(error){
+  }catch(e){
 
     result.textContent =
       "Couldn't calculate.";
 
   }
+
+}
+
+
+/* =========================
+   WEB
+========================= */
+
+function webSearch(){
+
+  const input =
+    document.getElementById(
+      "webSearch"
+    );
+
+  const results =
+    document.getElementById(
+      "webResults"
+    );
+
+  const query =
+    input.value.trim();
+
+  if(!query){
+
+    results.textContent =
+      "Enter something to search.";
+
+    return;
+
+  }
+
+  results.innerHTML =
+    "Searching for <b>" +
+    escapeHTML(query) +
+    "</b>...";
 
 }
 
@@ -1955,7 +2771,8 @@ function startSnake(){
 
   function loop(){
 
-    if(!snakeRunning) return;
+    if(!snakeRunning)
+      return;
 
     const head =
       {...snake[0]};
@@ -1975,8 +2792,8 @@ function startSnake(){
     if(
       head.x < 0 ||
       head.y < 0 ||
-      head.x >= canvas.width/size ||
-      head.y >= canvas.height/size
+      head.x >= 20 ||
+      head.y >= 20
     ){
 
       snakeRunning = false;
@@ -1984,6 +2801,7 @@ function startSnake(){
       alert("Game over!");
 
       return;
+
     }
 
     snake.unshift(head);
@@ -2042,7 +2860,10 @@ function startSnake(){
       size - 2
     );
 
-    setTimeout(loop,100);
+    setTimeout(
+      loop,
+      100
+    );
 
   }
 
@@ -2054,8 +2875,12 @@ function startSnake(){
 function spawnFood(){
 
   food = {
-    x:Math.floor(Math.random()*20),
-    y:Math.floor(Math.random()*20)
+    x:Math.floor(
+      Math.random()*20
+    ),
+    y:Math.floor(
+      Math.random()*20
+    )
   };
 
 }
@@ -2065,20 +2890,28 @@ document.addEventListener(
   "keydown",
   event => {
 
-    if(event.key === "ArrowUp" &&
-       direction !== "down")
+    if(
+      event.key === "ArrowUp" &&
+      direction !== "down"
+    )
       direction = "up";
 
-    if(event.key === "ArrowDown" &&
-       direction !== "up")
+    if(
+      event.key === "ArrowDown" &&
+      direction !== "up"
+    )
       direction = "down";
 
-    if(event.key === "ArrowLeft" &&
-       direction !== "right")
+    if(
+      event.key === "ArrowLeft" &&
+      direction !== "right"
+    )
       direction = "left";
 
-    if(event.key === "ArrowRight" &&
-       direction !== "left")
+    if(
+      event.key === "ArrowRight" &&
+      direction !== "left"
+    )
       direction = "right";
 
   }
@@ -2091,12 +2924,14 @@ document.addEventListener(
 
 function handleSearch(event){
 
-  if(event.key !== "Enter") return;
+  if(event.key !== "Enter")
+    return;
 
   const query =
     event.target.value.trim();
 
-  if(!query) return;
+  if(!query)
+    return;
 
   alert(
     "Foxie search: " + query
@@ -2106,7 +2941,7 @@ function handleSearch(event){
 
 
 /* =========================
-   SECURITY / HTML
+   SAFE HTML
 ========================= */
 
 function escapeHTML(value){
@@ -2122,10 +2957,11 @@ function escapeHTML(value){
 
 
 /* =========================
-   START FOXIE
+   START
 ========================= */
 
 loadDisplayName();
+loadCurrentUser();
 
 </script>
 
