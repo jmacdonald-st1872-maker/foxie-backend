@@ -1,18 +1,21 @@
 import os
 import sqlite3
-import secrets
 import hashlib
-from datetime import datetime, timedelta, timezone
+import secrets
+import time
+from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from dotenv import load_dotenv
-from openai import OpenAI
 
-load_dotenv()
 
-app = FastAPI(title="Foxie Backend", version="0.2")
+# ============================================================
+# FOXIE BACKEND
+# ============================================================
+
+app = FastAPI(title="Foxie Backend", version="2.0")
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,29 +25,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_FILE = "foxie.db"
 
-SYSTEM_PROMPT = """You are Foxie, an AI assistant owned by Jayden Wayne MacDonald.
-
-Be helpful, friendly, clear and honest.
-
-Never claim to have searched the web, checked traffic,
-accessed a device, read a file, or used an account unless
-an actual connected tool supplied that information.
-"""
+DB_PATH = os.environ.get("FOXIE_DB_PATH", "foxie.db")
 
 
-# =========================
+# ============================================================
 # DATABASE
-# =========================
+# ============================================================
 
 def db():
-    connection = sqlite3.connect(DB_FILE)
+    connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     return connection
 
 
-def setup_database():
+def init_db():
+
     connection = db()
     cursor = connection.cursor()
 
@@ -52,16 +48,9 @@ def setup_database():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
-            email TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
-            display_name TEXT NOT NULL,
-            avatar TEXT DEFAULT '🦊',
-            xp INTEGER DEFAULT 0,
-            coins INTEGER DEFAULT 0,
-            level INTEGER DEFAULT 1,
-            title TEXT DEFAULT 'Rookie',
-            is_creator INTEGER DEFAULT 0,
-            created_at TEXT NOT NULL
+            is_creator INTEGER NOT NULL DEFAULT 0,
+            created_at REAL NOT NULL
         )
     """)
 
@@ -69,28 +58,37 @@ def setup_database():
         CREATE TABLE IF NOT EXISTS sessions (
             token TEXT PRIMARY KEY,
             user_id INTEGER NOT NULL,
-            expires_at TEXT NOT NULL
+            created_at REAL NOT NULL
         )
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS friend_requests (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            sender_id INTEGER NOT NULL,
-            receiver_id INTEGER NOT NULL,
-            status TEXT DEFAULT 'pending',
-            created_at TEXT NOT NULL,
-            UNIQUE(sender_id, receiver_id)
+        CREATE TABLE IF NOT EXISTS foxie_ownership (
+            foxie_id TEXT PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            acquired_at REAL NOT NULL,
+            acquired_from TEXT
         )
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS friendships (
+        CREATE TABLE IF NOT EXISTS foxie_progress (
+            foxie_id TEXT PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            xp INTEGER NOT NULL DEFAULT 0,
+            level INTEGER NOT NULL DEFAULT 1,
+            bond INTEGER NOT NULL DEFAULT 0,
+            updated_at REAL NOT NULL
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS discoveries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user1_id INTEGER NOT NULL,
-            user2_id INTEGER NOT NULL,
-            created_at TEXT NOT NULL,
-            UNIQUE(user1_id, user2_id)
+            foxie_id TEXT NOT NULL,
+            user_id INTEGER NOT NULL,
+            discovered_at REAL NOT NULL,
+            discovery_method TEXT
         )
     """)
 
@@ -98,925 +96,1265 @@ def setup_database():
     connection.close()
 
 
-setup_database()
+init_db()
 
 
-# =========================
-# MODELS
-# =========================
+# ============================================================
+# FOXIE UNIVERSE
+# ============================================================
 
-class ChatRequest(BaseModel):
-    message: str
+FOXIE_COUNT = 1_000_000
+UNKNOWN_COUNT = 1_000
+UNEXISTING_COUNT = 100
+ONE_OF_ONE_COUNT = 10_000
+APEX_COUNT = 10
 
+
+FOXIE_TYPES = [
+    "fire",
+    "water",
+    "nature",
+    "electric",
+    "ice",
+    "shadow",
+    "cosmic",
+    "cyber",
+    "crystal",
+    "void",
+    "solar",
+    "wind",
+    "earth",
+    "spirit",
+    "prism",
+    "toxic",
+]
+
+
+TYPE_ABILITIES = {
+    "fire": "Flame Heart",
+    "water": "Tidal Soul",
+    "nature": "Wild Growth",
+    "electric": "Voltage Soul",
+    "ice": "Frost Core",
+    "shadow": "Dark Step",
+    "cosmic": "Star Pulse",
+    "cyber": "System Override",
+    "crystal": "Crystal Guard",
+    "void": "Void Core",
+    "solar": "Solar Charge",
+    "wind": "Gale Runner",
+    "earth": "Earth Guard",
+    "spirit": "Spirit Bond",
+    "prism": "Spectrum Shift",
+    "toxic": "Toxic Pulse",
+}
+
+
+NAME_START = [
+    "Ember",
+    "Nova",
+    "Shadow",
+    "Frost",
+    "Volt",
+    "Cosmo",
+    "Crystal",
+    "Storm",
+    "Luna",
+    "Solar",
+    "Echo",
+    "Pixel",
+    "Blaze",
+    "Aero",
+    "Myst",
+    "Flare",
+    "Glitch",
+    "Thunder",
+    "River",
+    "Terra",
+    "Spirit",
+    "Prism",
+    "Void",
+    "Cyber",
+    "Star",
+    "Moon",
+    "Neon",
+    "Inferno",
+    "Galaxy",
+    "Ghost",
+]
+
+
+NAME_END = [
+    "ly",
+    "on",
+    "ix",
+    "ora",
+    "is",
+    "en",
+    "yx",
+    "a",
+    "o",
+    "ia",
+    "u",
+    "ex",
+    "ar",
+    "elle",
+    "ium",
+    "ox",
+    "ra",
+    "zen",
+    "byte",
+    "wing",
+    "flare",
+    "spark",
+]
+
+
+RARITIES = [
+    "Common",
+    "Common",
+    "Common",
+    "Common",
+    "Uncommon",
+    "Rare",
+    "Epic",
+    "Mythic",
+    "Legendary",
+]
+
+
+# ============================================================
+# APEX FOXIES
+# ============================================================
+
+APEX_FOXIES = {
+
+    "APEX-01": {
+        "name": "The Bounty Hunter",
+        "type": "shadow",
+        "ability": "Hunter's Mark",
+    },
+
+    "APEX-02": {
+        "name": "Volt Reaper",
+        "type": "electric",
+        "ability": "Infinite Voltage",
+    },
+
+    "APEX-03": {
+        "name": "Galaxy Warden",
+        "type": "cosmic",
+        "ability": "Galaxy Core",
+    },
+
+    "APEX-04": {
+        "name": "The Void King",
+        "type": "void",
+        "ability": "Void Dominion",
+    },
+
+    "APEX-05": {
+        "name": "Dracoflare",
+        "type": "fire",
+        "ability": "Inferno Core",
+    },
+
+    "APEX-06": {
+        "name": "Frost Monarch",
+        "type": "ice",
+        "ability": "Absolute Frost",
+    },
+
+    "APEX-07": {
+        "name": "Nightmare",
+        "type": "shadow",
+        "ability": "Nightmare Realm",
+    },
+
+    "APEX-08": {
+        "name": "Crystal Overlord",
+        "type": "crystal",
+        "ability": "Perfect Crystal",
+    },
+
+    "APEX-09": {
+        "name": "Reality Breaker",
+        "type": "cyber",
+        "ability": "Reality Glitch",
+    },
+
+    "APEX-10": {
+        "name": "The Forgotten",
+        "type": "spirit",
+        "ability": "Forgotten Power",
+    },
+}
+
+
+# ============================================================
+# DETERMINISTIC FOXIE GENERATION
+# ============================================================
+
+def hash_number(value: str, salt: str = "") -> int:
+
+    raw = f"FOXIE::{salt}::{value}".encode()
+
+    digest = hashlib.sha256(raw).hexdigest()
+
+    return int(digest[:16], 16)
+
+
+def generated_name(index: int) -> str:
+
+    start = NAME_START[
+        index % len(NAME_START)
+    ]
+
+    end = NAME_END[
+        (index // len(NAME_START)) % len(NAME_END)
+    ]
+
+    return start + end
+
+
+def normal_foxie(index: int):
+
+    foxie_id = (
+        f"FOX-{index:06d}"
+    )
+
+    seed = hash_number(foxie_id)
+
+    foxie_type = FOXIE_TYPES[
+        seed % len(FOXIE_TYPES)
+    ]
+
+    rarity = RARITIES[
+        (seed // 17) % len(RARITIES)
+    ]
+
+    level = 1 + ((seed // 101) % 120)
+
+    hp = 80 + ((seed // 7) % 120)
+
+    attack = 10 + ((seed // 11) % 90)
+
+    defense = 10 + ((seed // 13) % 90)
+
+    speed = 10 + ((seed // 19) % 90)
+
+    body_styles = [
+        "four-legged",
+        "upright",
+        "mixed",
+    ]
+
+    body = body_styles[
+        (seed // 23) % len(body_styles)
+    ]
+
+    evolution = evolution_for_level(level)
+
+    return {
+        "id": foxie_id,
+        "name": generated_name(index),
+        "type": foxie_type,
+        "rarity": rarity,
+        "level": level,
+        "xp": max(0, (level - 1) * 100),
+        "body_style": body,
+        "ability": TYPE_ABILITIES[foxie_type],
+        "hp": hp,
+        "attack": attack,
+        "defense": defense,
+        "speed": speed,
+        "evolution": evolution,
+        "discovered": False,
+        "owned": False,
+        "special": False,
+    }
+
+
+# ============================================================
+# EVOLUTION
+# ============================================================
+
+def evolution_for_level(level: int):
+
+    if level >= 999:
+        return "Final Form"
+
+    if level >= 500:
+        return "Evolution 4"
+
+    if level >= 100:
+        return "Evolution 3"
+
+    if level >= 50:
+        return "Evolution 2"
+
+    if level >= 25:
+        return "Evolution 1"
+
+    return "Base Form"
+
+
+# ============================================================
+# FOXIE ID VALIDATION
+# ============================================================
+
+def valid_normal_id(index: int) -> bool:
+    return 1 <= index <= FOXIE_COUNT
+
+
+def get_foxie(foxie_id: str):
+
+    foxie_id = foxie_id.upper().strip()
+
+    # -------------------------
+    # NORMAL FOXIES
+    # -------------------------
+
+    if foxie_id.startswith("FOX-"):
+
+        try:
+            number = int(
+                foxie_id.split("-")[1]
+            )
+        except ValueError:
+            return None
+
+        if not valid_normal_id(number):
+            return None
+
+        return normal_foxie(number)
+
+
+    # -------------------------
+    # APEX
+    # -------------------------
+
+    if foxie_id in APEX_FOXIES:
+
+        data = APEX_FOXIES[foxie_id]
+
+        return {
+            "id": foxie_id,
+            "name": data["name"],
+            "type": data["type"],
+            "rarity": "Apex",
+            "level": 999,
+            "xp": 99800,
+            "body_style": "upright",
+            "ability": data["ability"],
+            "hp": 999,
+            "attack": 999,
+            "defense": 999,
+            "speed": 999,
+            "evolution": "Apex Final Form",
+            "discovered": False,
+            "owned": False,
+            "special": True,
+        }
+
+
+    # -------------------------
+    # UNKNOWN
+    # -------------------------
+
+    if foxie_id.startswith("UNK-"):
+
+        try:
+            number = int(
+                foxie_id.split("-")[1]
+            )
+        except ValueError:
+            return None
+
+        if not 1 <= number <= UNKNOWN_COUNT:
+            return None
+
+        return {
+            "id": foxie_id,
+            "name": "???",
+            "type": "unknown",
+            "rarity": "Unknown",
+            "level": None,
+            "xp": None,
+            "body_style": None,
+            "ability": "???",
+            "hp": None,
+            "attack": None,
+            "defense": None,
+            "speed": None,
+            "evolution": "???",
+            "discovered": False,
+            "owned": False,
+            "special": True,
+        }
+
+
+    # -------------------------
+    # UNEXISTING
+    # -------------------------
+
+    if foxie_id.startswith("UOX-"):
+
+        try:
+            number = int(
+                foxie_id.split("-")[1]
+            )
+        except ValueError:
+            return None
+
+        if not 1 <= number <= UNEXISTING_COUNT:
+            return None
+
+        return {
+            "id": foxie_id,
+            "name": "???",
+            "type": "unknown",
+            "rarity": "Unexisting",
+            "level": None,
+            "xp": None,
+            "body_style": None,
+            "ability": "???",
+            "hp": None,
+            "attack": None,
+            "defense": None,
+            "speed": None,
+            "evolution": "???",
+            "discovered": False,
+            "owned": False,
+            "special": True,
+        }
+
+
+    # -------------------------
+    # ONE OF ONE
+    # -------------------------
+
+    if foxie_id.startswith("OOO-"):
+
+        try:
+            number = int(
+                foxie_id.split("-")[1]
+            )
+        except ValueError:
+            return None
+
+        if not 1 <= number <= ONE_OF_ONE_COUNT:
+            return None
+
+        return {
+            "id": foxie_id,
+            "name": "???",
+            "type": "unknown",
+            "rarity": "One-of-One",
+            "level": None,
+            "xp": None,
+            "body_style": None,
+            "ability": "???",
+            "hp": None,
+            "attack": None,
+            "defense": None,
+            "speed": None,
+            "evolution": "???",
+            "discovered": False,
+            "owned": False,
+            "special": True,
+        }
+
+
+    return None
+
+
+# ============================================================
+# AUTH
+# ============================================================
 
 class RegisterRequest(BaseModel):
     username: str
-    email: str
     password: str
-    display_name: str
 
 
 class LoginRequest(BaseModel):
-    email: str
+    username: str
     password: str
 
 
-class ProfileUpdate(BaseModel):
-    display_name: str | None = None
-    avatar: str | None = None
+def password_hash(password: str):
 
+    salt = secrets.token_bytes(16)
 
-class FriendRequest(BaseModel):
-    username: str
-
-
-class FriendResponse(BaseModel):
-    request_id: int
-    action: str
-
-
-# =========================
-# PASSWORDS
-# =========================
-
-def hash_password(password: str, salt: bytes | None = None):
-    if salt is None:
-        salt = secrets.token_bytes(16)
-
-    hashed = hashlib.pbkdf2_hmac(
+    digest = hashlib.pbkdf2_hmac(
         "sha256",
         password.encode(),
         salt,
-        200000
+        200_000,
     )
 
-    return salt.hex() + ":" + hashed.hex()
+    return (
+        salt.hex()
+        + ":"
+        + digest.hex()
+    )
 
 
-def verify_password(password: str, stored: str):
+def check_password(
+    password: str,
+    stored: str
+):
+
     try:
-        salt_hex, hash_hex = stored.split(":")
+
+        salt_hex, digest_hex = stored.split(":")
+
         salt = bytes.fromhex(salt_hex)
 
-        test_hash = hashlib.pbkdf2_hmac(
+        digest = hashlib.pbkdf2_hmac(
             "sha256",
             password.encode(),
             salt,
-            200000
-        ).hex()
+            200_000,
+        )
 
-        return secrets.compare_digest(test_hash, hash_hex)
+        return secrets.compare_digest(
+            digest.hex(),
+            digest_hex,
+        )
 
     except Exception:
+
         return False
 
 
-# =========================
-# AUTH
-# =========================
+def get_current_user(
+    authorization: Optional[str]
+):
 
-def create_session(user_id: int):
-    token = secrets.token_urlsafe(48)
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated",
+        )
 
-    expires = (
-        datetime.now(timezone.utc) +
-        timedelta(days=30)
-    ).isoformat()
+    if not authorization.startswith("Bearer "):
 
-    connection = db()
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid authorization",
+        )
 
-    connection.execute(
-        "INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)",
-        (token, user_id, expires)
-    )
-
-    connection.commit()
-    connection.close()
-
-    return token
-
-
-def get_user_from_token(token: str | None):
-    if not token:
-        return None
+    token = authorization[7:]
 
     connection = db()
 
-    row = connection.execute("""
+    row = connection.execute(
+        """
         SELECT users.*
         FROM sessions
-        JOIN users ON users.id = sessions.user_id
-        WHERE sessions.token = ?
-    """, (token,)).fetchone()
+        JOIN users
+        ON users.id = sessions.user_id
+        WHERE sessions.token=?
+        """,
+        (token,),
+    ).fetchone()
 
     connection.close()
 
     if not row:
-        return None
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid session",
+        )
 
     return row
 
 
-def public_user(user):
-    return {
-        "id": user["id"],
-        "username": user["username"],
-        "display_name": user["display_name"],
-        "avatar": user["avatar"],
-        "xp": user["xp"],
-        "coins": user["coins"],
-        "level": user["level"],
-        "title": user["title"],
-        "is_creator": bool(user["is_creator"])
-    }
-
-
-# =========================
+# ============================================================
 # BASIC ROUTES
-# =========================
+# ============================================================
 
 @app.get("/")
 def root():
+
     return {
-        "name": "Foxie",
+        "name": "Foxie Backend",
         "status": "online",
-        "version": "0.2"
+        "version": "2.0",
+        "foxie_universe": FOXIE_COUNT,
     }
 
 
 @app.get("/health")
 def health():
+
     return {
-        "status": "ok"
+        "ok": True,
+        "service": "foxie-backend",
     }
 
 
-# =========================
+# ============================================================
 # REGISTER
-# =========================
+# ============================================================
 
 @app.post("/api/auth/register")
-def register(request: RegisterRequest):
+def register(data: RegisterRequest):
 
-    username = request.username.strip().lower()
-    email = request.email.strip().lower()
-    display_name = request.display_name.strip()
+    username = data.username.strip()
 
-    if len(username) < 3:
+    if len(username) < 2:
         raise HTTPException(
             status_code=400,
-            detail="Username must be at least 3 characters."
+            detail="Username is too short",
         )
 
-    if len(request.password) < 8:
+    if len(data.password) < 6:
         raise HTTPException(
             status_code=400,
-            detail="Password must be at least 8 characters."
+            detail="Password is too short",
         )
 
-    if "@" not in email:
-        raise HTTPException(
-            status_code=400,
-            detail="Please enter a valid email."
+    connection = db()
+
+    try:
+
+        cursor = connection.execute(
+            """
+            INSERT INTO users
+            (username,password_hash,is_creator,created_at)
+            VALUES (?,?,0,?)
+            """,
+            (
+                username,
+                password_hash(data.password),
+                time.time(),
+            ),
         )
 
-    if not display_name:
+        connection.commit()
+
+        user_id = cursor.lastrowid
+
+    except sqlite3.IntegrityError:
+
+        connection.close()
+
         raise HTTPException(
-            status_code=400,
-            detail="Display name is required."
+            status_code=409,
+            detail="Username already exists",
+        )
+
+    connection.close()
+
+    return {
+        "ok": True,
+        "user_id": user_id,
+        "username": username,
+    }
+
+
+# ============================================================
+# LOGIN
+# ============================================================
+
+@app.post("/api/auth/login")
+def login(data: LoginRequest):
+
+    connection = db()
+
+    row = connection.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE username=?
+        """,
+        (data.username.strip(),),
+    ).fetchone()
+
+    if not row:
+
+        connection.close()
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid username or password",
+        )
+
+    if not check_password(
+        data.password,
+        row["password_hash"],
+    ):
+
+        connection.close()
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid username or password",
+        )
+
+    token = secrets.token_urlsafe(48)
+
+    connection.execute(
+        """
+        INSERT INTO sessions
+        (token,user_id,created_at)
+        VALUES (?,?,?)
+        """,
+        (
+            token,
+            row["id"],
+            time.time(),
+        ),
+    )
+
+    connection.commit()
+    connection.close()
+
+    return {
+        "ok": True,
+        "token": token,
+        "user": {
+            "id": row["id"],
+            "username": row["username"],
+            "is_creator": bool(row["is_creator"]),
+        },
+    }
+
+
+# ============================================================
+# CURRENT USER
+# ============================================================
+
+@app.get("/api/auth/me")
+def me(
+    authorization: Optional[str] = Header(None)
+):
+
+    user = get_current_user(
+        authorization
+    )
+
+    return {
+        "id": user["id"],
+        "username": user["username"],
+        "is_creator": bool(
+            user["is_creator"]
+        ),
+    }
+
+
+# ============================================================
+# FOXIE DATA
+# ============================================================
+
+@app.get("/api/foxies/{foxie_id}")
+def foxie_details(foxie_id: str):
+
+    foxie = get_foxie(foxie_id)
+
+    if not foxie:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Foxie not found",
+        )
+
+    return foxie
+
+
+# ============================================================
+# FOXIE SEARCH
+# ============================================================
+
+@app.get("/api/foxies")
+def foxie_search(
+    search: str = "",
+    foxie_type: str = "",
+    rarity: str = "",
+    limit: int = 50,
+):
+
+    limit = max(
+        1,
+        min(limit, 100),
+    )
+
+    results = []
+
+    search = search.strip().lower()
+
+    # We intentionally generate only the
+    # requested page instead of loading
+    # one million objects into memory.
+
+    if search.startswith("fox-"):
+
+        try:
+
+            number = int(
+                search.replace(
+                    "fox-",
+                    "",
+                )
+            )
+
+            foxie = get_foxie(
+                f"FOX-{number:06d}"
+            )
+
+            if foxie:
+                results.append(foxie)
+
+        except ValueError:
+
+            pass
+
+    else:
+
+        for number in range(
+            1,
+            min(
+                FOXIE_COUNT,
+                limit * 5,
+            ) + 1,
+        ):
+
+            foxie = normal_foxie(
+                number
+            )
+
+            if search:
+
+                if search not in (
+                    foxie["name"].lower()
+                    + " "
+                    + foxie["id"].lower()
+                ):
+                    continue
+
+            if foxie_type:
+
+                if foxie["type"] != foxie_type:
+                    continue
+
+            if rarity:
+
+                if foxie["rarity"] != rarity:
+                    continue
+
+            results.append(foxie)
+
+            if len(results) >= limit:
+                break
+
+    return {
+        "count": len(results),
+        "results": results,
+    }
+
+
+# ============================================================
+# CLAIM / OWNERSHIP
+# ============================================================
+
+@app.post("/api/foxies/{foxie_id}/claim")
+def claim_foxie(
+    foxie_id: str,
+    authorization: Optional[str] = Header(None),
+):
+
+    user = get_current_user(
+        authorization
+    )
+
+    foxie = get_foxie(foxie_id)
+
+    if not foxie:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Foxie not found",
         )
 
     connection = db()
 
     existing = connection.execute(
-        "SELECT id FROM users WHERE username = ? OR email = ?",
-        (username, email)
+        """
+        SELECT *
+        FROM foxie_ownership
+        WHERE foxie_id=?
+        """,
+        (foxie["id"],),
     ).fetchone()
 
     if existing:
+
         connection.close()
 
         raise HTTPException(
             status_code=409,
-            detail="Username or email is already in use."
+            detail="This Foxie is already owned",
         )
 
-    now = datetime.now(timezone.utc).isoformat()
+    # Special Foxies require the future
+    # discovery/catch system.
+    if foxie["special"]:
 
-    cursor = connection.execute("""
-        INSERT INTO users
-        (username, email, password_hash, display_name, created_at)
-        VALUES (?, ?, ?, ?, ?)
-    """, (
-        username,
-        email,
-        hash_password(request.password),
-        display_name,
-        now
-    ))
-
-    user_id = cursor.lastrowid
-
-    connection.commit()
-
-    user = connection.execute(
-        "SELECT * FROM users WHERE id = ?",
-        (user_id,)
-    ).fetchone()
-
-    connection.close()
-
-    token = create_session(user_id)
-
-    return {
-        "message": "Account created!",
-        "token": token,
-        "user": public_user(user)
-    }
-
-
-# =========================
-# LOGIN
-# =========================
-
-@app.post("/api/auth/login")
-def login(request: LoginRequest):
-
-    connection = db()
-
-    user = connection.execute(
-        "SELECT * FROM users WHERE email = ?",
-        (request.email.strip().lower(),)
-    ).fetchone()
-
-    connection.close()
-
-    if not user or not verify_password(
-        request.password,
-        user["password_hash"]
-    ):
-        raise HTTPException(
-            status_code=401,
-            detail="Incorrect email or password."
-        )
-
-    token = create_session(user["id"])
-
-    return {
-        "message": "Logged in!",
-        "token": token,
-        "user": public_user(user)
-    }
-
-
-# =========================
-# CURRENT USER
-# =========================
-
-@app.get("/api/auth/me")
-def me(authorization: str | None = Header(default=None)):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-
-    user = get_user_from_token(token)
-
-    if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
-
-    return {
-        "user": public_user(user)
-    }
-
-
-# =========================
-# LOGOUT
-# =========================
-
-@app.post("/api/auth/logout")
-def logout(authorization: str | None = Header(default=None)):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-
-    if token:
-        connection = db()
-
-        connection.execute(
-            "DELETE FROM sessions WHERE token = ?",
-            (token,)
-        )
-
-        connection.commit()
-        connection.close()
-
-    return {
-        "message": "Logged out."
-    }
-
-
-# =========================
-# PROFILE
-# =========================
-
-@app.patch("/api/profile")
-def update_profile(
-    request: ProfileUpdate,
-    authorization: str | None = Header(default=None)
-):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-    user = get_user_from_token(token)
-
-    if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
-
-    connection = db()
-
-    if request.display_name is not None:
-        name = request.display_name.strip()
-
-        if name:
-            connection.execute(
-                "UPDATE users SET display_name = ? WHERE id = ?",
-                (name, user["id"])
-            )
-
-    if request.avatar is not None:
-        connection.execute(
-            "UPDATE users SET avatar = ? WHERE id = ?",
-            (request.avatar, user["id"])
-        )
-
-    connection.commit()
-
-    updated = connection.execute(
-        "SELECT * FROM users WHERE id = ?",
-        (user["id"],)
-    ).fetchone()
-
-    connection.close()
-
-    return {
-        "user": public_user(updated)
-    }
-
-
-# =========================
-# PROGRESSION
-# =========================
-
-@app.get("/api/progression")
-def progression(
-    authorization: str | None = Header(default=None)
-):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-    user = get_user_from_token(token)
-
-    if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
-
-    return {
-        "level": user["level"],
-        "xp": user["xp"],
-        "coins": user["coins"],
-        "title": user["title"]
-    }
-
-
-# =========================
-# USER SEARCH
-# =========================
-
-@app.get("/api/users/search")
-def search_users(
-    username: str,
-    authorization: str | None = Header(default=None)
-):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-    current = get_user_from_token(token)
-
-    if not current:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
-
-    search = username.strip().lower()
-
-    connection = db()
-
-    users = connection.execute("""
-        SELECT *
-        FROM users
-        WHERE username LIKE ?
-        AND id != ?
-        ORDER BY username
-        LIMIT 20
-    """, (
-        "%" + search + "%",
-        current["id"]
-    )).fetchall()
-
-    connection.close()
-
-    return {
-        "users": [public_user(user) for user in users]
-    }
-
-
-# =========================
-# SEND FRIEND REQUEST
-# =========================
-
-@app.post("/api/friends/request")
-def send_friend_request(
-    request: FriendRequest,
-    authorization: str | None = Header(default=None)
-):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-    current = get_user_from_token(token)
-
-    if not current:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
-
-    username = request.username.strip().lower()
-
-    connection = db()
-
-    target = connection.execute(
-        "SELECT * FROM users WHERE username = ?",
-        (username,)
-    ).fetchone()
-
-    if not target:
         connection.close()
 
         raise HTTPException(
-            status_code=404,
-            detail="User not found."
+            status_code=403,
+            detail="Special Foxies must be discovered first",
         )
 
-    if target["id"] == current["id"]:
-        connection.close()
+    now = time.time()
 
-        raise HTTPException(
-            status_code=400,
-            detail="You cannot add yourself."
-        )
-
-    # Check existing friendship
-    friendship = connection.execute("""
-        SELECT id
-        FROM friendships
-        WHERE
-        (user1_id = ? AND user2_id = ?)
-        OR
-        (user1_id = ? AND user2_id = ?)
-    """, (
-        current["id"],
-        target["id"],
-        target["id"],
-        current["id"]
-    )).fetchone()
-
-    if friendship:
-        connection.close()
-
-        raise HTTPException(
-            status_code=409,
-            detail="You are already friends."
-        )
-
-    existing = connection.execute("""
-        SELECT *
-        FROM friend_requests
-        WHERE
+    connection.execute(
+        """
+        INSERT INTO foxie_ownership
+        (foxie_id,user_id,acquired_at,acquired_from)
+        VALUES (?,?,?,?)
+        """,
         (
-            sender_id = ? AND receiver_id = ?
-        )
-        OR
+            foxie["id"],
+            user["id"],
+            now,
+            "wild",
+        ),
+    )
+
+    connection.execute(
+        """
+        INSERT INTO foxie_progress
+        (foxie_id,user_id,xp,level,bond,updated_at)
+        VALUES (?,?,?,?,?,?)
+        """,
         (
-            sender_id = ? AND receiver_id = ?
-        )
-        AND status = 'pending'
-    """, (
-        current["id"],
-        target["id"],
-        target["id"],
-        current["id"]
-    )).fetchone()
-
-    if existing:
-        connection.close()
-
-        raise HTTPException(
-            status_code=409,
-            detail="A friend request already exists."
-        )
-
-    now = datetime.now(timezone.utc).isoformat()
-
-    connection.execute("""
-        INSERT INTO friend_requests
-        (sender_id, receiver_id, status, created_at)
-        VALUES (?, ?, 'pending', ?)
-    """, (
-        current["id"],
-        target["id"],
-        now
-    ))
+            foxie["id"],
+            user["id"],
+            0,
+            1,
+            0,
+            now,
+        ),
+    )
 
     connection.commit()
     connection.close()
 
     return {
-        "message": "Friend request sent!"
+        "ok": True,
+        "foxie": foxie["id"],
+        "owner_id": user["id"],
     }
 
 
-# =========================
-# FRIEND REQUESTS
-# =========================
+# ============================================================
+# MY FOXIES
+# ============================================================
 
-@app.get("/api/friends/requests")
-def get_friend_requests(
-    authorization: str | None = Header(default=None)
+@app.get("/api/my-foxies")
+def my_foxies(
+    authorization: Optional[str] = Header(None),
 ):
 
-    token = authorization.replace("Bearer ", "") if authorization else None
-    current = get_user_from_token(token)
-
-    if not current:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
+    user = get_current_user(
+        authorization
+    )
 
     connection = db()
 
-    requests = connection.execute("""
+    rows = connection.execute(
+        """
         SELECT
-            friend_requests.id,
-            users.username,
-            users.display_name,
-            users.avatar,
-            users.level,
-            users.title,
-            friend_requests.created_at
-        FROM friend_requests
-        JOIN users
-        ON users.id = friend_requests.sender_id
-        WHERE
-            friend_requests.receiver_id = ?
-            AND friend_requests.status = 'pending'
-        ORDER BY friend_requests.created_at DESC
-    """, (current["id"],)).fetchall()
-
-    connection.close()
-
-    return {
-        "requests": [
-            {
-                "id": row["id"],
-                "username": row["username"],
-                "display_name": row["display_name"],
-                "avatar": row["avatar"],
-                "level": row["level"],
-                "title": row["title"],
-                "created_at": row["created_at"]
-            }
-            for row in requests
-        ]
-    }
-
-
-# =========================
-# ACCEPT / DECLINE REQUEST
-# =========================
-
-@app.post("/api/friends/respond")
-def respond_friend_request(
-    request: FriendResponse,
-    authorization: str | None = Header(default=None)
-):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-    current = get_user_from_token(token)
-
-    if not current:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
-
-    action = request.action.lower()
-
-    if action not in ["accept", "decline"]:
-        raise HTTPException(
-            status_code=400,
-            detail="Action must be accept or decline."
-        )
-
-    connection = db()
-
-    friend_request = connection.execute("""
-        SELECT *
-        FROM friend_requests
-        WHERE
-            id = ?
-            AND receiver_id = ?
-            AND status = 'pending'
-    """, (
-        request.request_id,
-        current["id"]
-    )).fetchone()
-
-    if not friend_request:
-        connection.close()
-
-        raise HTTPException(
-            status_code=404,
-            detail="Friend request not found."
-        )
-
-    if action == "decline":
-
-        connection.execute("""
-            UPDATE friend_requests
-            SET status = 'declined'
-            WHERE id = ?
-        """, (request.request_id,))
-
-        connection.commit()
-        connection.close()
-
-        return {
-            "message": "Friend request declined."
-        }
-
-    sender_id = friend_request["sender_id"]
-
-    # Store lower ID first for consistency
-    user1 = min(sender_id, current["id"])
-    user2 = max(sender_id, current["id"])
-
-    now = datetime.now(timezone.utc).isoformat()
-
-    connection.execute("""
-        UPDATE friend_requests
-        SET status = 'accepted'
-        WHERE id = ?
-    """, (request.request_id,))
-
-    connection.execute("""
-        INSERT OR IGNORE INTO friendships
-        (user1_id, user2_id, created_at)
-        VALUES (?, ?, ?)
-    """, (
-        user1,
-        user2,
-        now
-    ))
-
-    connection.commit()
-    connection.close()
-
-    return {
-        "message": "You are now friends! 🦊"
-    }
-
-
-# =========================
-# FRIENDS LIST
-# =========================
-
-@app.get("/api/friends")
-def friends(
-    authorization: str | None = Header(default=None)
-):
-
-    token = authorization.replace("Bearer ", "") if authorization else None
-    current = get_user_from_token(token)
-
-    if not current:
-        raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
-        )
-
-    connection = db()
-
-    rows = connection.execute("""
-        SELECT users.*
-        FROM friendships
-        JOIN users
-        ON users.id =
-            CASE
-                WHEN friendships.user1_id = ? THEN friendships.user2_id
-                ELSE friendships.user1_id
-            END
-        WHERE
-            friendships.user1_id = ?
-            OR friendships.user2_id = ?
-        ORDER BY users.username
-    """, (
-        current["id"],
-        current["id"],
-        current["id"]
-    )).fetchall()
-
-    connection.close()
-
-    return {
-        "friends": [public_user(user) for user in rows]
-    }
-
-
-# =========================
-# LEADERBOARD
-# =========================
-
-@app.get("/api/leaderboard")
-def leaderboard():
-
-    connection = db()
-
-    users = connection.execute("""
-        SELECT *
-        FROM users
-        ORDER BY xp DESC, level DESC, coins DESC
-        LIMIT 100
-    """).fetchall()
+            o.foxie_id,
+            p.xp,
+            p.level,
+            p.bond
+        FROM foxie_ownership o
+        LEFT JOIN foxie_progress p
+        ON p.foxie_id=o.foxie_id
+        WHERE o.user_id=?
+        ORDER BY o.acquired_at DESC
+        """,
+        (user["id"],),
+    ).fetchall()
 
     connection.close()
 
     result = []
 
-    for position, user in enumerate(users, start=1):
+    for row in rows:
 
-        result.append({
-            "rank": position,
-            "username": user["username"],
-            "display_name": user["display_name"],
-            "avatar": user["avatar"],
-            "xp": user["xp"],
-            "coins": user["coins"],
-            "level": user["level"],
-            "title": user["title"]
-        })
+        foxie = get_foxie(
+            row["foxie_id"]
+        )
+
+        if not foxie:
+            continue
+
+        foxie["owned"] = True
+        foxie["discovered"] = True
+
+        if row["xp"] is not None:
+            foxie["xp"] = row["xp"]
+
+        if row["level"] is not None:
+            foxie["level"] = row["level"]
+
+        foxie["bond"] = (
+            row["bond"] or 0
+        )
+
+        foxie["evolution"] = \
+            evolution_for_level(
+                foxie["level"]
+            )
+
+        result.append(foxie)
 
     return {
-        "leaderboard": result
+        "count": len(result),
+        "foxies": result,
     }
 
 
-# =========================
-# ADD XP / COINS
-# =========================
+# ============================================================
+# FOXIE XP
+# ============================================================
 
-@app.post("/api/progression/reward")
-def reward(
-    xp: int = 0,
-    coins: int = 0,
-    authorization: str | None = Header(default=None)
+class XPRequest(BaseModel):
+    amount: int
+
+
+@app.post("/api/foxies/{foxie_id}/xp")
+def add_foxie_xp(
+    foxie_id: str,
+    data: XPRequest,
+    authorization: Optional[str] = Header(None),
 ):
 
-    token = authorization.replace("Bearer ", "") if authorization else None
-    user = get_user_from_token(token)
+    user = get_current_user(
+        authorization
+    )
 
-    if not user:
+    if data.amount <= 0:
         raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
+            status_code=400,
+            detail="XP must be positive",
         )
-
-    # Safety limits for now
-    xp = max(0, min(xp, 1000))
-    coins = max(0, min(coins, 1000))
-
-    new_xp = user["xp"] + xp
-    new_coins = user["coins"] + coins
-
-    # Level every 1000 XP
-    new_level = max(1, (new_xp // 1000) + 1)
-
-    if new_level >= 50:
-        title = "Foxie Legend"
-    elif new_level >= 25:
-        title = "Foxie Elite"
-    elif new_level >= 10:
-        title = "Foxie Pro"
-    elif new_level >= 5:
-        title = "Foxie Player"
-    else:
-        title = "Rookie"
 
     connection = db()
 
-    connection.execute("""
-        UPDATE users
-        SET xp = ?,
-            coins = ?,
-            level = ?,
-            title = ?
-        WHERE id = ?
-    """, (
-        new_xp,
-        new_coins,
-        new_level,
-        title,
-        user["id"]
-    ))
-
-    connection.commit()
-
-    updated = connection.execute(
-        "SELECT * FROM users WHERE id = ?",
-        (user["id"],)
+    ownership = connection.execute(
+        """
+        SELECT *
+        FROM foxie_ownership
+        WHERE foxie_id=? AND user_id=?
+        """,
+        (
+            foxie_id,
+            user["id"],
+        ),
     ).fetchone()
 
+    if not ownership:
+
+        connection.close()
+
+        raise HTTPException(
+            status_code=403,
+            detail="You do not own this Foxie",
+        )
+
+    progress = connection.execute(
+        """
+        SELECT *
+        FROM foxie_progress
+        WHERE foxie_id=? AND user_id=?
+        """,
+        (
+            foxie_id,
+            user["id"],
+        ),
+    ).fetchone()
+
+    if not progress:
+
+        connection.close()
+
+        raise HTTPException(
+            status_code=404,
+            detail="Foxie progress not found",
+        )
+
+    new_xp = (
+        progress["xp"]
+        + data.amount
+    )
+
+    new_level = min(
+        999,
+        (new_xp // 100) + 1,
+    )
+
+    connection.execute(
+        """
+        UPDATE foxie_progress
+        SET xp=?,level=?,updated_at=?
+        WHERE foxie_id=? AND user_id=?
+        """,
+        (
+            new_xp,
+            new_level,
+            time.time(),
+            foxie_id,
+            user["id"],
+        ),
+    )
+
+    connection.commit()
     connection.close()
 
     return {
-        "message": "Reward added!",
-        "user": public_user(updated)
+        "ok": True,
+        "foxie_id": foxie_id,
+        "xp": new_xp,
+        "level": new_level,
+        "evolution":
+            evolution_for_level(
+                new_level
+            ),
     }
 
 
-# =========================
-# CREATOR STATUS
-# =========================
+# ============================================================
+# DISCOVERY
+# ============================================================
 
-@app.get("/api/creator/status")
-def creator_status(
-    authorization: str | None = Header(default=None)
+class DiscoveryRequest(BaseModel):
+    method: str = "exploration"
+
+
+@app.post("/api/foxies/{foxie_id}/discover")
+def discover_foxie(
+    foxie_id: str,
+    data: DiscoveryRequest,
+    authorization: Optional[str] = Header(None),
 ):
 
-    token = authorization.replace("Bearer ", "") if authorization else None
-    user = get_user_from_token(token)
+    user = get_current_user(
+        authorization
+    )
 
-    if not user:
+    foxie = get_foxie(foxie_id)
+
+    if not foxie:
+
         raise HTTPException(
-            status_code=401,
-            detail="Not logged in."
+            status_code=404,
+            detail="Foxie not found",
         )
 
+    connection = db()
+
+    existing = connection.execute(
+        """
+        SELECT *
+        FROM discoveries
+        WHERE foxie_id=?
+        """,
+        (foxie_id,),
+    ).fetchone()
+
+    if existing:
+
+        connection.close()
+
+        return {
+            "ok": True,
+            "already_discovered": True,
+            "foxie": foxie,
+        }
+
+    now = time.time()
+
+    connection.execute(
+        """
+        INSERT INTO discoveries
+        (foxie_id,user_id,discovered_at,discovery_method)
+        VALUES (?,?,?,?)
+        """,
+        (
+            foxie_id,
+            user["id"],
+            now,
+            data.method,
+        ),
+    )
+
+    connection.commit()
+    connection.close()
+
+    foxie["discovered"] = True
+
     return {
-        "creator": bool(user["is_creator"])
+        "ok": True,
+        "first_discoverer": user["id"],
+        "foxie": foxie,
     }
 
 
-# =========================
-# FOXIE AI
-# =========================
+# ============================================================
+# UNIVERSE STATS
+# ============================================================
 
-@app.post("/api/chat")
-def chat(request: ChatRequest):
+@app.get("/api/foxie-universe")
+def foxie_universe():
 
-    key = os.getenv("OPENAI_API_KEY")
+    return {
 
-    if not key:
-        raise HTTPException(
-            status_code=500,
-            detail="OPENAI_API_KEY is not configured on the server."
-        )
+        "normal_foxies": FOXIE_COUNT,
 
-    try:
-        client = OpenAI(api_key=key)
+        "unknown": UNKNOWN_COUNT,
 
-        response = client.responses.create(
-            model="gpt-5.6",
-            instructions=SYSTEM_PROMPT,
-            input=request.message,
-        )
+        "unexisting": UNEXISTING_COUNT,
 
-        return {
-            "reply": response.output_text,
-            "assistant": "Foxie"
-        }
+        "one_of_one": ONE_OF_ONE_COUNT,
 
-    except Exception as e:
+        "apex": APEX_COUNT,
 
-        print(
-            f"OPENAI ERROR: {type(e).__name__}: {e}",
-            flush=True
-        )
+        "total_special_slots":
+            UNKNOWN_COUNT
+            + UNEXISTING_COUNT
+            + ONE_OF_ONE_COUNT
+            + APEX_COUNT,
 
-        raise HTTPException(
-            status_code=502,
-            detail=f"OpenAI request failed: {type(e).__name__}: {e}"
-        )
+        "evolution_levels":[
+            25,
+            50,
+            100,
+            500,
+            999,
+        ],
+
+        "spawn_schedule":{
+
+            "apex":
+                "1 per month",
+
+            "unexisting":
+                "1 per week",
+
+            "unknown":
+                "daily",
+
+            "one_of_one":
+                "daily",
+        },
+
+    }
