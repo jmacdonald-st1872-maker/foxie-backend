@@ -8,14 +8,14 @@
 <style>
 :root{
   --green:#39ff14;
-  --green2:#19c900;
   --bg:#020604;
   --panel:#07120b;
   --panel2:#0a190e;
   --line:#174d25;
   --text:#d9ffe0;
-  --muted:#7fa88a;
-  --danger:#ff4545;
+  --muted:#79a986;
+  --danger:#ff3864;
+  --gold:#ffd84d;
 }
 
 *{
@@ -26,13 +26,13 @@ html,body{
   margin:0;
   width:100%;
   height:100%;
+  overflow:hidden;
+  font-family:Arial,Helvetica,sans-serif;
   background:var(--bg);
   color:var(--text);
-  font-family:Arial,Helvetica,sans-serif;
-  overflow:hidden;
 }
 
-button,input{
+button,input,select{
   font:inherit;
 }
 
@@ -40,42 +40,68 @@ button{
   cursor:pointer;
 }
 
-body{
-  background:
-    radial-gradient(circle at 50% 20%,rgba(57,255,20,.08),transparent 35%),
-    #020604;
-}
-
-/* PARTICLES */
-
-#particles{
+#bg{
   position:fixed;
   inset:0;
-  pointer-events:none;
   overflow:hidden;
-  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(57,255,20,.08),transparent 35%),
+    linear-gradient(180deg,#010302,#020604 60%,#010301);
+}
+
+.grid{
+  position:absolute;
+  inset:0;
+  opacity:.15;
+  background-image:
+    linear-gradient(rgba(57,255,20,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,255,20,.12) 1px,transparent 1px);
+  background-size:55px 55px;
+  transform:perspective(500px) rotateX(60deg) scale(1.6);
+  transform-origin:bottom;
+}
+
+#codeRain{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  opacity:.2;
+}
+
+.code{
+  position:absolute;
+  top:-100px;
+  color:var(--green);
+  font-size:12px;
+  white-space:pre;
+  animation:fall linear infinite;
+  text-shadow:0 0 8px var(--green);
+}
+
+@keyframes fall{
+  to{transform:translateY(120vh)}
 }
 
 .particle{
   position:absolute;
-  bottom:-20px;
-  width:2px;
-  height:2px;
+  width:3px;
+  height:3px;
+  border-radius:50%;
   background:var(--green);
-  box-shadow:0 0 8px var(--green);
-  opacity:.7;
+  box-shadow:0 0 12px var(--green);
   animation:rise linear infinite;
 }
 
 @keyframes rise{
   from{
-    transform:translateY(0);
+    transform:translateY(110vh) scale(.5);
     opacity:0;
   }
-  15%{opacity:.8}
-  80%{opacity:.6}
+  15%{opacity:1}
+  85%{opacity:1}
   to{
-    transform:translateY(-110vh);
+    transform:translateY(-20vh) scale(1.4);
     opacity:0;
   }
 }
@@ -84,10 +110,10 @@ body{
 
 #app{
   position:relative;
-  z-index:1;
+  z-index:2;
   display:flex;
   width:100%;
-  height:100vh;
+  height:100%;
 }
 
 /* SIDEBAR */
@@ -96,67 +122,70 @@ body{
   width:245px;
   min-width:245px;
   height:100%;
-  background:rgba(4,12,7,.96);
+  padding:18px 14px;
+  background:rgba(2,8,5,.94);
   border-right:1px solid var(--line);
-  padding:18px 12px;
   display:flex;
   flex-direction:column;
-  overflow-y:auto;
+  box-shadow:8px 0 30px rgba(0,0,0,.35);
 }
 
 .logo{
-  font-size:28px;
-  font-weight:900;
+  border:1px solid var(--line);
+  background:linear-gradient(135deg,#07150a,#020604);
+  padding:16px;
+  border-radius:15px;
   color:var(--green);
-  text-shadow:0 0 14px rgba(57,255,20,.5);
-  padding:8px 12px 20px;
+  font-size:26px;
+  font-weight:900;
+  text-align:center;
+  letter-spacing:2px;
+  text-shadow:0 0 12px var(--green);
+  margin-bottom:18px;
+  user-select:none;
 }
 
 .logo small{
   display:block;
   font-size:10px;
   color:var(--muted);
-  letter-spacing:3px;
-  margin-top:4px;
+  letter-spacing:1px;
+  margin-top:5px;
 }
 
-.nav-title{
-  color:#477653;
-  font-size:10px;
-  font-weight:bold;
-  letter-spacing:2px;
-  padding:14px 12px 6px;
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
 }
 
-.nav-btn{
-  width:100%;
+.nav button{
   border:1px solid transparent;
+  color:var(--text);
   background:transparent;
-  color:#a9cdb0;
   text-align:left;
-  padding:11px 12px;
-  border-radius:8px;
-  margin:2px 0;
-  transition:.15s;
+  padding:12px 13px;
+  border-radius:10px;
+  transition:.2s;
 }
 
-.nav-btn:hover,
-.nav-btn.active{
-  background:#0b1d10;
-  border-color:#1b5b2b;
+.nav button:hover,
+.nav button.active{
+  background:rgba(57,255,20,.08);
+  border-color:var(--line);
   color:var(--green);
-  box-shadow:inset 3px 0 0 var(--green);
+  transform:translateX(3px);
 }
 
-.sidebar-bottom{
+.settings{
   margin-top:auto;
 }
 
-.creator-credit{
-  color:#31553a;
-  font-size:9px;
-  line-height:1.5;
-  padding:15px 10px 5px;
+.credit{
+  color:#4e7658;
+  font-size:10px;
+  text-align:center;
+  margin-top:12px;
 }
 
 /* MAIN */
@@ -164,67 +193,55 @@ body{
 .main{
   flex:1;
   min-width:0;
-  height:100%;
   display:flex;
   flex-direction:column;
 }
 
-/* TOPBAR */
-
 .topbar{
-  height:64px;
-  min-height:64px;
+  height:70px;
+  min-height:70px;
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:10px 18px;
+  gap:15px;
+  padding:12px 22px;
   border-bottom:1px solid var(--line);
-  background:rgba(3,10,6,.86);
+  background:rgba(2,7,4,.78);
   backdrop-filter:blur(10px);
-}
-
-.mobile-menu{
-  display:none;
-  background:#0a190e;
-  border:1px solid var(--line);
-  color:var(--green);
-  border-radius:7px;
-  padding:8px 11px;
 }
 
 .search{
   flex:1;
-  max-width:600px;
+  max-width:650px;
 }
 
 .search input{
   width:100%;
-  background:#06100a;
+  background:#030a05;
   border:1px solid var(--line);
-  color:white;
+  border-radius:12px;
+  color:var(--text);
+  padding:12px 15px;
   outline:none;
-  padding:10px 13px;
-  border-radius:8px;
 }
 
 .search input:focus{
   border-color:var(--green);
-  box-shadow:0 0 12px rgba(57,255,20,.12);
+  box-shadow:0 0 15px rgba(57,255,20,.12);
 }
 
 .clock{
   margin-left:auto;
   color:var(--green);
-  font-family:monospace;
-  font-size:15px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
 .account{
-  background:#08170c;
+  padding:9px 12px;
   border:1px solid var(--line);
-  border-radius:8px;
-  padding:8px 12px;
-  color:#bdebc5;
+  border-radius:10px;
+  background:#07110a;
+  color:var(--text);
 }
 
 /* CONTENT */
@@ -237,7 +254,7 @@ body{
 
 .page{
   display:none;
-  max-width:1250px;
+  max-width:1400px;
   margin:auto;
 }
 
@@ -246,396 +263,715 @@ body{
 }
 
 h1{
-  margin:0 0 8px;
-  color:#f1fff3;
+  margin:0 0 7px;
+  font-size:36px;
 }
 
 h2{
-  color:var(--green);
+  margin:0 0 8px;
 }
 
-p{
+.sub{
   color:var(--muted);
+  margin-bottom:22px;
 }
 
 /* CARDS */
 
-.grid{
+.gridCards{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;
+  gap:15px;
 }
 
 .card{
-  background:linear-gradient(145deg,#07130b,#040b06);
+  background:linear-gradient(145deg,rgba(8,24,13,.95),rgba(3,10,6,.95));
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:16px;
   padding:18px;
-  min-height:120px;
-  transition:.2s;
+  box-shadow:0 10px 35px rgba(0,0,0,.18);
 }
 
 .card:hover{
-  border-color:#29883b;
-  transform:translateY(-2px);
-  box-shadow:0 0 25px rgba(57,255,20,.08);
+  border-color:#278b35;
 }
 
-.card h3{
-  margin-top:0;
+.bigEmoji{
+  font-size:45px;
+  margin-bottom:10px;
+}
+
+.card p{
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.green{
   color:var(--green);
 }
 
-.hero{
-  padding:28px;
-  border:1px solid #1b5b2b;
-  background:
-    linear-gradient(135deg,rgba(57,255,20,.08),transparent),
-    #061009;
-  border-radius:16px;
-  margin-bottom:18px;
-}
-
-.hero-title{
-  font-size:clamp(34px,6vw,70px);
-  font-weight:900;
-  color:var(--green);
-  text-shadow:0 0 25px rgba(57,255,20,.35);
+.gold{
+  color:var(--gold);
 }
 
 /* BUTTONS */
 
 .btn{
-  border:1px solid var(--line);
-  background:#0a1c0e;
-  color:#c8ffd0;
-  border-radius:8px;
-  padding:9px 13px;
+  border:1px solid var(--green);
+  background:rgba(57,255,20,.08);
+  color:var(--green);
+  border-radius:10px;
+  padding:11px 15px;
+  font-weight:800;
 }
 
 .btn:hover{
-  border-color:var(--green);
-  color:var(--green);
+  background:rgba(57,255,20,.17);
+  box-shadow:0 0 15px rgba(57,255,20,.12);
 }
 
-.btn.green{
-  background:var(--green);
-  color:#001800;
-  border-color:var(--green);
-  font-weight:bold;
+.btn.secondary{
+  border-color:var(--line);
+  color:var(--text);
+  background:#07110a;
 }
 
 .btn.danger{
-  color:#ff7777;
-  border-color:#632222;
+  border-color:var(--danger);
+  color:#ff7895;
 }
 
-/* CHAT */
+/* HOME */
 
-.chat-box{
-  height:calc(100vh - 140px);
-  min-height:400px;
+.hero{
+  padding:28px;
   border:1px solid var(--line);
-  background:#040b06;
-  border-radius:12px;
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 80% 20%,rgba(57,255,20,.12),transparent 30%),
+    linear-gradient(135deg,rgba(8,25,13,.98),rgba(2,7,4,.98));
+  margin-bottom:18px;
+}
+
+.hero h1{
+  color:var(--green);
+  text-shadow:0 0 15px rgba(57,255,20,.4);
+}
+
+.heroActions{
   display:flex;
-  flex-direction:column;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+/* AVATAR */
+
+.avatarLayout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.avatarPreview{
+  min-height:470px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at center,rgba(57,255,20,.09),transparent 50%),
+    #030a05;
+}
+
+.avatarStage{
+  position:relative;
+  width:240px;
+  height:400px;
+}
+
+.avatarBody{
+  position:absolute;
+  left:70px;
+  bottom:25px;
+  width:100px;
+  height:170px;
+  background:linear-gradient(135deg,#28a83d,#0d4d1d);
+  border:3px solid #64ff79;
+  border-radius:45px 45px 20px 20px;
+  box-shadow:0 0 30px rgba(57,255,20,.2);
+}
+
+.avatarHead{
+  position:absolute;
+  left:48px;
+  top:50px;
+  width:145px;
+  height:145px;
+  background:#f0b37e;
+  border:3px solid #ffd0a6;
+  border-radius:50%;
+  z-index:3;
+}
+
+.hair{
+  position:absolute;
+  left:43px;
+  top:35px;
+  width:155px;
+  height:80px;
+  background:#101010;
+  border-radius:70% 70% 30% 30%;
+  z-index:4;
+}
+
+.eye{
+  position:absolute;
+  top:105px;
+  width:13px;
+  height:18px;
+  border-radius:50%;
+  background:#111;
+  z-index:5;
+}
+
+.eye.left{left:80px}
+.eye.right{left:143px}
+
+.leg{
+  position:absolute;
+  bottom:0;
+  width:32px;
+  height:90px;
+  background:#151c19;
+  border:2px solid #394b41;
+  border-radius:15px;
+}
+
+.leg.left{left:75px}
+.leg.right{left:133px}
+
+.shoe{
+  position:absolute;
+  bottom:-7px;
+  width:53px;
+  height:25px;
+  background:#090909;
+  border:2px solid #444;
+  border-radius:20px;
+}
+
+.shoe.left{left:58px}
+.shoe.right{left:126px}
+
+.avatarCape{
+  position:absolute;
+  left:39px;
+  top:116px;
+  width:165px;
+  height:220px;
+  background:linear-gradient(90deg,rgba(255,0,100,.7),rgba(80,0,255,.35));
+  clip-path:polygon(20% 0,80% 0,100% 100%,50% 85%,0 100%);
+  z-index:1;
+  display:none;
+}
+
+.avatarCape.on{
+  display:block;
+}
+
+.avatarBackpack{
+  position:absolute;
+  left:37px;
+  top:160px;
+  width:50px;
+  height:90px;
+  background:#243cff;
+  border:3px solid #7990ff;
+  border-radius:18px;
+  z-index:2;
+  display:none;
+}
+
+.avatarBackpack.on{
+  display:block;
+}
+
+.avatarMask{
+  position:absolute;
+  left:68px;
+  top:128px;
+  width:105px;
+  height:48px;
+  background:#111;
+  border:2px solid #444;
+  border-radius:20px;
+  z-index:6;
+  display:none;
+}
+
+.avatarMask.on{
+  display:block;
+}
+
+.avatarAura{
+  position:absolute;
+  inset:5px;
+  border:3px solid var(--green);
+  border-radius:50%;
+  box-shadow:
+    0 0 25px var(--green),
+    0 0 70px rgba(57,255,20,.25);
+  animation:pulse 2s infinite;
+  z-index:0;
+  display:none;
+}
+
+.avatarAura.on{
+  display:block;
+}
+
+@keyframes pulse{
+  50%{transform:scale(1.05);opacity:.55}
+}
+
+/* FOXIE */
+
+.foxieCard{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.foxiePreview{
+  width:230px;
+  min-width:230px;
+  height:280px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:
+    radial-gradient(circle,rgba(57,255,20,.09),transparent 55%),
+    #020604;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
   overflow:hidden;
 }
 
-.messages{
-  flex:1;
-  overflow:auto;
-  padding:18px;
+.foxie{
+  position:relative;
+  width:160px;
+  height:190px;
+  transition:.3s;
 }
 
-.message{
-  margin-bottom:12px;
-  max-width:80%;
-  padding:11px 13px;
-  border-radius:10px;
-  background:#0a190e;
-  border:1px solid #123d1c;
+.foxieBody{
+  position:absolute;
+  left:35px;
+  top:85px;
+  width:90px;
+  height:85px;
+  background:#d87522;
+  border-radius:45% 45% 35% 35%;
+  border:3px solid #ffad5d;
 }
 
-.message.me{
-  margin-left:auto;
-  border-color:#1b672a;
+.foxieHead{
+  position:absolute;
+  left:25px;
+  top:25px;
+  width:110px;
+  height:100px;
+  background:#e8872d;
+  border:3px solid #ffb565;
+  border-radius:48% 48% 45% 45%;
+  z-index:3;
 }
 
-.message strong{
+.ear{
+  position:absolute;
+  top:2px;
+  width:48px;
+  height:60px;
+  background:#e8872d;
+  border:3px solid #ffb565;
+  transform:rotate(25deg);
+  z-index:2;
+}
+
+.ear.left{
+  left:25px;
+  clip-path:polygon(50% 0,100% 100%,0 100%);
+}
+
+.ear.right{
+  right:25px;
+  transform:rotate(-25deg);
+  clip-path:polygon(50% 0,100% 100%,0 100%);
+}
+
+.foxEye{
+  position:absolute;
+  top:63px;
+  width:13px;
+  height:16px;
+  background:#101010;
+  border-radius:50%;
+  z-index:4;
+}
+
+.foxEye.left{left:50px}
+.foxEye.right{left:91px}
+
+.foxNose{
+  position:absolute;
+  left:73px;
+  top:82px;
+  width:16px;
+  height:12px;
+  border-radius:50%;
+  background:#111;
+  z-index:5;
+}
+
+.foxTail{
+  position:absolute;
+  right:0;
+  top:105px;
+  width:80px;
+  height:55px;
+  background:#e8872d;
+  border:3px solid #ffb565;
+  border-radius:60% 20% 60% 20%;
+  transform:rotate(-20deg);
+  z-index:1;
+}
+
+.foxTail:after{
+  content:"";
+  position:absolute;
+  right:-3px;
+  top:8px;
+  width:30px;
+  height:35px;
+  background:#fff2e3;
+  border-radius:50%;
+}
+
+.foxLeg{
+  position:absolute;
+  top:150px;
+  width:24px;
+  height:52px;
+  background:#d87522;
+  border:3px solid #ffad5d;
+  border-radius:12px;
+}
+
+.foxLeg.l1{left:40px}
+.foxLeg.l2{left:72px}
+.foxLeg.l3{left:103px}
+
+.foxie.upright{
+  height:205px;
+}
+
+.foxie.upright .foxieBody{
+  left:43px;
+  top:83px;
+  width:75px;
+  height:95px;
+  border-radius:40px;
+}
+
+.foxie.upright .foxLeg{
+  top:165px;
+  height:55px;
+}
+
+.foxie.upright .foxTail{
+  right:-8px;
+  top:105px;
+}
+
+.foxie.upright .foxHead{
+  transform:scale(1.04);
+}
+
+.foxie.fire .foxieBody,
+.foxie.fire .foxieHead,
+.foxie.fire .ear,
+.foxie.fire .foxTail{
+  background:#e64b19;
+  border-color:#ff9a50;
+}
+
+.foxie.ice .foxieBody,
+.foxie.ice .foxieHead,
+.foxie.ice .ear,
+.foxie.ice .foxTail{
+  background:#66d9ff;
+  border-color:#c5f5ff;
+}
+
+.foxie.cyber .foxieBody,
+.foxie.cyber .foxieHead,
+.foxie.cyber .ear,
+.foxie.cyber .foxTail{
+  background:#744cff;
+  border-color:#b6a1ff;
+}
+
+.foxie.cosmic .foxieBody,
+.foxie.cosmic .foxieHead,
+.foxie.cosmic .ear,
+.foxie.cosmic .foxTail{
+  background:#522f92;
+  border-color:#d6a8ff;
+}
+
+.foxie.shadow .foxieBody,
+.foxie.shadow .foxieHead,
+.foxie.shadow .ear,
+.foxie.shadow .foxTail{
+  background:#191b22;
+  border-color:#7f8495;
+}
+
+.foxie.gold .foxieBody,
+.foxie.gold .foxieHead,
+.foxie.gold .ear,
+.foxie.gold .foxTail{
+  background:#d5a51f;
+  border-color:#fff09b;
+}
+
+.foxieMirror{
+  position:absolute;
+  right:15px;
+  top:15px;
+  font-size:12px;
   color:var(--green);
-  display:block;
-  margin-bottom:4px;
 }
 
-.chat-input{
+/* CONTROLS */
+
+.control{
   display:flex;
+  flex-direction:column;
   gap:8px;
-  padding:10px;
+  margin-bottom:14px;
+}
+
+.control label{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.control select,
+.control input{
+  background:#030805;
+  color:var(--text);
+  border:1px solid var(--line);
+  padding:11px;
+  border-radius:9px;
+}
+
+.check{
+  display:flex;
+  gap:9px;
+  align-items:center;
+  margin:12px 0;
+}
+
+/* GAME */
+
+.gameArena{
+  min-height:500px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(57,255,20,.12),transparent 35%),
+    linear-gradient(180deg,#07130a,#020604);
+}
+
+.battleHud{
+  position:absolute;
+  left:20px;
+  right:20px;
+  top:18px;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.hpBox{
+  width:280px;
+  padding:12px;
+  background:rgba(0,0,0,.6);
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+
+.hpBar{
+  height:12px;
+  background:#202020;
+  border-radius:8px;
+  overflow:hidden;
+  margin-top:8px;
+}
+
+.hpFill{
+  height:100%;
+  width:100%;
+  background:var(--green);
+}
+
+.battleFox{
+  position:absolute;
+  bottom:70px;
+}
+
+.enemy{
+  right:18%;
+}
+
+.player{
+  left:18%;
+}
+
+.battleMessage{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:18px;
+  background:rgba(0,0,0,.78);
   border-top:1px solid var(--line);
 }
 
-.chat-input input{
-  flex:1;
-  background:#06100a;
-  border:1px solid var(--line);
-  color:white;
-  padding:11px;
-  border-radius:8px;
-  outline:none;
-}
-
-/* GAMES */
-
-.game-grid{
+.moves{
+  position:absolute;
+  right:18px;
+  bottom:80px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:15px;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
 }
 
-.game-card{
-  min-height:180px;
+.moves button{
+  min-width:125px;
+}
+
+/* LIST */
+
+.list{
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
-  background:#061009;
+  gap:10px;
+}
+
+.row{
+  padding:14px;
   border:1px solid var(--line);
-  border-radius:13px;
-  padding:18px;
-}
-
-.game-icon{
-  font-size:42px;
-}
-
-.game-card h3{
-  color:var(--green);
-  margin:8px 0;
-}
-
-/* FULLSCREEN OVERLAY */
-
-#fullscreenOverlay{
-  position:fixed;
-  inset:0;
-  background:#010402;
-  z-index:9999;
-  display:none;
-  flex-direction:column;
-}
-
-#fullscreenOverlay.show{
+  border-radius:12px;
+  background:#061009;
   display:flex;
-}
-
-.fs-topbar{
-  height:58px;
-  min-height:58px;
-  background:#030a05;
-  border-bottom:1px solid var(--line);
-  display:flex;
+  justify-content:space-between;
   align-items:center;
   gap:10px;
-  padding:8px 14px;
 }
 
-.fs-title{
-  color:var(--green);
-  font-weight:bold;
-  flex:1;
-}
+/* TOAST */
 
-.fs-body{
-  flex:1;
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* GAME FULLSCREEN */
-
-.fake-game{
-  width:min(1000px,94vw);
-  height:min(650px,80vh);
-  background:
-    radial-gradient(circle at center,rgba(57,255,20,.08),transparent 55%),
-    #020703;
-  border:1px solid #1b632b;
-  border-radius:15px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 0 50px rgba(57,255,20,.08);
-}
-
-.fake-game .big{
-  font-size:90px;
-}
-
-.fake-game h2{
-  font-size:30px;
-}
-
-.hud{
-  position:absolute;
-  top:15px;
-  left:15px;
-  right:15px;
-  display:flex;
-  justify-content:space-between;
-  color:var(--green);
-  font-family:monospace;
-}
-
-/* CALL */
-
-.call-room{
-  width:100%;
-  height:100%;
-  padding:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:15px;
-}
-
-.video-tile{
-  position:relative;
-  min-height:220px;
-  border:1px solid #1a5428;
-  background:
-    radial-gradient(circle,rgba(57,255,20,.08),transparent 50%),
-    #061009;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:60px;
-}
-
-.video-name{
-  position:absolute;
-  bottom:10px;
-  left:10px;
-  background:rgba(0,0,0,.7);
-  padding:6px 9px;
-  border-radius:6px;
-  font-size:12px;
-  color:white;
-}
-
-.call-controls{
-  position:absolute;
-  bottom:18px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:9px;
-  background:rgba(3,10,5,.94);
-  border:1px solid var(--line);
-  padding:9px;
-  border-radius:12px;
-}
-
-/* TABLE */
-
-.table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-
-.table th,
-.table td{
-  border-bottom:1px solid #123d1c;
-  padding:11px;
-  text-align:left;
-}
-
-.table th{
-  color:var(--green);
-}
-
-/* MODAL */
-
-.modal{
+#toast{
   position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.72);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:10000;
-  padding:20px;
+  right:22px;
+  bottom:22px;
+  background:#07150b;
+  border:1px solid var(--green);
+  color:var(--text);
+  padding:14px 17px;
+  border-radius:12px;
+  box-shadow:0 0 25px rgba(57,255,20,.15);
+  transform:translateY(130px);
+  opacity:0;
+  transition:.3s;
+  z-index:99;
 }
 
-.modal.show{
-  display:flex;
+#toast.show{
+  transform:translateY(0);
+  opacity:1;
 }
 
-.modal-box{
-  width:min(440px,100%);
-  background:#061009;
-  border:1px solid #1d672e;
-  border-radius:14px;
-  padding:24px;
-  box-shadow:0 0 50px rgba(57,255,20,.12);
-}
+/* RESPONSIVE */
 
-.modal-box input{
-  width:100%;
-  background:#020604;
-  border:1px solid var(--line);
-  color:white;
-  padding:11px;
-  border-radius:8px;
-  margin:6px 0 10px;
-  outline:none;
-}
-
-.modal-actions{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-}
-
-/* MOBILE */
-
-@media(max-width:800px){
+@media(max-width:900px){
   .sidebar{
-    position:fixed;
-    left:-260px;
-    top:0;
-    bottom:0;
-    z-index:11000;
-    transition:.2s;
+    width:190px;
+    min-width:190px;
   }
 
-  .sidebar.open{
-    left:0;
+  .avatarLayout{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+  .sidebar{
+    width:72px;
+    min-width:72px;
+    padding:10px 7px;
   }
 
-  .mobile-menu{
-    display:block;
+  .logo{
+    font-size:0;
+  }
+
+  .logo:first-letter{
+    font-size:25px;
+  }
+
+  .logo small,
+  .nav button span,
+  .credit{
+    display:none;
+  }
+
+  .nav button{
+    text-align:center;
+    padding:12px 4px;
+    font-size:18px;
   }
 
   .content{
-    padding:15px;
+    padding:14px;
+  }
+
+  .topbar{
+    padding:10px;
   }
 
   .clock{
     display:none;
   }
 
-  .account{
-    display:none;
+  h1{
+    font-size:28px;
   }
 
-  .call-room{
-    grid-template-columns:1fr;
+  .foxieCard{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .foxiePreview{
+    width:100%;
   }
 }
 </style>
@@ -643,580 +979,1038 @@ p{
 
 <body>
 
-<div id="particles"></div>
+<div id="bg">
+  <div class="grid"></div>
+  <div id="codeRain"></div>
+</div>
 
 <div id="app">
 
-<aside class="sidebar" id="sidebar">
+  <!-- SIDEBAR -->
 
-  <div class="logo">
-    🦊 FOXIE
-    <small>PLAY • CREATE • CONNECT</small>
-  </div>
+  <aside class="sidebar">
 
-  <div class="nav-title">MAIN</div>
-
-  <button class="nav-btn active" onclick="openPage('home',this)">🏠 Home</button>
-  <button class="nav-btn" onclick="openPage('chat',this)">💬 Chat</button>
-  <button class="nav-btn" onclick="openPage('web',this)">🌐 Web</button>
-  <button class="nav-btn" onclick="openPage('images',this)">🖼️ Images</button>
-
-  <div class="nav-title">COMMUNITY</div>
-
-  <button class="nav-btn" onclick="openPage('profile',this)">👤 Profile</button>
-  <button class="nav-btn" onclick="openPage('users',this)">🔎 Users</button>
-  <button class="nav-btn" onclick="openPage('friends',this)">👥 Friends</button>
-  <button class="nav-btn" onclick="openPage('vids',this)">🎬 Foxie Vids</button>
-  <button class="nav-btn" onclick="openCall()">📞 Calls</button>
-
-  <div class="nav-title">PLAY</div>
-
-  <button class="nav-btn" onclick="openPage('games',this)">🎮 Games</button>
-  <button class="nav-btn" onclick="openPage('leaderboard',this)">🏆 Leaderboard</button>
-
-  <div class="nav-title">TOOLS</div>
-
-  <button class="nav-btn" onclick="openPage('calculator',this)">🧮 Calculator</button>
-  <button class="nav-btn" onclick="openPage('creator',this)">🛠️ Creator Mode</button>
-
-  <div class="sidebar-bottom">
-    <button class="nav-btn" onclick="openPage('settings',this)">⚙️ Settings</button>
-
-    <div class="creator-credit">
-      Jayden Wayne MacDonald created this 🦊
-    </div>
-  </div>
-
-</aside>
-
-<main class="main">
-
-  <header class="topbar">
-    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
-
-    <div class="search">
-      <input id="globalSearch" placeholder="Search Foxie..." onkeydown="globalSearch(event)">
+    <div class="logo" id="logo">
+      🦊 FOXIE
+      <small>PLAY • CREATE • DISCOVER</small>
     </div>
 
-    <div class="clock" id="clock">00:00:00</div>
+    <nav class="nav">
 
-    <div class="account" id="accountName">
-      Guest
-    </div>
-  </header>
-
-  <section class="content">
-
-    <!-- HOME -->
-
-    <div class="page active" id="home">
-
-      <div class="hero">
-        <div class="hero-title">FOXIE 🦊</div>
-        <h2>Play. Create. Connect.</h2>
-        <p>
-          Your gaming, social and AI platform.
-        </p>
-
-        <button class="btn green" onclick="openPage('games')">
-          🎮 Play Games
-        </button>
-
-        <button class="btn" onclick="openCall()">
-          📞 Start a Call
-        </button>
-      </div>
-
-      <div class="grid">
-
-        <div class="card">
-          <h3>💬 AI Chat</h3>
-          <p>Talk with Foxie AI.</p>
-          <button class="btn" onclick="openPage('chat')">Open Chat</button>
-        </div>
-
-        <div class="card">
-          <h3>🎮 Games</h3>
-          <p>Play Foxie games and compete.</p>
-          <button class="btn" onclick="openPage('games')">Explore</button>
-        </div>
-
-        <div class="card">
-          <h3>🏆 Tournaments</h3>
-          <p>Hourly competitions and rewards.</p>
-        </div>
-
-        <div class="card">
-          <h3>👥 Community</h3>
-          <p>Friends, profiles and players.</p>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- CHAT -->
-
-    <div class="page" id="chat">
-
-      <h1>💬 Foxie Chat</h1>
-      <p>Talk with Foxie AI.</p>
-
-      <div class="chat-box">
-
-        <div class="messages" id="messages">
-
-          <div class="message">
-            <strong>🦊 Foxie</strong>
-            Yo! I'm Foxie. What's up?
-          </div>
-
-        </div>
-
-        <div class="chat-input">
-          <input id="chatInput"
-                 placeholder="Message Foxie..."
-                 onkeydown="if(event.key==='Enter')sendChat()">
-
-          <button class="btn green" onclick="sendChat()">
-            Send
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- WEB -->
-
-    <div class="page" id="web">
-
-      <h1>🌐 Foxie Web</h1>
-      <p>Web tools will live here.</p>
-
-      <div class="card">
-        <h3>Fullscreen Web</h3>
-        <p>Open Foxie's web workspace.</p>
-        <button class="btn green" onclick="openFullscreen('web','🌐 Foxie Web')">
-          ⛶ Open Fullscreen
-        </button>
-      </div>
-
-    </div>
-
-    <!-- IMAGES -->
-
-    <div class="page" id="images">
-
-      <h1>🖼️ Foxie Images</h1>
-
-      <div class="card">
-        <h3>Image Workspace</h3>
-        <p>Your image tools can be added here.</p>
-
-        <button class="btn green"
-                onclick="openFullscreen('images','🖼️ Foxie Images')">
-          ⛶ Fullscreen
-        </button>
-      </div>
-
-    </div>
-
-    <!-- PROFILE -->
-
-    <div class="page" id="profile">
-
-      <h1>👤 Profile</h1>
-
-      <div class="card">
-        <h3 id="profileName">Guest</h3>
-        <p id="profileUsername">@guest</p>
-
-        <p>
-          XP: <strong id="profileXP">0</strong>
-          &nbsp; • &nbsp;
-          Coins: <strong id="profileCoins">0</strong>
-        </p>
-      </div>
-
-    </div>
-
-    <!-- USERS -->
-
-    <div class="page" id="users">
-
-      <h1>🔎 Find Users</h1>
-
-      <input id="userSearch"
-             placeholder="Search username..."
-             style="width:100%;max-width:500px;padding:12px;background:#06100a;border:1px solid var(--line);color:white;border-radius:8px"
-             onkeydown="if(event.key==='Enter')searchUsers()">
-
-      <button class="btn green" onclick="searchUsers()">Search</button>
-
-      <div id="userResults" class="grid" style="margin-top:15px"></div>
-
-    </div>
-
-    <!-- FRIENDS -->
-
-    <div class="page" id="friends">
-
-      <h1>👥 Friends</h1>
-
-      <div id="friendsList" class="grid">
-        <div class="card">
-          <h3>No friends loaded</h3>
-          <p>Search for players and send friend requests.</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- VIDS -->
-
-    <div class="page" id="vids">
-
-      <h1>🎬 Foxie Vids</h1>
-
-      <div class="grid">
-
-        <div class="card">
-          <h3>📺 Video Player</h3>
-          <p>Watch Foxie videos fullscreen.</p>
-
-          <button class="btn green"
-                  onclick="openFullscreen('video','🎬 Foxie Vids')">
-            ⛶ Fullscreen
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- GAMES -->
-
-    <div class="page" id="games">
-
-      <h1>🎮 Foxie Games</h1>
-      <p>Every game can have its own fullscreen experience.</p>
-
-      <div class="game-grid">
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🐍</div>
-            <h3>Foxie Snake</h3>
-            <p>Classic snake arcade.</p>
-          </div>
-
-          <button class="btn green"
-                  onclick="openGame('🐍','Foxie Snake')">
-            ▶ Play Fullscreen
-          </button>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">♟️</div>
-            <h3>Foxie Chess</h3>
-            <p>Competitive chess.</p>
-          </div>
-
-          <button class="btn green"
-                  onclick="openGame('♟️','Foxie Chess')">
-            ▶ Play Fullscreen
-          </button>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🚗</div>
-            <h3>Foxie Drive</h3>
-            <p>Open-world driving experience.</p>
-          </div>
-
-          <button class="btn green"
-                  onclick="openGame('🚗','Foxie Drive')">
-            ▶ Play Fullscreen
-          </button>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🌎</div>
-            <h3>Foxie Worlds</h3>
-            <p>Player-created worlds.</p>
-          </div>
-
-          <button class="btn green"
-                  onclick="openGame('🌎','Foxie Worlds')">
-            ▶ Play Fullscreen
-          </button>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">⚽</div>
-            <h3>Foxie Arena</h3>
-            <p>Competitive multiplayer arena.</p>
-          </div>
-
-          <button class="btn green"
-                  onclick="openGame('⚽','Foxie Arena')">
-            ▶ Play Fullscreen
-          </button>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🏎️</div>
-            <h3>Foxie Racing</h3>
-            <p>Race other players.</p>
-          </div>
-
-          <button class="btn green"
-                  onclick="openGame('🏎️','Foxie Racing')">
-            ▶ Play Fullscreen
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- LEADERBOARD -->
-
-    <div class="page" id="leaderboard">
-
-      <h1>🏆 Leaderboard</h1>
-
-      <div class="card">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Player</th>
-              <th>XP</th>
-              <th>Coins</th>
-            </tr>
-          </thead>
-
-          <tbody id="leaderboardBody">
-            <tr>
-              <td>-</td>
-              <td>Loading...</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-
-    <!-- CALCULATOR -->
-
-    <div class="page" id="calculator">
-
-      <h1>🧮 Calculator</h1>
-
-      <div class="card" style="max-width:500px">
-
-        <input id="calcInput"
-               placeholder="Example: 25 * 4"
-               style="width:100%;padding:12px;background:#020604;color:white;border:1px solid var(--line);border-radius:8px">
-
-        <button class="btn green"
-                style="margin-top:10px"
-                onclick="calculate()">
-          Calculate
-        </button>
-
-        <h2 id="calcResult">—</h2>
-
-      </div>
-
-    </div>
-
-    <!-- CREATOR -->
-
-    <div class="page" id="creator">
-
-      <h1>🛠️ Creator Mode</h1>
-
-      <div class="card">
-
-        <h3 id="creatorStatus">
-          Checking creator status...
-        </h3>
-
-        <p>
-          Creator access is controlled by secure authentication.
-          Your display name does not give creator permissions.
-        </p>
-
-      </div>
-
-    </div>
-
-    <!-- SETTINGS -->
-
-    <div class="page" id="settings">
-
-      <h1>⚙️ Settings</h1>
-
-      <div class="card">
-
-        <h3>Display Name</h3>
-
-        <input id="displayNameInput"
-               placeholder="Your display name"
-               style="width:100%;max-width:500px;padding:11px;background:#020604;border:1px solid var(--line);color:white;border-radius:8px">
-
-        <br><br>
-
-        <button class="btn green" onclick="saveDisplayName()">
-          Save Name
-        </button>
-
-        <button class="btn" onclick="resetDisplayName()">
-          Reset
-        </button>
-
-      </div>
-
-      <br>
-
-      <div class="card">
-
-        <h3>Account</h3>
-
-        <button class="btn danger" onclick="logout()">
-          Log Out
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-</main>
-</div>
-
-<!-- FULLSCREEN -->
-
-<div id="fullscreenOverlay">
-
-  <div class="fs-topbar">
-
-    <div class="fs-title" id="fsTitle">
-      Foxie
-    </div>
-
-    <button class="btn" onclick="browserFullscreen()">
-      ⛶ Browser Fullscreen
-    </button>
-
-    <button class="btn danger" onclick="closeFullscreen()">
-      ✕ Exit
-    </button>
-
-  </div>
-
-  <div class="fs-body" id="fsBody"></div>
-
-</div>
-
-<!-- ACCOUNT MODAL -->
-
-<div class="modal" id="accountModal">
-
-  <div class="modal-box">
-
-    <h2>🦊 Foxie Account</h2>
-
-    <input id="authUsername" placeholder="Username">
-
-    <input id="authDisplayName" placeholder="Display name">
-
-    <input id="authPassword" type="password" placeholder="Password">
-
-    <div class="modal-actions">
-
-      <button class="btn green" onclick="register()">
-        Sign Up
+      <button class="active" onclick="showPage('home',this)">
+        🏠 <span>Home</span>
       </button>
 
-      <button class="btn" onclick="login()">
-        Log In
+      <button onclick="showPage('games',this)">
+        🎮 <span>Games</span>
       </button>
 
-      <button class="btn" onclick="closeAccountModal()">
-        Close
+      <button onclick="showPage('foxiego',this)">
+        🌍 <span>Foxie Go</span>
       </button>
 
+      <button onclick="showPage('worlds',this)">
+        🌎 <span>Foxie Worlds</span>
+      </button>
+
+      <button onclick="showPage('movies',this)">
+        🎬 <span>Movies</span>
+      </button>
+
+      <button onclick="showPage('vids',this)">
+        📺 <span>Vids</span>
+      </button>
+
+      <button onclick="showPage('tournaments',this)">
+        🏆 <span>Tournaments</span>
+      </button>
+
+      <button onclick="showPage('learn',this)">
+        📚 <span>Learn</span>
+      </button>
+
+      <button onclick="showPage('chat',this)">
+        💬 <span>Chat</span>
+      </button>
+
+      <button onclick="showPage('friends',this)">
+        👥 <span>Friends</span>
+      </button>
+
+      <button onclick="showPage('profile',this)">
+        👤 <span>Profile</span>
+      </button>
+
+      <button onclick="showPage('leaderboard',this)">
+        🏅 <span>Leaderboard</span>
+      </button>
+
+    </nav>
+
+    <div class="settings">
+      <button class="nav" style="width:100%;background:transparent;border:0;color:var(--text);text-align:left;padding:12px" onclick="showPage('settings',this)">
+        ⚙️ <span>Settings</span>
+      </button>
     </div>
 
-    <p id="authMessage"></p>
+    <div class="credit">
+      Jayden Wayne MacDonald created this
+    </div>
 
-  </div>
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="search">
+        <input id="search" placeholder="Search Foxie, games, players, worlds...">
+      </div>
+
+      <div class="clock" id="clock">00:00:00</div>
+
+      <div class="account" id="accountName">
+        Guest
+      </div>
+
+    </header>
+
+    <section class="content">
+
+      <!-- HOME -->
+
+      <div class="page active" id="home">
+
+        <div class="hero">
+
+          <h1>Welcome to Foxie 🦊</h1>
+
+          <div class="sub">
+            Play. Create. Discover. Train your Foxies.
+          </div>
+
+          <div class="heroActions">
+            <button class="btn" onclick="showPage('avatar')">
+              👤 Create Avatar
+            </button>
+
+            <button class="btn" onclick="showPage('foxiego')">
+              🌍 Open Foxie Go
+            </button>
+
+            <button class="btn" onclick="showPage('worlds')">
+              🌎 Enter Foxie Worlds
+            </button>
+
+            <button class="btn" onclick="showPage('battle')">
+              ⚔️ Battle
+            </button>
+          </div>
+
+        </div>
+
+        <div class="gridCards">
+
+          <div class="card">
+            <div class="bigEmoji">🦊</div>
+            <h2>Your Foxie</h2>
+            <p id="homeFoxieText">
+              Your companion is waiting.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🧬</div>
+            <h2>Evolution</h2>
+            <p>
+              Evolve at levels
+              <b>25 • 50 • 100 • 500 • 999</b>.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">👑</div>
+            <h2>Apex</h2>
+            <p>
+              Ten unique Apex Foxies rule their powers.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🌍</div>
+            <h2>Foxie Go</h2>
+            <p>
+              Explore and discover Foxies in the real world.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- AVATAR -->
+
+      <div class="page" id="avatar">
+
+        <h1>Avatar Creator 👤</h1>
+
+        <div class="sub">
+          Build your own Foxie avatar and matching companion.
+        </div>
+
+        <div class="avatarLayout">
+
+          <div class="card avatarPreview">
+
+            <div class="avatarStage">
+
+              <div id="avatarAura" class="avatarAura"></div>
+
+              <div id="avatarCape" class="avatarCape"></div>
+
+              <div id="avatarBackpack" class="avatarBackpack"></div>
+
+              <div class="leg left"></div>
+              <div class="leg right"></div>
+
+              <div class="shoe left"></div>
+              <div class="shoe right"></div>
+
+              <div class="avatarBody"></div>
+
+              <div class="avatarHead"></div>
+
+              <div id="avatarHair" class="hair"></div>
+
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+
+              <div id="avatarMask" class="avatarMask"></div>
+
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <h2>Avatar Closet</h2>
+
+            <div class="control">
+              <label>Hair</label>
+              <select id="hairSelect" onchange="updateAvatar()">
+                <option>Black</option>
+                <option>Brown</option>
+                <option>Blonde</option>
+                <option>White</option>
+                <option>Green</option>
+                <option>Blue</option>
+                <option>Purple</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label>Clothing</label>
+              <select id="clothesSelect" onchange="updateAvatar()">
+                <option>Foxie Hoodie</option>
+                <option>Black Hoodie</option>
+                <option>Tech Jacket</option>
+                <option>Ninja Outfit</option>
+                <option>Galaxy Jacket</option>
+                <option>Royal Outfit</option>
+                <option>Streetwear</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label>Backpack</label>
+              <select id="backpackSelect" onchange="updateAvatar()">
+                <option>None</option>
+                <option>School Backpack</option>
+                <option>Gamer Backpack</option>
+                <option>Tech Backpack</option>
+                <option>Foxie Backpack</option>
+                <option>Galaxy Backpack</option>
+                <option>Glitch Backpack</option>
+                <option>Royal Backpack</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label>Face accessory</label>
+              <select id="maskSelect" onchange="updateAvatar()">
+                <option>None</option>
+                <option>Ninja Mask</option>
+                <option>Fox Mask</option>
+                <option>Cyber Mask</option>
+                <option>Visor</option>
+                <option>Sunglasses</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label>Cape</label>
+              <select id="capeSelect" onchange="updateAvatar()">
+                <option>None</option>
+                <option>Hero Cape</option>
+                <option>Royal Cape</option>
+                <option>Galaxy Cape</option>
+                <option>Shadow Cape</option>
+                <option>Glitch Cape</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label>Aura</label>
+              <select id="auraSelect" onchange="updateAvatar()">
+                <option>None</option>
+                <option>Neon Green</option>
+                <option>Galaxy</option>
+                <option>Fire</option>
+                <option>Ice</option>
+                <option>Glitch</option>
+              </select>
+            </div>
+
+            <button class="btn" onclick="saveAvatar()">
+              💾 Save Avatar
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- FOXIE -->
+
+      <div class="page" id="foxie">
+
+        <h1>Your Foxie 🦊</h1>
+
+        <div class="sub">
+          Customize your companion and its battle identity.
+        </div>
+
+        <div class="card foxieCard">
+
+          <div class="foxiePreview">
+
+            <div class="foxieMirror" id="mirrorLabel">
+              MIRROR OFF
+            </div>
+
+            <div id="foxieVisual" class="foxie">
+
+              <div class="ear left"></div>
+              <div class="ear right"></div>
+
+              <div class="foxTail"></div>
+
+              <div class="foxLeg l1"></div>
+              <div class="foxLeg l2"></div>
+              <div class="foxLeg l3"></div>
+
+              <div class="foxieBody"></div>
+
+              <div class="foxieHead"></div>
+
+              <div class="foxEye left"></div>
+              <div class="foxEye right"></div>
+
+              <div class="foxNose"></div>
+
+            </div>
+
+          </div>
+
+          <div style="flex:1">
+
+            <h2 id="foxieName">
+              Emberly
+            </h2>
+
+            <p>
+              ID:
+              <span class="green" id="foxieId">
+                FOX-184729
+              </span>
+            </p>
+
+            <p>
+              Type:
+              <b id="foxieType">Fire 🔥</b>
+            </p>
+
+            <p>
+              Level:
+              <b id="foxieLevel">1</b>
+            </p>
+
+            <p>
+              Evolution:
+              <b id="evolutionText">Base Form</b>
+            </p>
+
+            <p>
+              Rarity:
+              <b id="foxieRarity">Common</b>
+            </p>
+
+            <hr style="border-color:var(--line);margin:18px 0">
+
+            <div class="control">
+              <label>Foxie Type</label>
+              <select id="typeSelect" onchange="changeFoxie()">
+                <option value="fire">Fire 🔥</option>
+                <option value="ice">Ice ❄️</option>
+                <option value="cyber">Cyber 💻</option>
+                <option value="cosmic">Cosmic 🌌</option>
+                <option value="shadow">Shadow 🌑</option>
+                <option value="gold">Prism/Gold ✨</option>
+              </select>
+            </div>
+
+            <div class="control">
+              <label>Body style</label>
+              <select id="bodySelect" onchange="changeFoxie()">
+                <option value="normal">Four-legged</option>
+                <option value="upright">Upright</option>
+              </select>
+            </div>
+
+            <label class="check">
+              <input type="checkbox" id="mirrorCheck" onchange="mirrorFoxie()">
+              🪞 Foxie Mirror Mode
+            </label>
+
+            <button class="btn" onclick="gainXP(10)">
+              ⭐ Train +10 XP
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- FOXIE GO -->
+
+      <div class="page" id="foxiego">
+
+        <h1>Foxie Go 🌍</h1>
+
+        <div class="sub">
+          Explore the world. Discover Foxies. Find secrets.
+        </div>
+
+        <div class="gridCards">
+
+          <div class="card">
+            <div class="bigEmoji">🗺️</div>
+            <h2>Explore</h2>
+            <p>
+              Discover nearby Foxie Go areas and exploration challenges.
+            </p>
+            <button class="btn" onclick="toast('Foxie Go map system coming online 🗺️')">
+              Open Map
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🦊</div>
+            <h2>Wild Foxies</h2>
+            <p>
+              Find Foxies and enter encounters.
+            </p>
+            <button class="btn" onclick="showPage('battle')">
+              Find Foxie
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🎁</div>
+            <h2>Foxie Stops</h2>
+            <p>
+              Discover treats, chests, XP and special items.
+            </p>
+            <button class="btn" onclick="toast('You found a Foxie Stop! 🎁')">
+              Discover
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">👑</div>
+            <h2>Rare Discoveries</h2>
+            <p>
+              One-of-Ones, Unknowns, Unexistings and special events can be discovered.
+            </p>
+            <button class="btn" onclick="toast('Searching for rare discoveries...')">
+              Search
+            </button>
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Safety</h2>
+          <p>
+            Foxie Go should use safe public areas and privacy-protecting
+            location systems. Exact player locations should never be exposed
+            to other players.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- WORLDS -->
+
+      <div class="page" id="worlds">
+
+        <h1>Foxie Worlds 🌎</h1>
+
+        <div class="sub">
+          Explore, build, battle and create your own worlds.
+        </div>
+
+        <div class="gridCards">
+
+          <div class="card">
+            <div class="bigEmoji">🏙️</div>
+            <h2>Foxie City</h2>
+            <p>
+              A multiplayer city where players can explore and meet others.
+            </p>
+            <button class="btn" onclick="toast('Entering Foxie City...')">
+              Enter
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🧱</div>
+            <h2>Build</h2>
+            <p>
+              Place and remove blocks to create your own world.
+            </p>
+            <button class="btn" onclick="toast('Building mode loaded 🧱')">
+              Build
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">⚔️</div>
+            <h2>Battle Arenas</h2>
+            <p>
+              Create arenas for Foxie battles.
+            </p>
+            <button class="btn" onclick="showPage('battle')">
+              Battle
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🎮</div>
+            <h2>Create a Game</h2>
+            <p>
+              Eventually players can turn their worlds into playable games.
+            </p>
+            <button class="btn" onclick="toast('Creator tools loading...')">
+              Create
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BATTLE -->
+
+      <div class="page" id="battle">
+
+        <h1>Foxie Battle ⚔️</h1>
+
+        <div class="sub">
+          Stylized cinematic Foxie battle prototype.
+        </div>
+
+        <div class="gameArena">
+
+          <div class="battleHud">
+
+            <div class="hpBox">
+              <b>Wild Foxie</b>
+              <div class="hpBar">
+                <div id="enemyHP" class="hpFill"></div>
+              </div>
+            </div>
+
+            <div class="hpBox">
+              <b id="playerBattleName">Emberly</b>
+              <div class="hpBar">
+                <div id="playerHP" class="hpFill"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="battleFox enemy">
+            <div id="enemyBattleFox" class="foxie fire">
+              <div class="ear left"></div>
+              <div class="ear right"></div>
+              <div class="foxTail"></div>
+              <div class="foxLeg l1"></div>
+              <div class="foxLeg l2"></div>
+              <div class="foxLeg l3"></div>
+              <div class="foxieBody"></div>
+              <div class="foxieHead"></div>
+              <div class="foxEye left"></div>
+              <div class="foxEye right"></div>
+              <div class="foxNose"></div>
+            </div>
+          </div>
+
+          <div class="battleFox player">
+
+            <div id="playerBattleFox" class="foxie">
+              <div class="ear left"></div>
+              <div class="ear right"></div>
+              <div class="foxTail"></div>
+              <div class="foxLeg l1"></div>
+              <div class="foxLeg l2"></div>
+              <div class="foxLeg l3"></div>
+              <div class="foxieBody"></div>
+              <div class="foxieHead"></div>
+              <div class="foxEye left"></div>
+              <div class="foxEye right"></div>
+              <div class="foxNose"></div>
+            </div>
+
+          </div>
+
+          <div class="moves">
+
+            <button class="btn" onclick="attack(15,'Flame Rush 🔥')">
+              Flame Rush
+            </button>
+
+            <button class="btn" onclick="attack(20,'Foxie Strike ⚡')">
+              Foxie Strike
+            </button>
+
+            <button class="btn" onclick="attack(10,'Quick Dash 💨')">
+              Quick Dash
+            </button>
+
+            <button class="btn secondary" onclick="feedBattle()">
+              🍖 Feed
+            </button>
+
+          </div>
+
+          <div class="battleMessage" id="battleMessage">
+            A wild Foxie appeared!
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- GAMES -->
+
+      <div class="page" id="games">
+
+        <h1>Games 🎮</h1>
+
+        <div class="sub">
+          The Foxie arcade.
+        </div>
+
+        <div class="gridCards">
+
+          <div class="card">
+            <div class="bigEmoji">🐍</div>
+            <h2>Foxie Snake</h2>
+            <p>Classic snake-style game.</p>
+            <button class="btn" onclick="toast('Snake loading...')">Play</button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">♟️</div>
+            <h2>Foxie Chess</h2>
+            <p>Chess with Foxie style.</p>
+            <button class="btn" onclick="toast('Chess loading...')">Play</button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🏎️</div>
+            <h2>Foxie Drive</h2>
+            <p>Stylized driving world.</p>
+            <button class="btn" onclick="toast('Foxie Drive loading...')">Play</button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🏁</div>
+            <h2>Foxie Racing</h2>
+            <p>Race against other players.</p>
+            <button class="btn" onclick="toast('Racing loading...')">Play</button>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">⚔️</div>
+            <h2>Foxie Arena</h2>
+            <p>Battle against other Foxies.</p>
+            <button class="btn" onclick="showPage('battle')">Play</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- MOVIES -->
+
+      <div class="page" id="movies">
+
+        <h1>Movies 🎬</h1>
+
+        <div class="sub">
+          Foxie Cinema.
+        </div>
+
+        <div class="gridCards">
+
+          <div class="card">
+            <div class="bigEmoji">🎞️</div>
+            <h2>Featured</h2>
+            <p>Discover movies and trailers.</p>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">❤️</div>
+            <h2>Watchlist</h2>
+            <p>Save movies you want to watch.</p>
+          </div>
+
+          <div class="card">
+            <div class="bigEmoji">🔥</div>
+            <h2>Trending</h2>
+            <p>See what's popular.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- VIDS -->
+
+      <div class="page" id="vids">
+
+        <h1>Foxie Vids 📺</h1>
+
+        <div class="sub">
+          Watch and eventually create videos.
+        </div>
+
+        <div class="card">
+          <h2>Video Feed</h2>
+          <p>
+            Short videos, gaming clips, Foxie discoveries and creator content.
+          </p>
+          <button class="btn" onclick="toast('Video feed loading...')">
+            Open Feed
+          </button>
+        </div>
+
+      </div>
+
+      <!-- TOURNAMENTS -->
+
+      <div class="page" id="tournaments">
+
+        <h1>Tournaments 🏆</h1>
+
+        <div class="sub">
+          Hourly competitions, rewards and championships.
+        </div>
+
+        <div class="list">
+
+          <div class="row">
+            <div>
+              <b>Foxie Battle Cup</b><br>
+              <small>Starts every hour</small>
+            </div>
+            <button class="btn" onclick="toast('Tournament registration opened!')">
+              Join
+            </button>
+          </div>
+
+          <div class="row">
+            <div>
+              <b>Foxie Racing</b><br>
+              <small>Speed tournament</small>
+            </div>
+            <button class="btn" onclick="toast('Tournament registration opened!')">
+              Join
+            </button>
+          </div>
+
+          <div class="row">
+            <div>
+              <b>Pro Foxie Championship</b><br>
+              <small>Elite competition</small>
+            </div>
+            <button class="btn secondary">
+              Details
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LEARN -->
+
+      <div class="page" id="learn">
+
+        <h1>Learn 📚</h1>
+
+        <div class="sub">
+          Learn almost anything.
+        </div>
+
+        <div class="gridCards">
+
+          <div class="card">🎸 <b>Music</b><p>Guitar, piano, drums and more.</p></div>
+          <div class="card">💻 <b>Technology</b><p>Coding, websites, AI and computers.</p></div>
+          <div class="card">🩹 <b>Life Skills</b><p>First aid, cooking, safety and more.</p></div>
+          <div class="card">🎨 <b>Creative</b><p>Art, video, animation and design.</p></div>
+          <div class="card">🌎 <b>Languages</b><p>Practice languages and pronunciation.</p></div>
+          <div class="card">🔬 <b>Science</b><p>Physics, biology, chemistry and space.</p></div>
+
+        </div>
+
+      </div>
+
+      <!-- CHAT -->
+
+      <div class="page" id="chat">
+
+        <h1>Chat 💬</h1>
+
+        <div class="sub">
+          Talk with your friends and Foxie community.
+        </div>
+
+        <div class="card">
+
+          <div id="chatMessages" class="list" style="max-height:350px;overflow:auto">
+            <div class="row">
+              <b>Foxie</b>
+              <span>Welcome to Foxie chat 🦊</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <input id="chatInput" style="flex:1;background:#030805;border:1px solid var(--line);color:white;padding:12px;border-radius:10px" placeholder="Type a message...">
+            <button class="btn" onclick="sendChat()">Send</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- FRIENDS -->
+
+      <div class="page" id="friends">
+
+        <h1>Friends 👥</h1>
+
+        <div class="sub">
+          Add friends, create parties and play together.
+        </div>
+
+        <div class="card">
+          <input id="friendInput" placeholder="Search username..." style="width:100%;background:#030805;border:1px solid var(--line);color:white;padding:12px;border-radius:10px">
+          <button class="btn" style="margin-top:10px" onclick="toast('Friend request sent!')">
+            Add Friend
+          </button>
+        </div>
+
+      </div>
+
+      <!-- PROFILE -->
+
+      <div class="page" id="profile">
+
+        <h1>Profile 👤</h1>
+
+        <div class="gridCards">
+
+          <div class="card">
+            <h2>Player XP</h2>
+            <p id="playerXP">0 XP</p>
+          </div>
+
+          <div class="card">
+            <h2>Foxie XP</h2>
+            <p id="petXP">0 XP</p>
+          </div>
+
+          <div class="card">
+            <h2>Titles</h2>
+            <p>New titles will appear here.</p>
+          </div>
+
+          <div class="card">
+            <h2>Achievements</h2>
+            <p>Discover secrets to unlock achievements.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LEADERBOARD -->
+
+      <div class="page" id="leaderboard">
+
+        <h1>Leaderboard 🏅</h1>
+
+        <div class="sub">
+          Player XP and competitive rankings.
+        </div>
+
+        <div class="list">
+
+          <div class="row">
+            <b>#1</b>
+            <span>FoxieMaster</span>
+            <strong>999,999 XP</strong>
+          </div>
+
+          <div class="row">
+            <b>#2</b>
+            <span>ShadowFox</span>
+            <strong>850,000 XP</strong>
+          </div>
+
+          <div class="row">
+            <b>#3</b>
+            <span>GalaxyPlayer</span>
+            <strong>720,000 XP</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SETTINGS -->
+
+      <div class="page" id="settings">
+
+        <h1>Settings ⚙️</h1>
+
+        <div class="card">
+
+          <div class="control">
+            <label>Display name</label>
+            <input id="displayName" value="Guest">
+          </div>
+
+          <button class="btn" onclick="saveName()">
+            Save Name
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
 
 </div>
 
-<!-- DISPLAY NAME -->
-
-<div class="modal" id="nameModal">
-
-  <div class="modal-box">
-
-    <h2>🦊 Welcome to Foxie</h2>
-
-    <p>Choose your display name.</p>
-
-    <input id="firstNameInput" placeholder="Display name">
-
-    <button class="btn green" onclick="saveFirstName()">
-      Enter Foxie
-    </button>
-
-  </div>
-
-</div>
+<div id="toast"></div>
 
 <script>
 
 /* =========================
-   CONFIG
+   BACKGROUND
 ========================= */
 
-const API =
-  "https://foxie-ai-backend.onrender.com";
+const rain = document.getElementById("codeRain");
 
-let sessionToken =
-  localStorage.getItem("foxie_session") || "";
+const chars =
+"01ABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]<>/\\\\#$%&@FOXIE";
 
-/* =========================
-   PARTICLES
-========================= */
+for(let i=0;i<45;i++){
 
-for(let i=0;i<100;i++){
+  const el=document.createElement("div");
+
+  el.className="code";
+
+  el.style.left=Math.random()*100+"%";
+  el.style.animationDuration=(5+Math.random()*9)+"s";
+  el.style.animationDelay=(-Math.random()*10)+"s";
+
+  let text="";
+
+  for(let j=0;j<Math.floor(4+Math.random()*9);j++){
+
+    text+=chars[Math.floor(Math.random()*chars.length)]+"\n";
+
+  }
+
+  el.textContent=text;
+
+  rain.appendChild(el);
+}
+
+for(let i=0;i<80;i++){
 
   const p=document.createElement("div");
 
   p.className="particle";
 
   p.style.left=Math.random()*100+"%";
+  p.style.animationDuration=(5+Math.random()*9)+"s";
+  p.style.animationDelay=(-Math.random()*10)+"s";
 
-  p.style.animationDuration=(5+Math.random()*10)+"s";
-
-  p.style.animationDelay=(Math.random()*10)+"s";
-
-  p.style.opacity=Math.random();
-
-  document.getElementById("particles").appendChild(p);
+  document.getElementById("bg").appendChild(p);
 }
+
+
+/* =========================
+   PAGE SYSTEM
+========================= */
+
+function showPage(id,button){
+
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  const page=document.getElementById(id);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+  document.querySelectorAll(".nav button").forEach(b=>{
+    b.classList.remove("active");
+  });
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  if(id==="profile"){
+    updateProfile();
+  }
+}
+
 
 /* =========================
    CLOCK
@@ -1234,999 +2028,601 @@ function updateClock(){
 setInterval(updateClock,1000);
 updateClock();
 
-/* =========================
-   SIDEBAR
-========================= */
-
-function toggleSidebar(){
-
-  document
-    .getElementById("sidebar")
-    .classList.toggle("open");
-
-}
 
 /* =========================
-   PAGE SYSTEM
+   TOAST
 ========================= */
 
-function openPage(id,btn){
+let toastTimer;
 
-  document.querySelectorAll(".page")
-    .forEach(p=>p.classList.remove("active"));
+function toast(message){
 
-  const page=document.getElementById(id);
+  const el=document.getElementById("toast");
 
-  if(page){
-    page.classList.add("active");
-  }
+  el.textContent=message;
 
-  document.querySelectorAll(".nav-btn")
-    .forEach(b=>b.classList.remove("active"));
+  el.classList.add("show");
 
-  if(btn){
-    btn.classList.add("active");
-  }
+  clearTimeout(toastTimer);
 
-  document
-    .getElementById("sidebar")
-    .classList.remove("open");
-
-  if(id==="profile") loadProfile();
-
-  if(id==="friends") loadFriends();
-
-  if(id==="leaderboard") loadLeaderboard();
-
-  if(id==="creator") loadCreator();
-
+  toastTimer=setTimeout(()=>{
+    el.classList.remove("show");
+  },2600);
 }
+
 
 /* =========================
-   FULLSCREEN SYSTEM
+   AVATAR
 ========================= */
 
-function openFullscreen(type,title){
+function updateAvatar(){
 
-  const overlay=document.getElementById("fullscreenOverlay");
-  const body=document.getElementById("fsBody");
+  const backpack=
+    document.getElementById("backpackSelect").value;
 
-  document.getElementById("fsTitle").textContent=title;
+  const mask=
+    document.getElementById("maskSelect").value;
 
-  body.innerHTML="";
+  const cape=
+    document.getElementById("capeSelect").value;
 
-  overlay.classList.add("show");
+  const aura=
+    document.getElementById("auraSelect").value;
 
-  if(type==="web"){
+  const hair=
+    document.getElementById("hairSelect").value;
 
-    body.innerHTML=`
-      <div class="fake-game">
-        <div class="big">🌐</div>
-        <h2>Foxie Web</h2>
-        <p>Fullscreen web workspace</p>
-      </div>
-    `;
+  const hairEl=document.getElementById("avatarHair");
 
+  const hairColours={
+    Black:"#101010",
+    Brown:"#4b2b1d",
+    Blonde:"#f2cf62",
+    White:"#eeeeee",
+    Green:"#39ff14",
+    Blue:"#3d8dff",
+    Purple:"#9a50ff"
+  };
+
+  hairEl.style.background=hairColours[hair];
+
+  document.getElementById("avatarBackpack")
+    .classList.toggle("on",backpack!=="None");
+
+  document.getElementById("avatarMask")
+    .classList.toggle("on",mask!=="None");
+
+  document.getElementById("avatarCape")
+    .classList.toggle("on",cape!=="None");
+
+  document.getElementById("avatarAura")
+    .classList.toggle("on",aura!=="None");
+
+  localStorage.setItem("foxieAvatar",JSON.stringify({
+    hair,
+    clothes:document.getElementById("clothesSelect").value,
+    backpack,
+    mask,
+    cape,
+    aura
+  }));
+
+  if(document.getElementById("mirrorCheck").checked){
+    mirrorFoxie();
+  }
+}
+
+
+function saveAvatar(){
+
+  updateAvatar();
+
+  toast("Avatar saved 💾🦊");
+}
+
+
+/* =========================
+   FOXIE DATA
+========================= */
+
+let foxie={
+
+  id:"FOX-184729",
+  name:"Emberly",
+  type:"fire",
+  level:1,
+  xp:0,
+  rarity:"Common",
+  body:"normal"
+
+};
+
+
+/* =========================
+   FOXIE UI
+========================= */
+
+function updateFoxieUI(){
+
+  document.getElementById("foxieName").textContent=
+    foxie.name;
+
+  document.getElementById("foxieId").textContent=
+    foxie.id;
+
+  const typeNames={
+    fire:"Fire 🔥",
+    ice:"Ice ❄️",
+    cyber:"Cyber 💻",
+    cosmic:"Cosmic 🌌",
+    shadow:"Shadow 🌑",
+    gold:"Prism/Gold ✨"
+  };
+
+  document.getElementById("foxieType").textContent=
+    typeNames[foxie.type];
+
+  document.getElementById("foxieLevel").textContent=
+    foxie.level;
+
+  document.getElementById("foxieRarity").textContent=
+    foxie.rarity;
+
+  let evolution="Base Form";
+
+  if(foxie.level>=999){
+    evolution="FINAL FORM 🌌";
+  }else if(foxie.level>=500){
+    evolution="Evolution 4 👑";
+  }else if(foxie.level>=100){
+    evolution="Evolution 3 💎";
+  }else if(foxie.level>=50){
+    evolution="Evolution 2 ⚡";
+  }else if(foxie.level>=25){
+    evolution="Evolution 1 ✨";
   }
 
-  if(type==="images"){
+  document.getElementById("evolutionText").textContent=
+    evolution;
 
-    body.innerHTML=`
-      <div class="fake-game">
-        <div class="big">🖼️</div>
-        <h2>Foxie Images</h2>
-        <p>Fullscreen image workspace</p>
-      </div>
-    `;
+  document.getElementById("homeFoxieText").innerHTML=
+    `${foxie.name} • Level ${foxie.level} • ${typeNames[foxie.type]}`;
 
+  document.getElementById("playerBattleName").textContent=
+    foxie.name;
+
+  updateFoxieVisual();
+}
+
+
+function updateFoxieVisual(){
+
+  const visual=
+    document.getElementById("foxieVisual");
+
+  visual.className=
+    "foxie "+foxie.type;
+
+  if(foxie.body==="upright"){
+    visual.classList.add("upright");
   }
 
-  if(type==="video"){
+  const battle=
+    document.getElementById("playerBattleFox");
 
-    body.innerHTML=`
-      <div class="fake-game">
-        <div class="big">🎬</div>
-        <h2>Foxie Vids</h2>
-        <p>Fullscreen video player</p>
-      </div>
-    `;
+  if(battle){
 
-  }
+    battle.className=
+      "foxie "+foxie.type;
 
-}
-
-function openGame(icon,title){
-
-  const overlay=document.getElementById("fullscreenOverlay");
-  const body=document.getElementById("fsBody");
-
-  document.getElementById("fsTitle").textContent=title;
-
-  body.innerHTML=`
-    <div class="fake-game">
-
-      <div class="hud">
-        <span>🪙 0 COINS</span>
-        <span>⭐ 0 XP</span>
-        <span>🏆 RANK #—</span>
-      </div>
-
-      <div class="big">${icon}</div>
-
-      <h2>${title}</h2>
-
-      <p>Game loading area</p>
-
-      <button class="btn green"
-              onclick="alert('This game engine will be connected here next!')">
-        ▶ START GAME
-      </button>
-
-    </div>
-  `;
-
-  overlay.classList.add("show");
-
-}
-
-function openCall(){
-
-  const overlay=document.getElementById("fullscreenOverlay");
-
-  const body=document.getElementById("fsBody");
-
-  document.getElementById("fsTitle").textContent =
-    "📞 Foxie Call";
-
-  body.innerHTML=`
-
-    <div class="call-room">
-
-      <div class="video-tile">
-        👤
-        <div class="video-name">
-          You
-        </div>
-      </div>
-
-      <div class="video-tile">
-        🦊
-        <div class="video-name">
-          Waiting for player...
-        </div>
-      </div>
-
-      <div class="call-controls">
-
-        <button class="btn" onclick="toggleCallButton(this)">
-          🎤
-        </button>
-
-        <button class="btn" onclick="toggleCallButton(this)">
-          📹
-        </button>
-
-        <button class="btn" onclick="alert('Screen sharing will connect here.')">
-          🖥️
-        </button>
-
-        <button class="btn" onclick="alert('Chat will connect here.')">
-          💬
-        </button>
-
-        <button class="btn danger" onclick="closeFullscreen()">
-          📞
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-  overlay.classList.add("show");
-
-}
-
-function toggleCallButton(button){
-
-  button.classList.toggle("green");
-
-}
-
-function closeFullscreen(){
-
-  const overlay=document.getElementById("fullscreenOverlay");
-
-  overlay.classList.remove("show");
-
-  if(document.fullscreenElement){
-    document.exitFullscreen().catch(()=>{});
-  }
-
-}
-
-async function browserFullscreen(){
-
-  const overlay=document.getElementById("fullscreenOverlay");
-
-  try{
-
-    if(!document.fullscreenElement){
-
-      await overlay.requestFullscreen();
-
-    }else{
-
-      await document.exitFullscreen();
-
-    }
-
-  }catch(error){
-
-    console.log(error);
-
-  }
-
-}
-
-document.addEventListener("keydown",function(e){
-
-  if(e.key==="Escape"){
-
-    const overlay=document.getElementById("fullscreenOverlay");
-
-    if(overlay.classList.contains("show")){
-      closeFullscreen();
+    if(foxie.body==="upright"){
+      battle.classList.add("upright");
     }
 
   }
+}
 
-});
+
+function changeFoxie(){
+
+  foxie.type=
+    document.getElementById("typeSelect").value;
+
+  foxie.body=
+    document.getElementById("bodySelect").value;
+
+  localStorage.setItem("foxieData",JSON.stringify(foxie));
+
+  updateFoxieUI();
+
+  toast("Foxie updated 🦊");
+}
+
+
+/* =========================
+   MIRROR MODE
+========================= */
+
+function mirrorFoxie(){
+
+  const enabled=
+    document.getElementById("mirrorCheck").checked;
+
+  document.getElementById("mirrorLabel").textContent=
+    enabled ? "MIRROR ON" : "MIRROR OFF";
+
+  if(enabled){
+
+    const clothes=
+      document.getElementById("clothesSelect").value;
+
+    const backpack=
+      document.getElementById("backpackSelect").value;
+
+    const mask=
+      document.getElementById("maskSelect").value;
+
+    const cape=
+      document.getElementById("capeSelect").value;
+
+    const aura=
+      document.getElementById("auraSelect").value;
+
+    /*
+      Prototype:
+      mirror mode changes Foxie's glow and tells the user
+      the companion is copying the avatar style.
+    */
+
+    const visual=
+      document.getElementById("foxieVisual");
+
+    visual.style.filter=
+      "drop-shadow(0 0 18px var(--green))";
+
+    toast(
+      "Foxie is copying your avatar style 🪞🦊"
+    );
+
+  }else{
+
+    document.getElementById("foxieVisual")
+      .style.filter="";
+
+  }
+}
+
+
+/* =========================
+   XP + EVOLUTION
+========================= */
+
+function gainXP(amount){
+
+  const oldLevel=foxie.level;
+
+  foxie.xp+=amount;
+
+  /*
+    Prototype progression:
+    100 XP = 1 level.
+  */
+
+  foxie.level=
+    Math.min(999,Math.floor(foxie.xp/100)+1);
+
+  const milestones=[25,50,100,500,999];
+
+  const reached=
+    milestones.find(
+      level=>oldLevel<level && foxie.level>=level
+    );
+
+  if(reached){
+
+    toast(
+      `🧬 EVOLUTION REACHED — LEVEL ${reached}!`
+    );
+
+  }else{
+
+    toast(
+      `🦊 +${amount} Foxie XP`
+    );
+
+  }
+
+  localStorage.setItem(
+    "foxieData",
+    JSON.stringify(foxie)
+  );
+
+  updateFoxieUI();
+  updateProfile();
+}
+
+
+/* =========================
+   BATTLE
+========================= */
+
+let enemyHP=100;
+let playerHP=100;
+
+function attack(damage,move){
+
+  if(enemyHP<=0){
+
+    document.getElementById("battleMessage")
+      .textContent=
+      "The Foxie has been defeated! You get a chance to claim it! 🦊";
+
+    toast("Claim chance unlocked! 🦊");
+
+    return;
+  }
+
+  enemyHP=Math.max(0,enemyHP-damage);
+
+  document.getElementById("enemyHP")
+    .style.width=enemyHP+"%";
+
+  document.getElementById("battleMessage")
+    .textContent=
+    `${foxie.name} used ${move}! -${damage} HP`;
+
+  if(enemyHP<=0){
+
+    document.getElementById("battleMessage")
+      .textContent=
+      "BOSS/FOXIE DEFEATED! You can attempt to claim it! 🏆🦊";
+
+    toast("Claim opportunity unlocked!");
+
+    gainXP(30);
+
+    return;
+  }
+
+  setTimeout(()=>{
+
+    const enemyDamage=
+      Math.floor(5+Math.random()*12);
+
+    playerHP=
+      Math.max(0,playerHP-enemyDamage);
+
+    document.getElementById("playerHP")
+      .style.width=playerHP+"%";
+
+    document.getElementById("battleMessage")
+      .textContent=
+      `Wild Foxie attacked! -${enemyDamage} HP`;
+
+    if(playerHP<=0){
+
+      document.getElementById("battleMessage")
+        .textContent=
+        "Your Foxie needs a rest!";
+
+    }
+
+  },650);
+}
+
+
+function feedBattle(){
+
+  toast("🍖 Treat used — bond increased!");
+
+  document.getElementById("battleMessage")
+    .textContent=
+    "You fed the Foxie a treat. Its bond increased! ❤️";
+}
+
 
 /* =========================
    CHAT
 ========================= */
 
-function addMessage(name,text,me=false){
+function sendChat(){
 
-  const box=document.getElementById("messages");
-
-  const div=document.createElement("div");
-
-  div.className="message"+(me?" me":"");
-
-  div.innerHTML=`
-    <strong>${escapeHTML(name)}</strong>
-    ${escapeHTML(text)}
-  `;
-
-  box.appendChild(div);
-
-  box.scrollTop=box.scrollHeight;
-
-}
-
-async function sendChat(){
-
-  const input=document.getElementById("chatInput");
+  const input=
+    document.getElementById("chatInput");
 
   const text=input.value.trim();
 
   if(!text)return;
 
+  const row=document.createElement("div");
+
+  row.className="row";
+
+  row.innerHTML=
+    `<b>You</b><span>${escapeHtml(text)}</span>`;
+
+  document.getElementById("chatMessages")
+    .appendChild(row);
+
   input.value="";
 
-  addMessage("You",text,true);
-
-  addMessage("🦊 Foxie","Thinking...");
-
-  const messages=document.getElementById("messages");
-
-  try{
-
-    const response=await fetch(API+"/api/chat",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        message:text
-      })
-    });
-
-    const data=await response.json();
-
-    messages.lastElementChild.remove();
-
-    addMessage(
-      "🦊 Foxie",
-      data.response ||
-      data.message ||
-      "I couldn't get a response."
-    );
-
-  }catch(error){
-
-    messages.lastElementChild.remove();
-
-    addMessage(
-      "🦊 Foxie",
-      "The Foxie server is waking up. Try again in a few seconds."
-    );
-
-  }
-
 }
 
-/* =========================
-   AUTH
-========================= */
 
-function openAccountModal(){
+function escapeHtml(text){
 
-  document
-    .getElementById("accountModal")
-    .classList.add("show");
+  const div=document.createElement("div");
 
+  div.textContent=text;
+
+  return div.innerHTML;
 }
 
-function closeAccountModal(){
-
-  document
-    .getElementById("accountModal")
-    .classList.remove("show");
-
-}
-
-async function register(){
-
-  const username=
-    document.getElementById("authUsername").value.trim();
-
-  const display_name=
-    document.getElementById("authDisplayName").value.trim();
-
-  const password=
-    document.getElementById("authPassword").value;
-
-  if(!username||!display_name||!password){
-
-    document.getElementById("authMessage").textContent =
-      "Fill in all fields.";
-
-    return;
-
-  }
-
-  try{
-
-    const response=await fetch(API+"/api/auth/register",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        username,
-        display_name,
-        password
-      })
-    });
-
-    const data=await response.json();
-
-    if(!response.ok){
-
-      document.getElementById("authMessage").textContent =
-        data.detail || "Registration failed.";
-
-      return;
-
-    }
-
-    document.getElementById("authMessage").textContent =
-      "Account created! Now log in.";
-
-  }catch(e){
-
-    document.getElementById("authMessage").textContent =
-      "Server unavailable.";
-
-  }
-
-}
-
-async function login(){
-
-  const username=
-    document.getElementById("authUsername").value.trim();
-
-  const password=
-    document.getElementById("authPassword").value;
-
-  try{
-
-    const response=await fetch(API+"/api/auth/login",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        username,
-        password
-      })
-    });
-
-    const data=await response.json();
-
-    if(!response.ok){
-
-      document.getElementById("authMessage").textContent =
-        data.detail || "Login failed.";
-
-      return;
-
-    }
-
-    sessionToken=
-      data.token ||
-      data.session_token ||
-      data.access_token ||
-      "";
-
-    if(sessionToken){
-
-      localStorage.setItem(
-        "foxie_session",
-        sessionToken
-      );
-
-    }
-
-    closeAccountModal();
-
-    loadCurrentUser();
-
-  }catch(e){
-
-    document.getElementById("authMessage").textContent =
-      "Server unavailable.";
-
-  }
-
-}
-
-async function logout(){
-
-  if(sessionToken){
-
-    try{
-
-      await fetch(API+"/api/auth/logout",{
-        method:"POST",
-        headers:{
-          "Authorization":"Bearer "+sessionToken
-        }
-      });
-
-    }catch(e){}
-
-  }
-
-  sessionToken="";
-
-  localStorage.removeItem("foxie_session");
-
-  document.getElementById("accountName").textContent="Guest";
-
-  openPage("home");
-
-}
-
-/* =========================
-   CURRENT USER
-========================= */
-
-async function loadCurrentUser(){
-
-  if(!sessionToken)return;
-
-  try{
-
-    const response=await fetch(API+"/api/auth/me",{
-      headers:{
-        "Authorization":"Bearer "+sessionToken
-      }
-    });
-
-    if(!response.ok)return;
-
-    const data=await response.json();
-
-    const user=data.user || data;
-
-    document.getElementById("accountName").textContent =
-      user.display_name ||
-      user.username ||
-      "User";
-
-    document.getElementById("profileName").textContent =
-      user.display_name ||
-      "User";
-
-    document.getElementById("profileUsername").textContent =
-      "@"+(user.username || "user");
-
-  }catch(e){}
-
-}
 
 /* =========================
    PROFILE
 ========================= */
 
-async function loadProfile(){
+let playerXP=
+  Number(localStorage.getItem("foxiePlayerXP")||0);
 
-  if(!sessionToken)return;
+function updateProfile(){
 
-  try{
+  document.getElementById("playerXP")
+    .textContent=
+    playerXP+" XP";
 
-    const response=await fetch(API+"/api/profile",{
-      headers:{
-        "Authorization":"Bearer "+sessionToken
-      }
-    });
-
-    if(!response.ok)return;
-
-    const data=await response.json();
-
-    const user=data.user || data;
-
-    document.getElementById("profileName").textContent =
-      user.display_name || "User";
-
-    document.getElementById("profileUsername").textContent =
-      "@"+(user.username || "user");
-
-    document.getElementById("profileXP").textContent =
-      user.xp ?? 0;
-
-    document.getElementById("profileCoins").textContent =
-      user.coins ?? 0;
-
-  }catch(e){}
-
+  document.getElementById("petXP")
+    .textContent=
+    foxie.xp+" XP";
 }
+
 
 /* =========================
-   USERS
+   NAME
 ========================= */
 
-async function searchUsers(){
-
-  const query=
-    document.getElementById("userSearch").value.trim();
-
-  if(!query)return;
-
-  const box=document.getElementById("userResults");
-
-  box.innerHTML="<p>Searching...</p>";
-
-  try{
-
-    const response=await fetch(
-      API+"/api/users/search?q="+encodeURIComponent(query),
-      {
-        headers:{
-          "Authorization":"Bearer "+sessionToken
-        }
-      }
-    );
-
-    const data=await response.json();
-
-    const users=data.users || data || [];
-
-    box.innerHTML="";
-
-    users.forEach(user=>{
-
-      const card=document.createElement("div");
-
-      card.className="card";
-
-      card.innerHTML=`
-        <h3>${escapeHTML(user.display_name || user.username)}</h3>
-        <p>@${escapeHTML(user.username || "")}</p>
-
-        <button class="btn green"
-                onclick="sendFriendRequest('${escapeJS(user.username)}')">
-          Add Friend
-        </button>
-      `;
-
-      box.appendChild(card);
-
-    });
-
-    if(!users.length){
-
-      box.innerHTML="<p>No users found.</p>";
-
-    }
-
-  }catch(e){
-
-    box.innerHTML="<p>Could not search right now.</p>";
-
-  }
-
-}
-
-async function sendFriendRequest(username){
-
-  if(!sessionToken){
-
-    openAccountModal();
-
-    return;
-
-  }
-
-  try{
-
-    const response=await fetch(API+"/api/friends/request",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer "+sessionToken
-      },
-      body:JSON.stringify({
-        username
-      })
-    });
-
-    const data=await response.json();
-
-    alert(
-      data.message ||
-      data.detail ||
-      "Friend request sent!"
-    );
-
-  }catch(e){
-
-    alert("Could not send request.");
-
-  }
-
-}
-
-/* =========================
-   FRIENDS
-========================= */
-
-async function loadFriends(){
-
-  if(!sessionToken){
-
-    document.getElementById("friendsList").innerHTML=`
-      <div class="card">
-        <h3>🔐 Log in first</h3>
-        <p>You need an account to use friends.</p>
-        <button class="btn green" onclick="openAccountModal()">
-          Log In / Sign Up
-        </button>
-      </div>
-    `;
-
-    return;
-
-  }
-
-  try{
-
-    const response=await fetch(API+"/api/friends",{
-      headers:{
-        "Authorization":"Bearer "+sessionToken
-      }
-    });
-
-    const data=await response.json();
-
-    const friends=data.friends || data || [];
-
-    const box=document.getElementById("friendsList");
-
-    box.innerHTML="";
-
-    friends.forEach(friend=>{
-
-      const card=document.createElement("div");
-
-      card.className="card";
-
-      card.innerHTML=`
-        <h3>👤 ${escapeHTML(friend.display_name || friend.username)}</h3>
-        <p>@${escapeHTML(friend.username || "")}</p>
-
-        <button class="btn" onclick="openCall()">
-          📞 Call
-        </button>
-      `;
-
-      box.appendChild(card);
-
-    });
-
-    if(!friends.length){
-
-      box.innerHTML=`
-        <div class="card">
-          <h3>No friends yet</h3>
-          <p>Find players and add them.</p>
-        </div>
-      `;
-
-    }
-
-  }catch(e){}
-
-}
-
-/* =========================
-   LEADERBOARD
-========================= */
-
-async function loadLeaderboard(){
-
-  try{
-
-    const response=await fetch(API+"/api/leaderboard");
-
-    const data=await response.json();
-
-    const players=data.players || data || [];
-
-    const body=document.getElementById("leaderboardBody");
-
-    body.innerHTML="";
-
-    players.forEach((player,index)=>{
-
-      const tr=document.createElement("tr");
-
-      tr.innerHTML=`
-        <td>${index+1}</td>
-        <td>${escapeHTML(player.display_name || player.username || "Player")}</td>
-        <td>${player.xp ?? 0}</td>
-        <td>${player.coins ?? 0}</td>
-      `;
-
-      body.appendChild(tr);
-
-    });
-
-  }catch(e){}
-
-}
-
-/* =========================
-   CREATOR
-========================= */
-
-async function loadCreator(){
-
-  if(!sessionToken){
-
-    document.getElementById("creatorStatus").textContent =
-      "🔐 Log in to check Creator Mode.";
-
-    return;
-
-  }
-
-  try{
-
-    const response=await fetch(API+"/api/creator/status",{
-      headers:{
-        "Authorization":"Bearer "+sessionToken
-      }
-    });
-
-    const data=await response.json();
-
-    document.getElementById("creatorStatus").textContent =
-      data.is_creator
-      ? "🛠️ Creator Mode enabled"
-      : "🔒 Creator Mode unavailable";
-
-  }catch(e){
-
-    document.getElementById("creatorStatus").textContent =
-      "Could not check Creator Mode.";
-
-  }
-
-}
-
-/* =========================
-   CALCULATOR
-========================= */
-
-function calculate(){
-
-  const value=
-    document.getElementById("calcInput").value.trim();
-
-  const result=
-    document.getElementById("calcResult");
-
-  if(!/^[0-9+\-*/().%\s]+$/.test(value)){
-
-    result.textContent="Invalid calculation.";
-
-    return;
-
-  }
-
-  try{
-
-    result.textContent=Function(
-      '"use strict";return ('+value+')'
-    )();
-
-  }catch(e){
-
-    result.textContent="Error.";
-
-  }
-
-}
-
-/* =========================
-   DISPLAY NAME
-========================= */
-
-function saveFirstName(){
+function saveName(){
 
   const name=
-    document.getElementById("firstNameInput")
-      .value.trim();
-
-  if(!name)return;
+    document.getElementById("displayName")
+      .value.trim() || "Guest";
 
   localStorage.setItem(
-    "foxie_display_name",
+    "foxieName",
     name
   );
 
-  document.getElementById("accountName").textContent=name;
+  document.getElementById("accountName")
+    .textContent=name;
 
-  document.getElementById("nameModal")
-    .classList.remove("show");
-
+  toast("Display name saved 🦊");
 }
 
-function saveDisplayName(){
 
-  const name=
-    document.getElementById("displayNameInput")
-      .value.trim();
+/* =========================
+   LOAD
+========================= */
 
-  if(!name)return;
+function loadData(){
 
-  localStorage.setItem(
-    "foxie_display_name",
-    name
-  );
+  const savedFoxie=
+    localStorage.getItem("foxieData");
 
-  document.getElementById("accountName").textContent=name;
+  if(savedFoxie){
 
+    try{
+
+      foxie=
+        JSON.parse(savedFoxie);
+
+    }catch(e){}
+
+  }
+
+  const savedName=
+    localStorage.getItem("foxieName");
+
+  if(savedName){
+
+    document.getElementById("accountName")
+      .textContent=savedName;
+
+    document.getElementById("displayName")
+      .value=savedName;
+
+  }
+
+  const avatar=
+    localStorage.getItem("foxieAvatar");
+
+  if(avatar){
+
+    try{
+
+      const a=JSON.parse(avatar);
+
+      document.getElementById("hairSelect").value=
+        a.hair||"Black";
+
+      document.getElementById("clothesSelect").value=
+        a.clothes||"Foxie Hoodie";
+
+      document.getElementById("backpackSelect").value=
+        a.backpack||"None";
+
+      document.getElementById("maskSelect").value=
+        a.mask||"None";
+
+      document.getElementById("capeSelect").value=
+        a.cape||"None";
+
+      document.getElementById("auraSelect").value=
+        a.aura||"None";
+
+    }catch(e){}
+
+  }
+
+  updateAvatar();
+
+  document.getElementById("typeSelect").value=
+    foxie.type;
+
+  document.getElementById("bodySelect").value=
+    foxie.body;
+
+  updateFoxieUI();
+  updateProfile();
 }
 
-function resetDisplayName(){
+loadData();
 
-  localStorage.removeItem(
-    "foxie_display_name"
-  );
 
-  document.getElementById("displayNameInput").value="";
+/* =========================
+   LOGO EASTER EGG
+========================= */
 
-  document.getElementById("accountName").textContent="Guest";
+let logoClicks=0;
 
-}
+document.getElementById("logo")
+  .addEventListener("click",()=>{
+
+    logoClicks++;
+
+    if(logoClicks===1){
+      toast("🦊 Foxie noticed you...");
+    }
+
+    if(logoClicks===3){
+
+      toast("🦊✨ SECRET FOXIE ENERGY!");
+
+      logoClicks=0;
+
+    }
+
+  });
+
 
 /* =========================
    SEARCH
 ========================= */
 
-function globalSearch(event){
+document.getElementById("search")
+  .addEventListener("keydown",e=>{
 
-  if(event.key!=="Enter")return;
+    if(e.key==="Enter"){
 
-  const query=
-    document.getElementById("globalSearch")
-      .value.trim()
-      .toLowerCase();
+      const value=e.target.value.trim();
 
-  if(!query)return;
+      if(!value)return;
 
-  if(query.includes("game")){
+      toast(`Searching Foxie for "${value}" 🔎`);
 
-    openPage("games");
+    }
 
-  }else if(query.includes("chat")){
-
-    openPage("chat");
-
-  }else if(query.includes("friend")){
-
-    openPage("friends");
-
-  }else if(query.includes("call")){
-
-    openCall();
-
-  }else{
-
-    alert("Foxie search: "+query);
-
-  }
-
-}
-
-/* =========================
-   HELPERS
-========================= */
-
-function escapeHTML(value){
-
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-function escapeJS(value){
-
-  return String(value)
-    .replaceAll("\\","\\\\")
-    .replaceAll("'","\\'");
-
-}
-
-/* =========================
-   STARTUP
-========================= */
-
-const savedName=
-  localStorage.getItem("foxie_display_name");
-
-if(savedName){
-
-  document.getElementById("accountName")
-    .textContent=savedName;
-
-  document.getElementById("displayNameInput")
-    .value=savedName;
-
-}else{
-
-  setTimeout(()=>{
-
-    document.getElementById("nameModal")
-      .classList.add("show");
-
-  },500);
-
-}
-
-loadCurrentUser();
+  });
 
 </script>
 
