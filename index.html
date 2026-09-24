@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,9 +29,7 @@ html,body{
   color:var(--text);
 }
 
-body{
-  overflow-x:hidden;
-}
+body{overflow-x:hidden}
 
 body:before{
   content:"";
@@ -68,6 +67,7 @@ header{
   color:var(--green);
   text-shadow:0 0 14px rgba(57,255,20,.4);
   white-space:nowrap;
+  cursor:pointer;
 }
 
 .search{
@@ -92,9 +92,7 @@ header{
   white-space:nowrap;
 }
 
-.creator strong{
-  color:var(--green);
-}
+.creator strong{color:var(--green)}
 
 nav{
   max-width:1500px;
@@ -208,9 +206,7 @@ h1{
   border:1px solid var(--line);
 }
 
-section{
-  margin-top:34px;
-}
+section{margin-top:34px}
 
 .section-head{
   display:flex;
@@ -293,13 +289,9 @@ section{
   align-items:center;
 }
 
-.tournament + .tournament{
-  margin-top:10px;
-}
+.tournament + .tournament{margin-top:10px}
 
-.tournament h3{
-  margin:0 0 6px;
-}
+.tournament h3{margin:0 0 6px}
 
 .tournament p{
   margin:0;
@@ -349,618 +341,58 @@ section{
   font-size:12px;
 }
 
-footer{
-  border-top:1px solid var(--line);
-  text-align:center;
-  padding:30px 20px;
-  color:var(--muted);
-  font-size:12px;
+/* SNAKE */
+
+.game-shell{
+  max-width:900px;
+  margin:0 auto;
 }
 
-#toast{
-  position:fixed;
-  left:50%;
-  bottom:25px;
-  transform:translateX(-50%);
-  background:#07140a;
-  border:1px solid var(--green);
-  color:var(--text);
-  padding:12px 17px;
+.game-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:15px;
+  flex-wrap:wrap;
+}
+
+.game-title{
+  color:var(--green);
+  font-size:30px;
+  font-weight:900;
+}
+
+.game-stats{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.game-stat{
+  border:1px solid var(--line);
+  background:#061009;
   border-radius:10px;
-  display:none;
-  z-index:300;
+  padding:10px 14px;
+  min-width:100px;
 }
 
-@media(max-width:700px){
-  .top{
-    flex-wrap:wrap;
-  }
-
-  .creator{
-    display:none;
-  }
-
-  .search{
-    order:3;
-    flex-basis:100%;
-  }
-
-  .hero{
-    padding:25px;
-  }
-
-  .hero:after{
-    font-size:130px;
-  }
-
-  .tournament{
-    grid-template-columns:1fr;
-  }
-
-  .countdown{
-    text-align:left;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <div class="top">
-    <div class="logo">🦊 FOXIE</div>
-
-    <input
-      id="search"
-      class="search"
-      type="search"
-      placeholder="Search games, videos, music, movies, creators..."
-      aria-label="Search Foxie"
-    >
-
-    <div class="creator">
-      Created by <strong>Jayden Wayne Macdonald</strong>
-    </div>
-  </div>
-
-  <nav id="nav">
-    <button class="active" data-section="home">🏠 Home</button>
-    <button data-section="games">🎮 Games</button>
-    <button data-section="tournaments">🏆 Tournaments</button>
-    <button data-section="drive">🚗 Drive</button>
-    <button data-section="movies">🎬 Movies</button>
-    <button data-section="music">🎵 Music</button>
-    <button data-section="videos">📺 Videos</button>
-    <button data-section="avatars">🧑 Avatars</button>
-    <button data-section="creator">🛠️ Creator</button>
-    <button data-section="social">👥 Social</button>
-    <button data-section="world">🌎 World</button>
-  </nav>
-</header>
-
-<main id="app"></main>
-
-<footer>
-  🦊 FOXIE — Play • Watch • Listen • Create • Explore • Compete • Discover
-</footer>
-
-<div id="toast" role="status" aria-live="polite"></div>
-
-<script>
-const games = [
-  ["♟️","Foxie Chess","Full online chess with 2D + 3D boards, puzzles, rankings and tournaments."],
-  ["♜","3D Chess","Immersive 3D chess arenas and competitive matches."],
-  ["🐍","Foxie Snake","3D multiplayer growth-and-survive arena."],
-  ["🏎️","Foxie Racing","Realistic racing, tracks, cars, tuning and championships."],
-  ["🚗","Foxie Drive","Open-world realistic cruising and car meets."],
-  ["⚽","Foxie Football","Full 3D football matches, clubs, leagues and tournaments."],
-  ["🏀","Basketball","Matches, training, ranked games and competitions."],
-  ["🎾","Tennis","Singles, doubles, seasons and tournaments."],
-  ["🥊","Foxie Fighter","Competitive fighting with arenas, progression and rankings."],
-  ["👻","Hide & Seek","Large multiplayer 3D hide-and-seek worlds."],
-  ["🧟","Survival","Explore, build and survive dynamic worlds."],
-  ["🏗️","City Builder","Build and manage your own 3D city."],
-  ["🎢","Theme Park","Build, customize and operate a giant theme park."],
-  ["🐾","Pet World","Collect, customize and care for creatures."],
-  ["🏝️","Island Survival","Explore islands, build bases and complete challenges."],
-  ["🚀","Space Adventure","Explore planets, stations and deep space."],
-  ["👻","Haunted House","3D mystery and horror adventure."],
-  ["🧩","Puzzle Arena","Logic, memory, reaction and puzzle competitions."],
-  ["🕵️","Mystery Mansion","Multiplayer investigation and mystery gameplay."],
-  ["🎵","Rhythm Battle","Music-based challenges and competitive scores."],
-  ["🧱","Platformer","3D obstacle worlds and community levels."],
-  ["🛡️","Tower Defence","Build defenses and survive waves."],
-  ["🏌️","Golf","Courses, multiplayer rounds and tournaments."],
-  ["🎳","Bowling","Realistic lanes, multiplayer and competitions."]
-];
-
-const categories = [
-  ["🎮","Official Games","Big Foxie-built experiences."],
-  ["👥","Community Games","Games created by Foxie players."],
-  ["🔥","Trending","Experiences everyone is discovering."],
-  ["🆕","New","Recently published experiences."],
-  ["⭐","Top Rated","Highly rated community experiences."],
-  ["👫","Friends Playing","See what your friends are playing."]
-];
-
-const avatars = [
-  ["🦊","Fox","Classic Foxie avatar"],
-  ["🤖","Robot","Futuristic avatar"],
-  ["👽","Alien","Explorer avatar"],
-  ["🐺","Wolf","Wild avatar"],
-  ["🐼","Panda","Animal avatar"],
-  ["🐲","Dragon","Fantasy avatar"],
-  ["🧙","Mage","Fantasy character"],
-  ["🥷","Ninja","Stealth character"],
-  ["🧑‍🚀","Space Explorer","Sci-fi character"],
-  ["🦾","Cyber","Cybernetic character"],
-  ["🧛","Night Walker","Fantasy character"],
-  ["🧑‍🎤","Music Star","Music-themed avatar"]
-];
-
-const tournaments = [
-  ["🐍 Foxie Snake","Solo","500 XP + 250 Coins","00:00"],
-  ["⚽ Foxie Football","3v3","1,000 XP + Trophy","00:15"],
-  ["♟️ 3D Chess","1v1","750 XP + Exclusive Title","00:30"],
-  ["🏎️ Foxie Racing","Solo","1,250 XP + Car Cosmetic","00:45"],
-  ["🥊 Foxie Fighter","1v1","1,000 XP + Fighter Title","01:00"],
-  ["🏀 Basketball","3v3","1,000 XP + Trophy","01:15"],
-  ["👻 Hide & Seek","Multiplayer","750 XP + Cosmetic","01:30"],
-  ["🎯 Target Challenge","Solo","500 XP + Badge","01:45"]
-];
-
-function card(item){
-  return `
-    <article class="card" tabindex="0" data-action="${item[1]}">
-      <div class="emoji">${item[0]}</div>
-      <h3>${item[1]}</h3>
-      <p>${item[2]}</p>
-    </article>
-  `;
+.game-stat small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  text-transform:uppercase;
 }
 
-function sectionHead(title,sub){
-  return `
-    <div class="section-head">
-      <h2>${title}</h2>
-      <span>${sub}</span>
-    </div>
-  `;
+.game-stat strong{
+  color:var(--green);
+  font-size:20px;
 }
 
-function home(){
-  return `
-    <div class="hero">
-      <div class="hero-content">
-        <div class="tag">🦊 THE FOXIE UNIVERSE</div>
-        <h1>PLAY.<br>CREATE.<br>EXPLORE.</h1>
-        <p>
-          A growing 3D entertainment universe with games, tournaments,
-          driving, movies, music, videos, avatars, creators, social worlds
-          and community experiences.
-        </p>
-
-        <div class="actions">
-          <button class="primary" data-go="games">🎮 Explore Games</button>
-          <button class="secondary" data-go="world">🌎 Enter World</button>
-          <button class="secondary" data-go="creator">🛠️ Create</button>
-        </div>
-      </div>
-    </div>
-
-    <section>
-      ${sectionHead("🏆 Happening in Foxie","Live tournament schedule")}
-      ${tournaments.slice(0,4).map(tournamentCard).join("")}
-    </section>
-
-    <section>
-      ${sectionHead("🔥 Discover","There's always something new")}
-      <div class="grid">
-        ${games.slice(0,8).map(card).join("")}
-      </div>
-    </section>
-
-    <section>
-      ${sectionHead("🌟 Foxie Features","The platform keeps expanding")}
-      <div class="feature-grid">
-        <div class="stat"><strong>∞</strong><span>New experiences can be added</span></div>
-        <div class="stat"><strong>3D</strong><span>Connected worlds and games</span></div>
-        <div class="stat"><strong>🏆</strong><span>Hourly competitions</span></div>
-        <div class="stat"><strong>🛠️</strong><span>Community creation</span></div>
-      </div>
-    </section>
-  `;
-}
-
-function tournamentCard(t){
-  return `
-    <div class="tournament">
-      <div>
-        <h3>${t[0]}</h3>
-        <p>${t[1]} • 🎁 ${t[2]} • Starts ${t[3]}</p>
-      </div>
-      <div class="countdown" data-time="${t[3]}">--:--</div>
-    </div>
-  `;
-}
-
-function gamesPage(){
-  return `
-    ${sectionHead("🎮 Foxie Game Library","Full experiences, not just mini-games")}
-    <div class="grid">${games.map(card).join("")}</div>
-
-    <section>
-      ${sectionHead("🌟 Discover Games","Explore the community")}
-      <div class="grid">${categories.map(card).join("")}</div>
-    </section>
-  `;
-}
-
-function tournamentsPage(){
-  return `
-    ${sectionHead("🏆 Tournament Hub","Events throughout the day")}
-    ${tournaments.map(tournamentCard).join("")}
-
-    <section>
-      <div class="feature">
-        <h3>🦊 Foxie Championship</h3>
-        <p>
-          Hourly → Daily → Weekly → Monthly → Seasonal championships.
-          Players can earn XP, coins, trophies, titles and exclusive cosmetics.
-        </p>
-        <div class="actions">
-          <button class="primary" data-toast="Tournament registration will connect to the multiplayer server.">Register</button>
-          <button class="secondary" data-toast="Leaderboard coming with the competitive backend.">Leaderboard</button>
-        </div>
-      </div>
-    </section>
-  `;
-}
-
-function drivePage(){
-  const driveGames = [
-    ["🚗","Foxie Drive","Realistic open-world cruising, traffic and car meets."],
-    ["🏁","Foxie Racing","Competitive racing and championships."],
-    ["💨","Foxie Drift","Dedicated drifting experience."],
-    ["🚛","Foxie Haul","Long-distance truck and delivery driving."],
-    ["🌄","Foxie Road Trip","Explore huge scenic worlds."],
-    ["🚓","Foxie Pursuit","Fictional chase-focused driving gameplay."]
-  ];
-
-  return `
-    <div class="feature">
-      <h3>🚗 FOXIE DRIVE</h3>
-      <p>
-        A dedicated realistic driving world for cruising, exploring,
-        car meets and driving with friends.
-      </p>
-    </div>
-
-    <section>
-      ${sectionHead("🚘 Driving Experiences","Every one is its own game")}
-      <div class="grid">${driveGames.map(card).join("")}</div>
-    </section>
-
-    <section>
-      ${sectionHead("🔧 Garage","Build your cars")}
-      <div class="grid">
-        ${[
-          ["🎨","Paint","Customize your vehicle appearance."],
-          ["🛞","Wheels","Choose wheels and visual styles."],
-          ["🔧","Tuning","Performance and handling upgrades."],
-          ["📸","Photo Mode","Create cinematic car photos."],
-          ["👥","Car Meets","Meet other players online."],
-          ["🗺️","Routes","Discover roads and scenic routes."]
-        ].map(card).join("")}
-      </div>
-    </section>
-  `;
-}
-
-function moviesPage(){
-  return `
-    ${sectionHead("🎬 Movies & Shows","Entertainment inside Foxie")}
-    <div class="grid">
-      ${[
-        ["🎬","Movies","Browse movies available through licensed content providers."],
-        ["📺","TV Shows","Series and episodic entertainment."],
-        ["🔥","Trending","Popular entertainment."],
-        ["🆕","New Releases","Recently added content."],
-        ["❤️","Watchlist","Save things to watch later."],
-        ["👥","Watch Party","Watch supported content with friends."]
-      ].map(card).join("")}
-    </div>
-    <section>
-      <div class="feature">
-        <h3>📜 Content Rights</h3>
-        <p>
-          Foxie can integrate properly licensed movies and shows,
-          alongside creator-owned content.
-        </p>
-      </div>
-    </section>
-  `;
-}
-
-function musicPage(){
-  return `
-    ${sectionHead("🎵 Foxie Music","Listen, discover and create")}
-    <div class="grid">
-      ${[
-        ["🎧","Music Player","Play supported music."],
-        ["🔥","Trending","Discover popular tracks."],
-        ["🆕","New Music","Find new releases."],
-        ["💿","Albums","Browse albums."],
-        ["🎤","Artists","Discover artists."],
-        ["📻","Radio","Radio-style listening."],
-        ["❤️","Playlists","Create personal playlists."],
-        ["🎙️","Podcasts","Listen to creator podcasts."],
-        ["🎵","Original Music","Discover creator-owned music."]
-      ].map(card).join("")}
-    </div>
-  `;
-}
-
-function videosPage(){
-  return `
-    ${sectionHead("📺 Foxie Videos","Community and creator video")}
-    <div class="grid">
-      ${[
-        ["🔥","Trending","What's popular right now."],
-        ["🆕","Latest","Fresh creator uploads."],
-        ["🎮","Gaming","Gameplay and gaming creators."],
-        ["😂","Funny","Comedy and entertainment."],
-        ["🎵","Music Videos","Music and performances."],
-        ["🧠","Educational","Learn something new."],
-        ["🏆","Sports","Sports content."],
-        ["🛠️","Tutorials","Guides and how-to videos."],
-        ["👤","Creator Channels","Follow your favorite creators."]
-      ].map(card).join("")}
-    </div>
-  `;
-}
-
-function avatarsPage(){
-  return `
-    ${sectionHead("🧑‍🚀 Foxie Avatars","Hundreds of characters and endless customization")}
-    <div class="grid">${avatars.map(card).join("")}</div>
-
-    <section>
-      ${sectionHead("🎨 Customize","Build your identity")}
-      <div class="grid">
-        ${[
-          ["👀","Face","Faces, eyes and expressions."],
-          ["💇","Hair","Different hairstyles."],
-          ["👕","Clothing","Shirts, jackets and outfits."],
-          ["🎩","Accessories","Hats, masks and accessories."],
-          ["✨","Effects","Auras, trails and visual effects."],
-          ["🐾","Pets","Companion creatures."],
-          ["🕺","Emotes","Animations and emotes."],
-          ["🪽","Back Items","Wings and other items."]
-        ].map(card).join("")}
-      </div>
-    </section>
-  `;
-}
-
-function creatorPage(){
-  return `
-    <div class="feature">
-      <h3>🛠️ FOXIE GAME CREATOR</h3>
-      <p>
-        Build games, worlds, maps and experiences. Start simple with
-        drag-and-drop tools, then expand into advanced creation tools.
-      </p>
-      <div class="actions">
-        <button class="primary" data-toast="Creator Studio will open when the creation backend is connected.">Create Game</button>
-        <button class="secondary" data-toast="World Creator is part of the planned creator system.">Create World</button>
-      </div>
-    </div>
-
-    <section>
-      ${sectionHead("🌎 What Can You Create?","Your imagination sets the direction")}
-      <div class="grid">
-        ${[
-          ["🎮","Games","Create complete playable experiences."],
-          ["🌎","Worlds","Build cities, islands and worlds."],
-          ["🗺️","Maps","Design custom environments."],
-          ["🏠","Homes","Create houses and spaces."],
-          ["🚗","Vehicles","Design vehicles and transport."],
-          ["🐲","Creatures","Create characters and creatures."],
-          ["🏆","Tournaments","Create supported competitions."],
-          ["🎨","Cosmetics","Design permitted avatar items."],
-          ["📺","Videos","Publish creator content."],
-          ["🎵","Music","Publish music you have rights to."]
-        ].map(card).join("")}
-      </div>
-    </section>
-  `;
-}
-
-function socialPage(){
-  return `
-    ${sectionHead("👥 Foxie Social","Connect around games and experiences")}
-    <div class="grid">
-      ${[
-        ["👤","Profile","Your universal Foxie identity."],
-        ["👫","Friends","Play and hang out together."],
-        ["🧑‍🤝‍🧑","Crews","Build a team or community."],
-        ["🎉","Clubs","Join interest groups."],
-        ["💬","Messages","Chat with friends."],
-        ["🎙️","Voice","Supported voice communication."],
-        ["🏠","Shared Homes","Invite friends to your space."],
-        ["📺","Watch Parties","Watch supported content together."],
-        ["🎮","Game Parties","Jump into games together."]
-      ].map(card).join("")}
-    </div>
-  `;
-}
-
-function worldPage(){
-  return `
-    <div class="hero">
-      <div class="hero-content">
-        <div class="tag">🌎 3D FOXIE WORLD</div>
-        <h1>ONE WORLD.<br>MANY EXPERIENCES.</h1>
-        <p>
-          A connected 3D universe where games, creators, social spaces,
-          entertainment and exploration can keep expanding.
-        </p>
-      </div>
-    </div>
-
-    <section>
-      ${sectionHead("🏙️ Explore","More worlds can be added")}
-      <div class="grid">
-        ${[
-          ["🏙️","Foxie City","A giant social city."],
-          ["🌲","Forest","Explore wilderness."],
-          ["🏝️","Islands","Discover islands and beaches."],
-          ["🌊","Ocean","Explore underwater environments."],
-          ["⛰️","Mountains","Drive and explore mountain roads."],
-          ["🌌","Space","Explore planets and stations."],
-          ["🏜️","Desert","Discover huge desert worlds."],
-          ["❄️","Snow World","Winter exploration."],
-          ["🏰","Fantasy Realm","Fantasy environments."],
-          ["🤖","Cyber World","Futuristic environments."]
-        ].map(card).join("")}
-      </div>
-    </section>
-  `;
-}
-
-const pages = {
-  home,
-  games:gamesPage,
-  tournaments:tournamentsPage,
-  drive:drivePage,
-  movies:moviesPage,
-  music:musicPage,
-  videos:videosPage,
-  avatars:avatarsPage,
-  creator:creatorPage,
-  social:socialPage,
-  world:worldPage
-};
-
-const app = document.getElementById("app");
-const nav = document.getElementById("nav");
-const search = document.getElementById("search");
-const toast = document.getElementById("toast");
-
-function show(name){
-  app.innerHTML = pages[name] ? pages[name]() : pages.home();
-
-  document.querySelectorAll("nav button").forEach(button=>{
-    button.classList.toggle("active",button.dataset.section===name);
-  });
-
-  startCountdowns();
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-nav.addEventListener("click",event=>{
-  const button = event.target.closest("button[data-section]");
-  if(!button)return;
-  show(button.dataset.section);
-});
-
-document.addEventListener("click",event=>{
-  const go = event.target.closest("[data-go]");
-  if(go){
-    show(go.dataset.go);
-    return;
-  }
-
-  const action = event.target.closest("[data-action]");
-  if(action){
-    notify("Opening " + action.dataset.action + " — this experience will connect to its game backend.");
-    return;
-  }
-
-  const toastButton = event.target.closest("[data-toast]");
-  if(toastButton){
-    notify(toastButton.dataset.toast);
-  }
-});
-
-search.addEventListener("keydown",event=>{
-  if(event.key !== "Enter")return;
-
-  const q = search.value.trim().toLowerCase();
-
-  if(!q){
-    show("games");
-    return;
-  }
-
-  const results = games.filter(g =>
-    g[1].toLowerCase().includes(q) ||
-    g[2].toLowerCase().includes(q)
-  );
-
-  app.innerHTML = `
-    ${sectionHead("🔎 Search Results",results.length + " found")}
-    <div class="grid">
-      ${
-        results.length
-        ? results.map(card).join("")
-        : `<div class="feature"><h3>No results yet</h3><p>Try another search.</p></div>`
-      }
-    </div>
-  `;
-
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  startCountdowns();
-});
-
-function notify(message){
-  toast.textContent = message;
-  toast.style.display="block";
-  clearTimeout(window.__foxieToast);
-  window.__foxieToast=setTimeout(()=>{
-    toast.style.display="none";
-  },3000);
-}
-
-function startCountdowns(){
-  document.querySelectorAll(".countdown").forEach(el=>{
-    const start = el.dataset.time;
-    if(!start)return;
-
-    const [h,m] = start.split(":").map(Number);
-
-    function update(){
-      const now = new Date();
-      const target = new Date(now);
-
-      target.setHours(h,m,0,0);
-
-      if(target <= now){
-        target.setDate(target.getDate()+1);
-      }
-
-      const diff = Math.max(0,target-now);
-
-      const hours = Math.floor(diff/3600000);
-      const minutes = Math.floor((diff%3600000)/60000);
-      const seconds = Math.floor((diff%60000)/1000);
-
-      el.textContent =
-        String(hours).padStart(2,"0") + ":" +
-        String(minutes).padStart(2,"0") + ":" +
-        String(seconds).padStart(2,"0");
-    }
-
-    update();
-    const timer=setInterval(update,1000);
-
-    el.dataset.timer=timer;
-  });
-}
-
-show("home");
-</script>
-
-</body>
-</html>
+.canvas-wrap{
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  background:#0
+```
