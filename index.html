@@ -36,11 +36,45 @@ body:before{
   position:fixed;
   inset:0;
   pointer-events:none;
-  opacity:.18;
+  opacity:.16;
   background-image:
     linear-gradient(rgba(57,255,20,.05) 1px,transparent 1px),
     linear-gradient(90deg,rgba(57,255,20,.05) 1px,transparent 1px);
   background-size:40px 40px;
+  z-index:0;
+}
+
+#particles{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:1;
+}
+
+.particle{
+  position:absolute;
+  bottom:-20px;
+  width:3px;
+  height:3px;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green);
+  border-radius:50%;
+  animation:rise linear infinite;
+  opacity:.65;
+}
+
+@keyframes rise{
+  from{
+    transform:translateY(0);
+    opacity:0;
+  }
+  15%{opacity:.7}
+  85%{opacity:.5}
+  to{
+    transform:translateY(-110vh);
+    opacity:0;
+  }
 }
 
 header{
@@ -94,6 +128,15 @@ header{
 
 .creator strong{color:var(--green)}
 
+.clock{
+  font-size:12px;
+  color:var(--green);
+  border:1px solid var(--line);
+  padding:7px 9px;
+  border-radius:8px;
+  white-space:nowrap;
+}
+
 nav{
   max-width:1500px;
   margin:auto;
@@ -121,10 +164,15 @@ nav button.active{
 }
 
 main{
+  position:relative;
+  z-index:2;
   max-width:1500px;
   margin:auto;
   padding:28px 20px 80px;
 }
+
+.page{display:none}
+.page.active{display:block}
 
 .hero{
   min-height:310px;
@@ -186,8 +234,7 @@ h1{
   margin-top:22px;
 }
 
-.primary,
-.secondary{
+.primary,.secondary{
   border-radius:10px;
   padding:12px 17px;
   cursor:pointer;
@@ -278,33 +325,6 @@ section{margin-top:34px}
   padding:4px 7px;
 }
 
-.tournament{
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:18px;
-  background:#061009;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:15px;
-  align-items:center;
-}
-
-.tournament + .tournament{margin-top:10px}
-
-.tournament h3{margin:0 0 6px}
-
-.tournament p{
-  margin:0;
-  color:var(--muted);
-}
-
-.countdown{
-  color:var(--green);
-  font-weight:900;
-  font-size:22px;
-  text-align:right;
-}
-
 .feature{
   border:1px solid var(--line);
   border-radius:18px;
@@ -341,7 +361,93 @@ section{margin-top:34px}
   font-size:12px;
 }
 
-/* SNAKE */
+.tournament{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+  background:#061009;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:15px;
+  align-items:center;
+}
+
+.tournament + .tournament{margin-top:10px}
+
+.tournament h3{margin:0 0 6px}
+
+.tournament p{
+  margin:0;
+  color:var(--muted);
+}
+
+.countdown{
+  color:var(--green);
+  font-weight:900;
+  font-size:22px;
+  text-align:right;
+}
+
+.chat-box{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#040a06;
+  overflow:hidden;
+}
+
+.chat-messages{
+  height:430px;
+  overflow-y:auto;
+  padding:20px;
+}
+
+.message{
+  margin-bottom:14px;
+  max-width:75%;
+  padding:12px 15px;
+  border-radius:13px;
+  background:#08170c;
+  border:1px solid var(--line);
+}
+
+.message.user{
+  margin-left:auto;
+  background:#0b2410;
+}
+
+.message small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:5px;
+}
+
+.chat-input{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  border-top:1px solid var(--line);
+}
+
+.chat-input input{
+  flex:1;
+  background:#020604;
+  border:1px solid var(--line);
+  color:white;
+  padding:12px;
+  border-radius:10px;
+  outline:none;
+}
+
+.chat-input button{
+  background:var(--green);
+  color:#031005;
+  border:0;
+  border-radius:10px;
+  padding:0 18px;
+  font-weight:900;
+  cursor:pointer;
+}
 
 .game-shell{
   max-width:900px;
@@ -394,5 +500,1032 @@ section{margin-top:34px}
   border:1px solid var(--line);
   border-radius:18px;
   padding:12px;
-  background:#0
+  background:#010302;
+}
+
+#snakeCanvas{
+  display:block;
+  width:100%;
+  max-width:700px;
+  aspect-ratio:1;
+  margin:auto;
+  background:#020704;
+  border:1px solid #12391b;
+}
+
+.game-controls{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.game-controls button{
+  min-width:52px;
+  min-height:42px;
+  border:1px solid var(--line);
+  background:#07140a;
+  color:var(--green);
+  border-radius:9px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+footer{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  padding:30px;
+  color:var(--muted);
+  border-top:1px solid var(--line);
+}
+
+footer strong{color:var(--green)}
+
+@media(max-width:700px){
+  .top{
+    flex-wrap:wrap;
+  }
+
+  .creator{
+    order:3;
+    width:100%;
+  }
+
+  .clock{
+    margin-left:auto;
+  }
+
+  .hero{
+    padding:25px;
+  }
+
+  .hero:after{
+    font-size:130px;
+  }
+
+  .message{
+    max-width:90%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles"></div>
+
+<header>
+  <div class="top">
+
+    <div class="logo" onclick="showPage('home')">
+      🦊 FOXIE
+    </div>
+
+    <input
+      id="search"
+      class="search"
+      placeholder="Search games, features, tournaments..."
+      oninput="searchSite()"
+    >
+
+    <div class="clock" id="clock">--:--:--</div>
+
+    <div class="creator">
+      Created by <strong>Jayden Wayne MacDonald</strong>
+    </div>
+
+  </div>
+
+  <nav>
+    <button class="active" data-page="home" onclick="showPage('home')">Home</button>
+    <button data-page="games" onclick="showPage('games')">🎮 Games</button>
+    <button data-page="chat" onclick="showPage('chat')">💬 Chat</button>
+    <button data-page="tournaments" onclick="showPage('tournaments')">🏆 Tournaments</button>
+    <button data-page="community" onclick="showPage('community')">🌐 Community</button>
+    <button data-page="creator" onclick="showPage('creator')">🦊 Creator</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <div id="home" class="page active">
+
+    <div class="hero">
+      <div class="hero-content">
+
+        <div class="tag">FOXIE PLATFORM // ONLINE</div>
+
+        <h1>
+          Welcome to<br>
+          Foxie 🦊
+        </h1>
+
+        <p>
+          A gaming, social and AI platform built for players.
+          Discover games, chat with people, join tournaments,
+          earn rewards and explore the Foxie world.
+        </p>
+
+        <div class="actions">
+          <button class="primary" onclick="showPage('games')">
+            🎮 Play Games
+          </button>
+
+          <button class="secondary" onclick="showPage('chat')">
+            💬 Open Foxie Chat
+          </button>
+
+          <button class="secondary" onclick="showPage('tournaments')">
+            🏆 Tournaments
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <section>
+      <div class="section-head">
+        <h2>🔥 Featured</h2>
+        <span>What's happening on Foxie</span>
+      </div>
+
+      <div class="feature">
+
+        <h3>FOXIE GAMING NETWORK</h3>
+
+        <div class="feature-grid">
+
+          <div class="stat">
+            <strong>24/7</strong>
+            <span>Gaming platform</span>
+          </div>
+
+          <div class="stat">
+            <strong>🎮</strong>
+            <span>Games & experiences</span>
+          </div>
+
+          <div class="stat">
+            <strong>🏆</strong>
+            <span>Hourly tournaments</span>
+          </div>
+
+          <div class="stat">
+            <strong>💬</strong>
+            <span>Community chat</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>⚡ Quick Play</h2>
+        <span>Jump straight into a game</span>
+      </div>
+
+      <div class="grid">
+
+        <div class="card" onclick="showPage('games')">
+          <div class="emoji">🐍</div>
+          <h3>Foxie Snake</h3>
+          <p>Classic Snake with a Foxie hacker-style design.</p>
+          <span class="badge">PLAY</span>
+        </div>
+
+        <div class="card">
+          <div class="emoji">♟️</div>
+          <h3>Chess</h3>
+          <p>Challenge another player in a classic chess experience.</p>
+          <span class="badge">SOON</span>
+        </div>
+
+        <div class="card">
+          <div class="emoji">🚗</div>
+          <h3>Foxie Drive</h3>
+          <p>Free-drive style gaming with roads, cars and challenges.</p>
+          <span class="badge">SOON</span>
+        </div>
+
+        <div class="card">
+          <div class="emoji">🟢</div>
+          <h3>Slither Foxie</h3>
+          <p>Grow your snake, collect food and compete with others.</p>
+          <span class="badge">SOON</span>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+
+  <!-- GAMES -->
+  <div id="games" class="page">
+
+    <div class="section-head">
+      <h2>🎮 Foxie Games</h2>
+      <span>Choose your game</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card" onclick="startSnake()">
+        <div class="emoji">🐍</div>
+        <h3>Foxie Snake</h3>
+        <p>Classic Snake. Eat the glowing food and survive.</p>
+        <span class="badge">PLAY NOW</span>
+      </div>
+
+      <div class="card">
+        <div class="emoji">♟️</div>
+        <h3>Foxie Chess</h3>
+        <p>Chess-style multiplayer experience.</p>
+        <span class="badge">COMING</span>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🚗</div>
+        <h3>Foxie Drive</h3>
+        <p>Driving, drifting and free-roaming challenges.</p>
+        <span class="badge">COMING</span>
+      </div>
+
+      <div class="card">
+        <div class="emoji">⚽</div>
+        <h3>Foxie Football</h3>
+        <p>Arcade football matches and tournaments.</p>
+        <span class="badge">COMING</span>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🔫</div>
+        <h3>Foxie Arena</h3>
+        <p>Fast competitive arena gameplay.</p>
+        <span class="badge">COMING</span>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🧱</div>
+        <h3>Foxie World</h3>
+        <p>Explore player-created worlds and experiences.</p>
+        <span class="badge">COMING</span>
+      </div>
+
+    </div>
+
+    <section id="snakeGame">
+
+      <div class="game-shell">
+
+        <div class="game-header">
+
+          <div class="game-title">
+            🐍 FOXIE SNAKE
+          </div>
+
+          <div class="game-stats">
+
+            <div class="game-stat">
+              <small>Score</small>
+              <strong id="score">0</strong>
+            </div>
+
+            <div class="game-stat">
+              <small>High Score</small>
+              <strong id="highScore">0</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="canvas-wrap">
+
+          <canvas id="snakeCanvas" width="600" height="600"></canvas>
+
+          <div class="game-controls">
+
+            <button onclick="snakeDirection('up')">▲</button>
+
+            <button onclick="snakeDirection('left')">◀</button>
+
+            <button onclick="snakeDirection('down')">▼</button>
+
+            <button onclick="snakeDirection('right')">▶</button>
+
+            <button onclick="startSnake()">↻ Restart</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- CHAT -->
+  <div id="chat" class="page">
+
+    <div class="section-head">
+      <h2>💬 Foxie Chat</h2>
+      <span>Talk to Foxie</span>
+    </div>
+
+    <div class="chat-box">
+
+      <div class="chat-messages" id="messages">
+
+        <div class="message">
+          <small>FOXIE AI</small>
+          Yo! 🦊 Welcome to Foxie.
+          Ask me something or tell me what you want to do.
+        </div>
+
+      </div>
+
+      <div class="chat-input">
+
+        <input
+          id="chatInput"
+          placeholder="Message Foxie..."
+          onkeydown="if(event.key==='Enter')sendMessage()"
+        >
+
+        <button onclick="sendMessage()">SEND</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TOURNAMENTS -->
+  <div id="tournaments" class="page">
+
+    <div class="section-head">
+      <h2>🏆 Tournaments</h2>
+      <span>Hourly Foxie events</span>
+    </div>
+
+    <div class="tournament">
+
+      <div>
+        <h3>🐍 Snake Rush</h3>
+        <p>Highest score wins the tournament title.</p>
+      </div>
+
+      <div class="countdown" id="timer1">STARTING</div>
+
+    </div>
+
+    <div class="tournament">
+
+      <div>
+        <h3>♟️ Chess Arena</h3>
+        <p>Competitive chess tournament.</p>
+      </div>
+
+      <div class="countdown">SOON</div>
+
+    </div>
+
+    <div class="tournament">
+
+      <div>
+        <h3>🚗 Foxie Drive</h3>
+        <p>Fastest driver challenge.</p>
+      </div>
+
+      <div class="countdown">SOON</div>
+
+    </div>
+
+  </div>
+
+
+  <!-- COMMUNITY -->
+  <div id="community" class="page">
+
+    <div class="section-head">
+      <h2>🌐 Community</h2>
+      <span>Foxie social hub</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="emoji">👥</div>
+        <h3>Players</h3>
+        <p>Meet other Foxie players.</p>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🏅</div>
+        <h3>Leaderboards</h3>
+        <p>Compete for records and titles.</p>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🎨</div>
+        <h3>Creators</h3>
+        <p>Create and share your own Foxie experiences.</p>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🏆</div>
+        <h3>Rewards</h3>
+        <p>Earn badges, titles and tournament rewards.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- CREATOR -->
+  <div id="creator" class="page">
+
+    <div class="feature">
+
+      <h3>🦊 FOXIE CREATOR</h3>
+
+      <p>
+        Foxie is being built as a gaming and social platform
+        with games, AI, tournaments, community features and
+        creator experiences.
+      </p>
+
+      <div class="feature-grid">
+
+        <div class="stat">
+          <strong>🦊</strong>
+          <span>Foxie Platform</span>
+        </div>
+
+        <div class="stat">
+          <strong>🎮</strong>
+          <span>Games</span>
+        </div>
+
+        <div class="stat">
+          <strong>🤖</strong>
+          <span>AI</span>
+        </div>
+
+        <div class="stat">
+          <strong>🏆</strong>
+          <span>Tournaments</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  🦊 FOXIE — Created by <strong>Jayden Wayne MacDonald</strong>
+</footer>
+
+
+<script>
+
+/* =========================
+   PARTICLES
+========================= */
+
+const particles=document.getElementById("particles");
+
+for(let i=0;i<90;i++){
+
+  const p=document.createElement("div");
+
+  p.className="particle";
+
+  p.style.left=Math.random()*100+"%";
+
+  p.style.animationDuration=(5+Math.random()*9)+"s";
+
+  p.style.animationDelay=(Math.random()*8)+"s";
+
+  p.style.transform="scale("+(0.5+Math.random()*1.8)+")";
+
+  particles.appendChild(p);
+
+}
+
+
+/* =========================
+   CLOCK
+========================= */
+
+function updateClock(){
+
+  const now=new Date();
+
+  document.getElementById("clock").textContent=
+    now.toLocaleTimeString([],{
+      hour:"2-digit",
+      minute:"2-digit",
+      second:"2-digit"
+    });
+
+}
+
+setInterval(updateClock,1000);
+updateClock();
+
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function showPage(page){
+
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  const target=document.getElementById(page);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document.querySelectorAll("nav button").forEach(button=>{
+    button.classList.toggle(
+      "active",
+      button.dataset.page===page
+    );
+  });
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  if(page==="games"){
+    setTimeout(drawSnake,100);
+  }
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchSite(){
+
+  const q=document.getElementById("search").value.toLowerCase().trim();
+
+  if(!q)return;
+
+  if(q.includes("snake")){
+    showPage("games");
+    setTimeout(startSnake,100);
+  }
+  else if(q.includes("chat") || q.includes("ai")){
+    showPage("chat");
+  }
+  else if(q.includes("tournament")){
+    showPage("tournaments");
+  }
+  else if(q.includes("creator")){
+    showPage("creator");
+  }
+  else if(
+    q.includes("game") ||
+    q.includes("chess") ||
+    q.includes("drive") ||
+    q.includes("football")
+  ){
+    showPage("games");
+  }
+
+}
+
+
+/* =========================
+   CHAT
+========================= */
+
+function addMessage(text,type){
+
+  const box=document.getElementById("messages");
+
+  const msg=document.createElement("div");
+
+  msg.className="message "+(type||"");
+
+  msg.innerHTML=
+    "<small>"+(type==="user"?"YOU":"FOXIE AI")+"</small>"+
+    text;
+
+  box.appendChild(msg);
+
+  box.scrollTop=box.scrollHeight;
+
+}
+
+
+function foxieReply(text){
+
+  const t=text.toLowerCase();
+
+  if(t.includes("hello") || t.includes("hi")){
+    return "Yo! 🦊 What's up?";
+  }
+
+  if(t.includes("game")){
+    return "You should check the 🎮 Games section!";
+  }
+
+  if(t.includes("snake")){
+    return "🐍 Snake is ready! Go to Games and hit Play.";
+  }
+
+  if(t.includes("who made") || t.includes("creator")){
+    return "Foxie was created by Jayden Wayne MacDonald. 🦊";
+  }
+
+  if(t.includes("time")){
+    return "The current time is "+new Date().toLocaleTimeString()+".";
+  }
+
+  if(t.includes("tournament")){
+    return "🏆 Check the Tournaments tab for the current Foxie events.";
+  }
+
+  return "I’m Foxie 🦊. I’m still being upgraded, but I’m listening!";
+}
+
+
+function sendMessage(){
+
+  const input=document.getElementById("chatInput");
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  addMessage(text,"user");
+
+  input.value="";
+
+  setTimeout(()=>{
+    addMessage(foxieReply(text));
+  },350);
+
+}
+
+
+/* =========================
+   TOURNAMENT TIMER
+========================= */
+
+function updateTournament(){
+
+  const now=new Date();
+
+  const seconds=now.getSeconds();
+
+  const remaining=60-seconds;
+
+  document.getElementById("timer1").textContent=
+    "00:"+String(remaining).padStart(2,"0");
+
+}
+
+setInterval(updateTournament,1000);
+updateTournament();
+
+
+/* =========================
+   SNAKE GAME
+========================= */
+
+const canvas=document.getElementById("snakeCanvas");
+
+const ctx=canvas.getContext("2d");
+
+const cells=24;
+
+const size=canvas.width/cells;
+
+let snake=[];
+
+let food={x:10,y:10};
+
+let direction={x:1,y:0};
+
+let nextDirection={x:1,y:0};
+
+let score=0;
+
+let highScore=
+  Number(localStorage.getItem("foxieHighScore")||0);
+
+let snakeRunning=false;
+
+let snakeTimer=null;
+
+
+document.getElementById("highScore").textContent=highScore;
+
+
+function startSnake(){
+
+  showPage("games");
+
+  snake=[
+    {x:12,y:12},
+    {x:11,y:12},
+    {x:10,y:12}
+  ];
+
+  direction={x:1,y:0};
+
+  nextDirection={x:1,y:0};
+
+  score=0;
+
+  document.getElementById("score").textContent=score;
+
+  placeFood();
+
+  snakeRunning=true;
+
+  clearInterval(snakeTimer);
+
+  snakeTimer=setInterval(updateSnake,105);
+
+  drawSnake();
+
+}
+
+
+function placeFood(){
+
+  let good=false;
+
+  while(!good){
+
+    food={
+      x:Math.floor(Math.random()*cells),
+      y:Math.floor(Math.random()*cells)
+    };
+
+    good=!snake.some(
+      s=>s.x===food.x && s.y===food.y
+    );
+
+  }
+
+}
+
+
+function snakeDirection(dir){
+
+  if(dir==="up" && direction.y!==1)
+    nextDirection={x:0,y:-1};
+
+  if(dir==="down" && direction.y!==-1)
+    nextDirection={x:0,y:1};
+
+  if(dir==="left" && direction.x!==1)
+    nextDirection={x:-1,y:0};
+
+  if(dir==="right" && direction.x!==-1)
+    nextDirection={x:1,y:0};
+
+}
+
+
+function updateSnake(){
+
+  if(!snakeRunning)return;
+
+  direction=nextDirection;
+
+  const head={
+    x:snake[0].x+direction.x,
+    y:snake[0].y+direction.y
+  };
+
+  if(
+    head.x<0 ||
+    head.x>=cells ||
+    head.y<0 ||
+    head.y>=cells
+  ){
+    endSnake();
+    return;
+  }
+
+  if(
+    snake.some(
+      s=>s.x===head.x && s.y===head.y
+    )
+  ){
+    endSnake();
+    return;
+  }
+
+  snake.unshift(head);
+
+  if(
+    head.x===food.x &&
+    head.y===food.y
+  ){
+
+    score++;
+
+    document.getElementById("score").textContent=score;
+
+    if(score>highScore){
+
+      highScore=score;
+
+      localStorage.setItem(
+        "foxieHighScore",
+        highScore
+      );
+
+      document.getElementById("highScore").textContent=
+        highScore;
+    }
+
+    placeFood();
+
+  }else{
+
+    snake.pop();
+
+  }
+
+  drawSnake();
+
+}
+
+
+function endSnake(){
+
+  snakeRunning=false;
+
+  clearInterval(snakeTimer);
+
+  setTimeout(()=>{
+
+    alert(
+      "GAME OVER 🦊\n\nScore: "+score+
+      "\nHigh Score: "+highScore
+    );
+
+  },50);
+
+}
+
+
+function drawSnake(){
+
+  ctx.fillStyle="#020704";
+
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  /* grid */
+
+  ctx.strokeStyle="rgba(57,255,20,.045)";
+
+  ctx.lineWidth=1;
+
+  for(let i=0;i<=cells;i++){
+
+    ctx.beginPath();
+
+    ctx.moveTo(i*size,0);
+
+    ctx.lineTo(i*size,canvas.height);
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,i*size);
+
+    ctx.lineTo(canvas.width,i*size);
+
+    ctx.stroke();
+
+  }
+
+  /* food */
+
+  ctx.fillStyle="#39ff14";
+
+  ctx.shadowColor="#39ff14";
+
+  ctx.shadowBlur=18;
+
+  ctx.beginPath();
+
+  ctx.arc(
+    food.x*size+size/2,
+    food.y*size+size/2,
+    size*.28,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.shadowBlur=0;
+
+  /* snake */
+
+  snake.forEach((part,index)=>{
+
+    ctx.fillStyle=
+      index===0 ? "#b6ffad" : "#39ff14";
+
+    ctx.shadowColor="#39ff14";
+
+    ctx.shadowBlur=index===0 ? 15 : 7;
+
+    ctx.fillRect(
+      part.x*size+2,
+      part.y*size+2,
+      size-4,
+      size-4
+    );
+
+  });
+
+  ctx.shadowBlur=0;
+
+}
+
+
+/* =========================
+   KEYBOARD CONTROLS
+========================= */
+
+document.addEventListener("keydown",e=>{
+
+  if(
+    e.key==="ArrowUp" ||
+    e.key.toLowerCase()==="w"
+  ){
+    snakeDirection("up");
+  }
+
+  if(
+    e.key==="ArrowDown" ||
+    e.key.toLowerCase()==="s"
+  ){
+    snakeDirection("down");
+  }
+
+  if(
+    e.key==="ArrowLeft" ||
+    e.key.toLowerCase()==="a"
+  ){
+    snakeDirection("left");
+  }
+
+  if(
+    e.key==="ArrowRight" ||
+    e.key.toLowerCase()==="d"
+  ){
+    snakeDirection("right");
+  }
+
+});
+
+
+/* initial canvas */
+
+drawSnake();
+
+</script>
+
+</body>
+</html>
 ```
