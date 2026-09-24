@@ -2,3 +2,7 @@ fastapi
 uvicorn[standard]
 gunicorn
 pydantic
+openai
+flask
+flask-cors
+ddgs
