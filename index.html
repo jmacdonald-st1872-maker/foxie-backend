@@ -8,13 +8,14 @@
 <style>
 :root{
   --green:#39ff14;
+  --green2:#19c900;
   --bg:#020604;
   --panel:#07120b;
   --panel2:#0a190e;
   --line:#174d25;
   --text:#d9ffe0;
-  --muted:#79a982;
-  --red:#ff5555;
+  --muted:#7fa88a;
+  --danger:#ff4545;
 }
 
 *{
@@ -39,217 +40,204 @@ button{
   cursor:pointer;
 }
 
-/* BACKGROUND */
-
-.bg{
-  position:fixed;
-  inset:0;
-  overflow:hidden;
-  pointer-events:none;
-  z-index:0;
+body{
+  background:
+    radial-gradient(circle at 50% 20%,rgba(57,255,20,.08),transparent 35%),
+    #020604;
 }
 
-.grid{
-  position:absolute;
+/* PARTICLES */
+
+#particles{
+  position:fixed;
   inset:0;
-  background-image:
-    linear-gradient(rgba(57,255,20,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(57,255,20,.025) 1px,transparent 1px);
-  background-size:45px 45px;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
 }
 
 .particle{
   position:absolute;
-  width:3px;
-  height:3px;
+  bottom:-20px;
+  width:2px;
+  height:2px;
   background:var(--green);
   box-shadow:0 0 8px var(--green);
-  border-radius:50%;
-  opacity:.65;
-  animation:floatUp linear infinite;
+  opacity:.7;
+  animation:rise linear infinite;
 }
 
-@keyframes floatUp{
+@keyframes rise{
   from{
-    transform:translateY(110vh);
+    transform:translateY(0);
+    opacity:0;
   }
+  15%{opacity:.8}
+  80%{opacity:.6}
   to{
-    transform:translateY(-20vh);
+    transform:translateY(-110vh);
+    opacity:0;
   }
+}
+
+/* APP */
+
+#app{
+  position:relative;
+  z-index:1;
+  display:flex;
+  width:100%;
+  height:100vh;
 }
 
 /* SIDEBAR */
 
 .sidebar{
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
   width:245px;
-  background:rgba(4,10,6,.97);
+  min-width:245px;
+  height:100%;
+  background:rgba(4,12,7,.96);
   border-right:1px solid var(--line);
-  z-index:100;
+  padding:18px 12px;
   display:flex;
   flex-direction:column;
-  box-shadow:5px 0 25px rgba(0,0,0,.35);
+  overflow-y:auto;
 }
 
 .logo{
-  height:82px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:0 22px;
-  border-bottom:1px solid var(--line);
-}
-
-.logo-icon{
-  font-size:35px;
-  filter:drop-shadow(0 0 10px var(--green));
-}
-
-.logo-text{
-  font-size:23px;
+  font-size:28px;
   font-weight:900;
   color:var(--green);
-  letter-spacing:2px;
+  text-shadow:0 0 14px rgba(57,255,20,.5);
+  padding:8px 12px 20px;
 }
 
-.sidebar-content{
-  flex:1;
-  overflow-y:auto;
-  padding:15px 12px;
-}
-
-.sidebar-content::-webkit-scrollbar{
-  width:5px;
-}
-
-.sidebar-content::-webkit-scrollbar-thumb{
-  background:var(--line);
-  border-radius:10px;
-}
-
-.nav-section{
-  color:#4f7958;
+.logo small{
+  display:block;
   font-size:10px;
-  text-transform:uppercase;
+  color:var(--muted);
+  letter-spacing:3px;
+  margin-top:4px;
+}
+
+.nav-title{
+  color:#477653;
+  font-size:10px;
+  font-weight:bold;
   letter-spacing:2px;
-  padding:12px 12px 7px;
+  padding:14px 12px 6px;
 }
 
 .nav-btn{
   width:100%;
-  border:0;
+  border:1px solid transparent;
   background:transparent;
-  color:#9bc5a2;
-  padding:12px 13px;
-  margin:2px 0;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  font-size:14px;
+  color:#a9cdb0;
   text-align:left;
-  transition:.18s;
+  padding:11px 12px;
+  border-radius:8px;
+  margin:2px 0;
+  transition:.15s;
 }
 
-.nav-btn:hover{
-  background:#0b1e10;
-  color:var(--green);
-  transform:translateX(2px);
-}
-
+.nav-btn:hover,
 .nav-btn.active{
-  background:rgba(57,255,20,.10);
+  background:#0b1d10;
+  border-color:#1b5b2b;
   color:var(--green);
-  border:1px solid rgba(57,255,20,.22);
-}
-
-.nav-icon{
-  width:24px;
-  text-align:center;
-  font-size:17px;
+  box-shadow:inset 3px 0 0 var(--green);
 }
 
 .sidebar-bottom{
-  padding:12px;
-  border-top:1px solid var(--line);
+  margin-top:auto;
 }
 
 .creator-credit{
-  font-size:10px;
-  color:#4f7958;
-  text-align:center;
-  margin-top:8px;
+  color:#31553a;
+  font-size:9px;
+  line-height:1.5;
+  padding:15px 10px 5px;
 }
 
 /* MAIN */
 
 .main{
-  position:fixed;
-  left:245px;
-  right:0;
-  top:0;
-  bottom:0;
-  z-index:2;
+  flex:1;
+  min-width:0;
+  height:100%;
   display:flex;
   flex-direction:column;
 }
 
+/* TOPBAR */
+
 .topbar{
-  height:68px;
-  flex-shrink:0;
-  background:rgba(4,10,6,.88);
-  border-bottom:1px solid var(--line);
+  height:64px;
+  min-height:64px;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding:0 25px;
+  gap:12px;
+  padding:10px 18px;
+  border-bottom:1px solid var(--line);
+  background:rgba(3,10,6,.86);
   backdrop-filter:blur(10px);
 }
 
-.search{
-  width:min(430px,45%);
-  background:#07120b;
+.mobile-menu{
+  display:none;
+  background:#0a190e;
   border:1px solid var(--line);
-  border-radius:10px;
-  padding:11px 14px;
-  color:var(--text);
-  outline:none;
+  color:var(--green);
+  border-radius:7px;
+  padding:8px 11px;
 }
 
-.search:focus{
+.search{
+  flex:1;
+  max-width:600px;
+}
+
+.search input{
+  width:100%;
+  background:#06100a;
+  border:1px solid var(--line);
+  color:white;
+  outline:none;
+  padding:10px 13px;
+  border-radius:8px;
+}
+
+.search input:focus{
   border-color:var(--green);
   box-shadow:0 0 12px rgba(57,255,20,.12);
 }
 
 .clock{
+  margin-left:auto;
   color:var(--green);
   font-family:monospace;
-  font-size:14px;
+  font-size:15px;
 }
 
-.page-container{
+.account{
+  background:#08170c;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:8px 12px;
+  color:#bdebc5;
+}
+
+/* CONTENT */
+
+.content{
   flex:1;
-  overflow-y:auto;
-  padding:30px;
+  overflow:auto;
+  padding:24px;
 }
-
-.page-container::-webkit-scrollbar{
-  width:7px;
-}
-
-.page-container::-webkit-scrollbar-thumb{
-  background:var(--line);
-  border-radius:10px;
-}
-
-/* PAGES */
 
 .page{
   display:none;
-  max-width:1100px;
+  max-width:1250px;
   margin:auto;
 }
 
@@ -257,45 +245,40 @@ button{
   display:block;
 }
 
-.hero{
-  padding:35px;
-  background:linear-gradient(145deg,#07120b,#09170d);
-  border:1px solid var(--line);
-  border-radius:18px;
-  box-shadow:0 0 30px rgba(57,255,20,.04);
-}
-
-.hero h1{
-  color:var(--green);
-  font-size:42px;
+h1{
   margin:0 0 8px;
-  text-shadow:0 0 15px rgba(57,255,20,.25);
+  color:#f1fff3;
 }
 
-.hero p{
-  color:var(--muted);
-  font-size:16px;
-}
-
-.welcome-name{
+h2{
   color:var(--green);
-  font-weight:bold;
-  margin-top:18px;
-  font-size:18px;
 }
 
-.cards{
+p{
+  color:var(--muted);
+}
+
+/* CARDS */
+
+.grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:15px;
-  margin-top:18px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
 }
 
 .card{
-  background:var(--panel);
+  background:linear-gradient(145deg,#07130b,#040b06);
   border:1px solid var(--line);
-  border-radius:14px;
-  padding:20px;
+  border-radius:12px;
+  padding:18px;
+  min-height:120px;
+  transition:.2s;
+}
+
+.card:hover{
+  border-color:#29883b;
+  transform:translateY(-2px);
+  box-shadow:0 0 25px rgba(57,255,20,.08);
 }
 
 .card h3{
@@ -303,139 +286,277 @@ button{
   color:var(--green);
 }
 
-.card p{
-  color:var(--muted);
-  line-height:1.5;
-}
-
-.panel{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:15px;
-  padding:22px;
+.hero{
+  padding:28px;
+  border:1px solid #1b5b2b;
+  background:
+    linear-gradient(135deg,rgba(57,255,20,.08),transparent),
+    #061009;
+  border-radius:16px;
   margin-bottom:18px;
 }
 
-.panel h2{
-  margin-top:0;
+.hero-title{
+  font-size:clamp(34px,6vw,70px);
+  font-weight:900;
   color:var(--green);
+  text-shadow:0 0 25px rgba(57,255,20,.35);
 }
 
-input{
-  width:100%;
-  padding:12px;
-  background:#020604;
-  border:1px solid var(--line);
-  color:var(--text);
-  border-radius:9px;
-  outline:none;
-}
-
-input:focus{
-  border-color:var(--green);
-}
+/* BUTTONS */
 
 .btn{
-  border:1px solid var(--green);
-  background:rgba(57,255,20,.08);
-  color:var(--green);
-  padding:11px 16px;
-  border-radius:9px;
-  font-weight:bold;
-  transition:.18s;
+  border:1px solid var(--line);
+  background:#0a1c0e;
+  color:#c8ffd0;
+  border-radius:8px;
+  padding:9px 13px;
 }
 
 .btn:hover{
-  background:rgba(57,255,20,.18);
-  box-shadow:0 0 15px rgba(57,255,20,.12);
-}
-
-.btn-danger{
-  border-color:var(--red);
-  color:var(--red);
-}
-
-.muted{
-  color:var(--muted);
-}
-
-.status{
-  margin-top:10px;
-  color:var(--muted);
-}
-
-.big-number{
-  font-size:30px;
+  border-color:var(--green);
   color:var(--green);
+}
+
+.btn.green{
+  background:var(--green);
+  color:#001800;
+  border-color:var(--green);
   font-weight:bold;
+}
+
+.btn.danger{
+  color:#ff7777;
+  border-color:#632222;
 }
 
 /* CHAT */
 
 .chat-box{
-  height:55vh;
-  overflow-y:auto;
-  background:#030805;
+  height:calc(100vh - 140px);
+  min-height:400px;
   border:1px solid var(--line);
-  border-radius:14px;
+  background:#040b06;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.messages{
+  flex:1;
+  overflow:auto;
   padding:18px;
 }
 
 .message{
-  padding:12px 15px;
-  border-radius:12px;
-  margin-bottom:10px;
+  margin-bottom:12px;
   max-width:80%;
-  line-height:1.5;
+  padding:11px 13px;
+  border-radius:10px;
+  background:#0a190e;
+  border:1px solid #123d1c;
 }
 
-.message.foxie{
-  background:#071b0b;
-  border:1px solid #174d25;
-}
-
-.message.user{
-  background:#0d2412;
-  border:1px solid #1c6128;
+.message.me{
   margin-left:auto;
+  border-color:#1b672a;
+}
+
+.message strong{
+  color:var(--green);
+  display:block;
+  margin-bottom:4px;
 }
 
 .chat-input{
   display:flex;
-  gap:10px;
-  margin-top:12px;
+  gap:8px;
+  padding:10px;
+  border-top:1px solid var(--line);
 }
 
-/* ACCOUNT */
+.chat-input input{
+  flex:1;
+  background:#06100a;
+  border:1px solid var(--line);
+  color:white;
+  padding:11px;
+  border-radius:8px;
+  outline:none;
+}
 
-.account-status{
+/* GAMES */
+
+.game-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:15px;
+}
+
+.game-card{
+  min-height:180px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  background:#061009;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:18px;
+}
+
+.game-icon{
+  font-size:42px;
+}
+
+.game-card h3{
+  color:var(--green);
+  margin:8px 0;
+}
+
+/* FULLSCREEN OVERLAY */
+
+#fullscreenOverlay{
+  position:fixed;
+  inset:0;
+  background:#010402;
+  z-index:9999;
+  display:none;
+  flex-direction:column;
+}
+
+#fullscreenOverlay.show{
+  display:flex;
+}
+
+.fs-topbar{
+  height:58px;
+  min-height:58px;
+  background:#030a05;
+  border-bottom:1px solid var(--line);
   display:flex;
   align-items:center;
   gap:10px;
-  margin-bottom:20px;
+  padding:8px 14px;
 }
 
-.online-dot{
-  width:10px;
-  height:10px;
-  background:var(--green);
-  border-radius:50%;
-  box-shadow:0 0 10px var(--green);
+.fs-title{
+  color:var(--green);
+  font-weight:bold;
+  flex:1;
 }
 
-/* GAME */
-
-.game-wrap{
+.fs-body{
+  flex:1;
+  position:relative;
+  overflow:hidden;
   display:flex;
+  align-items:center;
   justify-content:center;
-  align-items:center;
 }
 
-canvas{
-  max-width:100%;
-  border:1px solid var(--green);
-  background:#010301;
-  box-shadow:0 0 20px rgba(57,255,20,.12);
+/* GAME FULLSCREEN */
+
+.fake-game{
+  width:min(1000px,94vw);
+  height:min(650px,80vh);
+  background:
+    radial-gradient(circle at center,rgba(57,255,20,.08),transparent 55%),
+    #020703;
+  border:1px solid #1b632b;
+  border-radius:15px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 50px rgba(57,255,20,.08);
+}
+
+.fake-game .big{
+  font-size:90px;
+}
+
+.fake-game h2{
+  font-size:30px;
+}
+
+.hud{
+  position:absolute;
+  top:15px;
+  left:15px;
+  right:15px;
+  display:flex;
+  justify-content:space-between;
+  color:var(--green);
+  font-family:monospace;
+}
+
+/* CALL */
+
+.call-room{
+  width:100%;
+  height:100%;
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:15px;
+}
+
+.video-tile{
+  position:relative;
+  min-height:220px;
+  border:1px solid #1a5428;
+  background:
+    radial-gradient(circle,rgba(57,255,20,.08),transparent 50%),
+    #061009;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+}
+
+.video-name{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  background:rgba(0,0,0,.7);
+  padding:6px 9px;
+  border-radius:6px;
+  font-size:12px;
+  color:white;
+}
+
+.call-controls{
+  position:absolute;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:9px;
+  background:rgba(3,10,5,.94);
+  border:1px solid var(--line);
+  padding:9px;
+  border-radius:12px;
+}
+
+/* TABLE */
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+.table th,
+.table td{
+  border-bottom:1px solid #123d1c;
+  padding:11px;
+  text-align:left;
+}
+
+.table th{
+  color:var(--green);
 }
 
 /* MODAL */
@@ -443,115 +564,57 @@ canvas{
 .modal{
   position:fixed;
   inset:0;
-  z-index:9999;
+  background:rgba(0,0,0,.72);
   display:none;
   align-items:center;
   justify-content:center;
-  background:rgba(0,0,0,.90);
-  backdrop-filter:blur(12px);
+  z-index:10000;
+  padding:20px;
+}
+
+.modal.show{
+  display:flex;
 }
 
 .modal-box{
-  width:min(440px,92%);
-  padding:32px;
-  background:linear-gradient(145deg,#07120b,#0a190e);
-  border:1px solid var(--green);
-  border-radius:18px;
-  box-shadow:0 0 35px rgba(57,255,20,.2);
+  width:min(440px,100%);
+  background:#061009;
+  border:1px solid #1d672e;
+  border-radius:14px;
+  padding:24px;
+  box-shadow:0 0 50px rgba(57,255,20,.12);
 }
 
-.modal-logo{
-  text-align:center;
-  font-size:60px;
-  filter:drop-shadow(0 0 12px var(--green));
+.modal-box input{
+  width:100%;
+  background:#020604;
+  border:1px solid var(--line);
+  color:white;
+  padding:11px;
+  border-radius:8px;
+  margin:6px 0 10px;
+  outline:none;
 }
 
-.modal-box h1{
-  text-align:center;
-  color:var(--green);
-  margin:10px 0;
-}
-
-.modal-box p{
-  text-align:center;
-  color:var(--muted);
-}
-
-.modal-error{
-  min-height:20px;
-  margin-top:10px;
-  color:var(--red);
-  text-align:center;
-  font-size:13px;
-}
-
-.modal-tabs{
+.modal-actions{
   display:flex;
   gap:8px;
-  margin:20px 0;
-}
-
-.modal-tab{
-  flex:1;
-  padding:10px;
-  background:#030805;
-  border:1px solid var(--line);
-  color:var(--muted);
-  border-radius:8px;
-}
-
-.modal-tab.active{
-  color:var(--green);
-  border-color:var(--green);
-}
-
-.auth-form{
-  display:none;
-}
-
-.auth-form.active{
-  display:block;
-}
-
-.auth-form input{
-  margin-bottom:10px;
-}
-
-.auth-actions{
-  display:flex;
-  gap:10px;
-  margin-top:5px;
-}
-
-.auth-actions .btn{
-  flex:1;
+  margin-top:10px;
 }
 
 /* MOBILE */
 
-.mobile-menu{
-  display:none;
-  background:transparent;
-  border:1px solid var(--line);
-  color:var(--green);
-  padding:8px 11px;
-  border-radius:8px;
-  margin-right:10px;
-}
-
 @media(max-width:800px){
-
   .sidebar{
-    width:210px;
-    transform:translateX(-100%);
-    transition:.25s;
+    position:fixed;
+    left:-260px;
+    top:0;
+    bottom:0;
+    z-index:11000;
+    transition:.2s;
   }
 
   .sidebar.open{
-    transform:translateX(0);
-  }
-
-  .main{
     left:0;
   }
 
@@ -559,20 +622,20 @@ canvas{
     display:block;
   }
 
-  .topbar{
-    padding:0 12px;
-  }
-
-  .search{
-    width:45%;
-  }
-
-  .page-container{
+  .content{
     padding:15px;
   }
 
-  .hero h1{
-    font-size:32px;
+  .clock{
+    display:none;
+  }
+
+  .account{
+    display:none;
+  }
+
+  .call-room{
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -580,908 +643,600 @@ canvas{
 
 <body>
 
-<!-- BACKGROUND -->
+<div id="particles"></div>
 
-<div class="bg">
-  <div class="grid"></div>
-
-  <div class="particle" style="left:5%;animation-duration:11s"></div>
-  <div class="particle" style="left:13%;animation-duration:15s"></div>
-  <div class="particle" style="left:22%;animation-duration:9s"></div>
-  <div class="particle" style="left:31%;animation-duration:17s"></div>
-  <div class="particle" style="left:42%;animation-duration:12s"></div>
-  <div class="particle" style="left:51%;animation-duration:14s"></div>
-  <div class="particle" style="left:63%;animation-duration:10s"></div>
-  <div class="particle" style="left:74%;animation-duration:16s"></div>
-  <div class="particle" style="left:85%;animation-duration:13s"></div>
-  <div class="particle" style="left:94%;animation-duration:18s"></div>
-</div>
-
-
-<!-- DISPLAY NAME MODAL -->
-
-<div id="nameModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-logo">🦊</div>
-
-    <h1>Welcome to Foxie</h1>
-
-    <p>Choose your display name</p>
-
-    <input
-      id="displayNameInput"
-      maxlength="24"
-      placeholder="Your display name"
-      onkeydown="if(event.key==='Enter')saveDisplayName()"
-    >
-
-    <br><br>
-
-    <button class="btn" style="width:100%" onclick="saveDisplayName()">
-      Enter Foxie 🦊
-    </button>
-
-    <div id="nameError" class="modal-error"></div>
-
-  </div>
-
-</div>
-
-
-<!-- AUTH MODAL -->
-
-<div id="authModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-logo">🦊</div>
-
-    <h1>Foxie Account</h1>
-
-    <p>Save your Foxie progress and connect with players.</p>
-
-    <div class="modal-tabs">
-
-      <button
-        id="loginTab"
-        class="modal-tab active"
-        onclick="switchAuth('login')"
-      >
-        Login
-      </button>
-
-      <button
-        id="registerTab"
-        class="modal-tab"
-        onclick="switchAuth('register')"
-      >
-        Sign Up
-      </button>
-
-    </div>
-
-
-    <!-- LOGIN -->
-
-    <div id="loginForm" class="auth-form active">
-
-      <input
-        id="loginUsername"
-        placeholder="Username"
-      >
-
-      <input
-        id="loginPassword"
-        type="password"
-        placeholder="Password"
-        onkeydown="if(event.key==='Enter')login()"
-      >
-
-      <div class="auth-actions">
-
-        <button class="btn" onclick="login()">
-          Login
-        </button>
-
-        <button class="btn" onclick="closeAuth()">
-          Cancel
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- REGISTER -->
-
-    <div id="registerForm" class="auth-form">
-
-      <input
-        id="registerUsername"
-        placeholder="Username"
-      >
-
-      <input
-        id="registerDisplayName"
-        maxlength="24"
-        placeholder="Display name"
-      >
-
-      <input
-        id="registerPassword"
-        type="password"
-        placeholder="Password"
-        onkeydown="if(event.key==='Enter')register()"
-      >
-
-      <div class="auth-actions">
-
-        <button class="btn" onclick="register()">
-          Create Account
-        </button>
-
-        <button class="btn" onclick="closeAuth()">
-          Cancel
-        </button>
-
-      </div>
-
-    </div>
-
-    <div id="authError" class="modal-error"></div>
-
-  </div>
-
-</div>
-
-
-<!-- SIDEBAR -->
+<div id="app">
 
 <aside class="sidebar" id="sidebar">
 
   <div class="logo">
-    <div class="logo-icon">🦊</div>
-    <div class="logo-text">FOXIE</div>
+    🦊 FOXIE
+    <small>PLAY • CREATE • CONNECT</small>
   </div>
 
+  <div class="nav-title">MAIN</div>
 
-  <div class="sidebar-content">
+  <button class="nav-btn active" onclick="openPage('home',this)">🏠 Home</button>
+  <button class="nav-btn" onclick="openPage('chat',this)">💬 Chat</button>
+  <button class="nav-btn" onclick="openPage('web',this)">🌐 Web</button>
+  <button class="nav-btn" onclick="openPage('images',this)">🖼️ Images</button>
 
-    <div class="nav-section">Main</div>
+  <div class="nav-title">COMMUNITY</div>
 
-    <button class="nav-btn active" onclick="showPage('home',this)">
-      <span class="nav-icon">🏠</span>
-      Home
-    </button>
+  <button class="nav-btn" onclick="openPage('profile',this)">👤 Profile</button>
+  <button class="nav-btn" onclick="openPage('users',this)">🔎 Users</button>
+  <button class="nav-btn" onclick="openPage('friends',this)">👥 Friends</button>
+  <button class="nav-btn" onclick="openPage('vids',this)">🎬 Foxie Vids</button>
+  <button class="nav-btn" onclick="openCall()">📞 Calls</button>
 
-    <button class="nav-btn" onclick="showPage('chat',this)">
-      <span class="nav-icon">💬</span>
-      Chat
-    </button>
+  <div class="nav-title">PLAY</div>
 
-    <button class="nav-btn" onclick="showPage('web',this)">
-      <span class="nav-icon">🌐</span>
-      Web
-    </button>
+  <button class="nav-btn" onclick="openPage('games',this)">🎮 Games</button>
+  <button class="nav-btn" onclick="openPage('leaderboard',this)">🏆 Leaderboard</button>
 
-    <button class="nav-btn" onclick="showPage('images',this)">
-      <span class="nav-icon">🖼️</span>
-      Images
-    </button>
+  <div class="nav-title">TOOLS</div>
 
-
-    <div class="nav-section">Community</div>
-
-    <button class="nav-btn" onclick="showPage('profile',this)">
-      <span class="nav-icon">👤</span>
-      Profile
-    </button>
-
-    <button class="nav-btn" onclick="showPage('users',this)">
-      <span class="nav-icon">👥</span>
-      Users
-    </button>
-
-    <button class="nav-btn" onclick="showPage('friends',this)">
-      <span class="nav-icon">🫂</span>
-      Friends
-    </button>
-
-    <button class="nav-btn" onclick="showPage('vids',this)">
-      <span class="nav-icon">🎬</span>
-      Foxie Vids
-    </button>
-
-
-    <div class="nav-section">Play</div>
-
-    <button class="nav-btn" onclick="showPage('games',this)">
-      <span class="nav-icon">🎮</span>
-      Games
-    </button>
-
-    <button class="nav-btn" onclick="showPage('leaderboard',this)">
-      <span class="nav-icon">🏆</span>
-      Leaderboard
-    </button>
-
-
-    <div class="nav-section">Tools</div>
-
-    <button class="nav-btn" onclick="showPage('calculator',this)">
-      <span class="nav-icon">🧮</span>
-      Calculator
-    </button>
-
-    <button class="nav-btn" onclick="showPage('creator',this)">
-      <span class="nav-icon">🛠️</span>
-      Creator
-    </button>
-
-  </div>
-
+  <button class="nav-btn" onclick="openPage('calculator',this)">🧮 Calculator</button>
+  <button class="nav-btn" onclick="openPage('creator',this)">🛠️ Creator Mode</button>
 
   <div class="sidebar-bottom">
-
-    <button class="nav-btn" onclick="showPage('settings',this)">
-      <span class="nav-icon">⚙️</span>
-      Settings
-    </button>
+    <button class="nav-btn" onclick="openPage('settings',this)">⚙️ Settings</button>
 
     <div class="creator-credit">
-      Jayden Wayne MacDonald created this
+      Jayden Wayne MacDonald created this 🦊
     </div>
-
   </div>
 
 </aside>
 
-
-<!-- MAIN -->
-
 <main class="main">
 
   <header class="topbar">
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
 
-    <div style="display:flex;align-items:center">
-
-      <button class="mobile-menu" onclick="toggleSidebar()">
-        ☰
-      </button>
-
-      <input
-        class="search"
-        id="globalSearch"
-        placeholder="Search Foxie..."
-        onkeydown="handleSearch(event)"
-      >
-
+    <div class="search">
+      <input id="globalSearch" placeholder="Search Foxie..." onkeydown="globalSearch(event)">
     </div>
 
-    <div class="clock" id="clock">
-      00:00:00
-    </div>
+    <div class="clock" id="clock">00:00:00</div>
 
+    <div class="account" id="accountName">
+      Guest
+    </div>
   </header>
 
-
-  <div class="page-container">
-
+  <section class="content">
 
     <!-- HOME -->
 
-    <section class="page active" id="page-home">
+    <div class="page active" id="home">
 
       <div class="hero">
-
-        <h1>Foxie 🦊</h1>
-
+        <div class="hero-title">FOXIE 🦊</div>
+        <h2>Play. Create. Connect.</h2>
         <p>
-          Your AI assistant, gaming platform and social world.
+          Your gaming, social and AI platform.
         </p>
 
-        <div class="welcome-name" id="welcomeName"></div>
+        <button class="btn green" onclick="openPage('games')">
+          🎮 Play Games
+        </button>
 
+        <button class="btn" onclick="openCall()">
+          📞 Start a Call
+        </button>
       </div>
 
-
-      <div class="cards">
+      <div class="grid">
 
         <div class="card">
-
           <h3>💬 AI Chat</h3>
-
-          <p>
-            Talk to Foxie and ask questions.
-          </p>
-
-          <button class="btn" onclick="openPage('chat')">
-            Open Chat
-          </button>
-
+          <p>Talk with Foxie AI.</p>
+          <button class="btn" onclick="openPage('chat')">Open Chat</button>
         </div>
 
-
         <div class="card">
-
           <h3>🎮 Games</h3>
-
-          <p>
-            Play games and compete for rewards.
-          </p>
-
-          <button class="btn" onclick="openPage('games')">
-            Play
-          </button>
-
+          <p>Play Foxie games and compete.</p>
+          <button class="btn" onclick="openPage('games')">Explore</button>
         </div>
 
-
         <div class="card">
-
-          <h3>🏆 Leaderboards</h3>
-
-          <p>
-            Track XP, coins and player rankings.
-          </p>
-
-          <button class="btn" onclick="openPage('leaderboard')">
-            View
-          </button>
-
+          <h3>🏆 Tournaments</h3>
+          <p>Hourly competitions and rewards.</p>
         </div>
 
-
         <div class="card">
-
           <h3>👥 Community</h3>
-
-          <p>
-            Find players and make friends.
-          </p>
-
-          <button class="btn" onclick="openPage('users')">
-            Explore
-          </button>
-
+          <p>Friends, profiles and players.</p>
         </div>
 
       </div>
-
-    </section>
-
+    </div>
 
     <!-- CHAT -->
 
-    <section class="page" id="page-chat">
+    <div class="page" id="chat">
 
-      <div class="panel">
+      <h1>💬 Foxie Chat</h1>
+      <p>Talk with Foxie AI.</p>
 
-        <h2>💬 Foxie AI</h2>
+      <div class="chat-box">
 
-        <div id="chatBox" class="chat-box">
+        <div class="messages" id="messages">
 
-          <div class="message foxie">
-            Hey! I'm Foxie 🦊 Ask me anything!
+          <div class="message">
+            <strong>🦊 Foxie</strong>
+            Yo! I'm Foxie. What's up?
           </div>
 
         </div>
 
-
         <div class="chat-input">
+          <input id="chatInput"
+                 placeholder="Message Foxie..."
+                 onkeydown="if(event.key==='Enter')sendChat()">
 
-          <input
-            id="chatInput"
-            placeholder="Message Foxie..."
-            onkeydown="if(event.key==='Enter')sendChat()"
-          >
-
-          <button class="btn" onclick="sendChat()">
+          <button class="btn green" onclick="sendChat()">
             Send
           </button>
-
         </div>
 
       </div>
 
-    </section>
-
+    </div>
 
     <!-- WEB -->
 
-    <section class="page" id="page-web">
+    <div class="page" id="web">
 
-      <div class="panel">
+      <h1>🌐 Foxie Web</h1>
+      <p>Web tools will live here.</p>
 
-        <h2>🌐 Foxie Web</h2>
-
-        <p class="muted">
-          Search the web through Foxie.
-        </p>
-
-        <input
-          id="webSearch"
-          placeholder="Search..."
-          onkeydown="if(event.key==='Enter')webSearch()"
-        >
-
-        <br><br>
-
-        <button class="btn" onclick="webSearch()">
-          Search
+      <div class="card">
+        <h3>Fullscreen Web</h3>
+        <p>Open Foxie's web workspace.</p>
+        <button class="btn green" onclick="openFullscreen('web','🌐 Foxie Web')">
+          ⛶ Open Fullscreen
         </button>
-
-        <div id="webResults" class="status"></div>
-
       </div>
 
-    </section>
-
+    </div>
 
     <!-- IMAGES -->
 
-    <section class="page" id="page-images">
+    <div class="page" id="images">
 
-      <div class="panel">
+      <h1>🖼️ Foxie Images</h1>
 
-        <h2>🖼️ Foxie Images</h2>
+      <div class="card">
+        <h3>Image Workspace</h3>
+        <p>Your image tools can be added here.</p>
 
-        <p class="muted">
-          Image search and creation tools will live here.
-        </p>
-
-        <input placeholder="Search images...">
-
-        <br><br>
-
-        <button class="btn">
-          Search Images
+        <button class="btn green"
+                onclick="openFullscreen('images','🖼️ Foxie Images')">
+          ⛶ Fullscreen
         </button>
-
       </div>
 
-    </section>
-
+    </div>
 
     <!-- PROFILE -->
 
-    <section class="page" id="page-profile">
+    <div class="page" id="profile">
 
-      <div class="panel">
+      <h1>👤 Profile</h1>
 
-        <h2>👤 Profile</h2>
+      <div class="card">
+        <h3 id="profileName">Guest</h3>
+        <p id="profileUsername">@guest</p>
 
-        <div id="accountStatus">
-          Guest Mode
-        </div>
-
-        <br>
-
-        <p class="muted">
-          Display name
+        <p>
+          XP: <strong id="profileXP">0</strong>
+          &nbsp; • &nbsp;
+          Coins: <strong id="profileCoins">0</strong>
         </p>
-
-        <div class="big-number" id="profileName">
-          Guest
-        </div>
-
-        <br>
-
-        <p class="muted">
-          XP
-        </p>
-
-        <div class="big-number" id="profileXP">
-          0
-        </div>
-
-        <br>
-
-        <p class="muted">
-          Coins
-        </p>
-
-        <div class="big-number" id="profileCoins">
-          0
-        </div>
-
-        <br>
-
-        <button
-          class="btn"
-          id="accountButton"
-          onclick="openAuth()"
-        >
-          Login / Sign Up
-        </button>
-
       </div>
 
-    </section>
-
+    </div>
 
     <!-- USERS -->
 
-    <section class="page" id="page-users">
+    <div class="page" id="users">
 
-      <div class="panel">
+      <h1>🔎 Find Users</h1>
 
-        <h2>👥 Users</h2>
+      <input id="userSearch"
+             placeholder="Search username..."
+             style="width:100%;max-width:500px;padding:12px;background:#06100a;border:1px solid var(--line);color:white;border-radius:8px"
+             onkeydown="if(event.key==='Enter')searchUsers()">
 
-        <input
-          id="userSearch"
-          placeholder="Search users..."
-          onkeydown="if(event.key==='Enter')searchUsers()"
-        >
+      <button class="btn green" onclick="searchUsers()">Search</button>
 
-        <br><br>
+      <div id="userResults" class="grid" style="margin-top:15px"></div>
 
-        <button class="btn" onclick="searchUsers()">
-          Search
-        </button>
-
-        <div id="userResults" class="status"></div>
-
-      </div>
-
-    </section>
-
+    </div>
 
     <!-- FRIENDS -->
 
-    <section class="page" id="page-friends">
+    <div class="page" id="friends">
 
-      <div class="panel">
+      <h1>👥 Friends</h1>
 
-        <h2>🫂 Friends</h2>
-
-        <div id="friendsList" class="muted">
-          Log into your account to use Friends.
+      <div id="friendsList" class="grid">
+        <div class="card">
+          <h3>No friends loaded</h3>
+          <p>Search for players and send friend requests.</p>
         </div>
-
       </div>
 
-    </section>
-
+    </div>
 
     <!-- VIDS -->
 
-    <section class="page" id="page-vids">
+    <div class="page" id="vids">
 
-      <div class="panel">
+      <h1>🎬 Foxie Vids</h1>
 
-        <h2>🎬 Foxie Vids</h2>
+      <div class="grid">
 
-        <p class="muted">
-          Short videos, gaming clips and creator content.
-        </p>
+        <div class="card">
+          <h3>📺 Video Player</h3>
+          <p>Watch Foxie videos fullscreen.</p>
 
-        <button class="btn">
-          Explore Vids
-        </button>
+          <button class="btn green"
+                  onclick="openFullscreen('video','🎬 Foxie Vids')">
+            ⛶ Fullscreen
+          </button>
+        </div>
 
       </div>
 
-    </section>
-
+    </div>
 
     <!-- GAMES -->
 
-    <section class="page" id="page-games">
+    <div class="page" id="games">
 
-      <div class="panel">
+      <h1>🎮 Foxie Games</h1>
+      <p>Every game can have its own fullscreen experience.</p>
 
-        <h2>🎮 Foxie Games</h2>
+      <div class="game-grid">
 
-        <div class="cards">
-
-          <div class="card">
-
-            <h3>🐍 Snake</h3>
-
-            <p>
-              Classic Snake.
-            </p>
-
-            <button class="btn" onclick="startSnake()">
-              Play
-            </button>
-
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🐍</div>
+            <h3>Foxie Snake</h3>
+            <p>Classic snake arcade.</p>
           </div>
 
+          <button class="btn green"
+                  onclick="openGame('🐍','Foxie Snake')">
+            ▶ Play Fullscreen
+          </button>
+        </div>
 
-          <div class="card">
-
-            <h3>♟️ Chess</h3>
-
-            <p>
-              Competitive Foxie Chess.
-            </p>
-
-            <button class="btn">
-              Coming Soon
-            </button>
-
+        <div class="game-card">
+          <div>
+            <div class="game-icon">♟️</div>
+            <h3>Foxie Chess</h3>
+            <p>Competitive chess.</p>
           </div>
 
+          <button class="btn green"
+                  onclick="openGame('♟️','Foxie Chess')">
+            ▶ Play Fullscreen
+          </button>
+        </div>
 
-          <div class="card">
-
-            <h3>🚗 Foxie Drive</h3>
-
-            <p>
-              Realistic driving world.
-            </p>
-
-            <button class="btn">
-              Coming Soon
-            </button>
-
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🚗</div>
+            <h3>Foxie Drive</h3>
+            <p>Open-world driving experience.</p>
           </div>
 
+          <button class="btn green"
+                  onclick="openGame('🚗','Foxie Drive')">
+            ▶ Play Fullscreen
+          </button>
+        </div>
 
-          <div class="card">
-
-            <h3>🌎 Foxie Worlds</h3>
-
-            <p>
-              Create and explore player worlds.
-            </p>
-
-            <button class="btn">
-              Coming Soon
-            </button>
-
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🌎</div>
+            <h3>Foxie Worlds</h3>
+            <p>Player-created worlds.</p>
           </div>
 
+          <button class="btn green"
+                  onclick="openGame('🌎','Foxie Worlds')">
+            ▶ Play Fullscreen
+          </button>
+        </div>
+
+        <div class="game-card">
+          <div>
+            <div class="game-icon">⚽</div>
+            <h3>Foxie Arena</h3>
+            <p>Competitive multiplayer arena.</p>
+          </div>
+
+          <button class="btn green"
+                  onclick="openGame('⚽','Foxie Arena')">
+            ▶ Play Fullscreen
+          </button>
+        </div>
+
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🏎️</div>
+            <h3>Foxie Racing</h3>
+            <p>Race other players.</p>
+          </div>
+
+          <button class="btn green"
+                  onclick="openGame('🏎️','Foxie Racing')">
+            ▶ Play Fullscreen
+          </button>
         </div>
 
       </div>
 
-
-      <div class="panel">
-
-        <h2>🐍 Snake</h2>
-
-        <div class="game-wrap">
-
-          <canvas
-            id="snakeCanvas"
-            width="400"
-            height="400"
-          ></canvas>
-
-        </div>
-
-        <p class="muted">
-          Use the arrow keys.
-        </p>
-
-      </div>
-
-    </section>
-
+    </div>
 
     <!-- LEADERBOARD -->
 
-    <section class="page" id="page-leaderboard">
+    <div class="page" id="leaderboard">
 
-      <div class="panel">
+      <h1>🏆 Leaderboard</h1>
 
-        <h2>🏆 Leaderboard</h2>
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Player</th>
+              <th>XP</th>
+              <th>Coins</th>
+            </tr>
+          </thead>
 
-        <div id="leaderboard">
-          Loading...
-        </div>
-
+          <tbody id="leaderboardBody">
+            <tr>
+              <td>-</td>
+              <td>Loading...</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-    </section>
-
+    </div>
 
     <!-- CALCULATOR -->
 
-    <section class="page" id="page-calculator">
+    <div class="page" id="calculator">
 
-      <div class="panel">
+      <h1>🧮 Calculator</h1>
 
-        <h2>🧮 Calculator</h2>
+      <div class="card" style="max-width:500px">
 
-        <input
-          id="calcInput"
-          placeholder="Example: 56575 + 9"
-          onkeydown="if(event.key==='Enter')calculate()"
-        >
+        <input id="calcInput"
+               placeholder="Example: 25 * 4"
+               style="width:100%;padding:12px;background:#020604;color:white;border:1px solid var(--line);border-radius:8px">
 
-        <br><br>
-
-        <button class="btn" onclick="calculate()">
+        <button class="btn green"
+                style="margin-top:10px"
+                onclick="calculate()">
           Calculate
         </button>
 
-        <div id="calcResult" class="big-number"></div>
+        <h2 id="calcResult">—</h2>
 
       </div>
 
-    </section>
-
+    </div>
 
     <!-- CREATOR -->
 
-    <section class="page" id="page-creator">
+    <div class="page" id="creator">
 
-      <div class="panel">
+      <h1>🛠️ Creator Mode</h1>
 
-        <h2>🛠️ Creator Mode</h2>
+      <div class="card">
 
-        <p class="muted">
-          Creator Mode uses secure account authentication.
+        <h3 id="creatorStatus">
+          Checking creator status...
+        </h3>
+
+        <p>
+          Creator access is controlled by secure authentication.
+          Your display name does not give creator permissions.
         </p>
-
-        <div id="creatorStatus">
-          Log into your account to check Creator Mode.
-        </div>
 
       </div>
 
-    </section>
-
+    </div>
 
     <!-- SETTINGS -->
 
-    <section class="page" id="page-settings">
+    <div class="page" id="settings">
 
-      <div class="panel">
+      <h1>⚙️ Settings</h1>
 
-        <h2>⚙️ Settings</h2>
+      <div class="card">
 
         <h3>Display Name</h3>
 
-        <p class="muted">
-          Your guest display name is saved on this device.
-        </p>
-
-        <input
-          id="settingsName"
-          maxlength="24"
-          placeholder="Display name"
-        >
+        <input id="displayNameInput"
+               placeholder="Your display name"
+               style="width:100%;max-width:500px;padding:11px;background:#020604;border:1px solid var(--line);color:white;border-radius:8px">
 
         <br><br>
 
-        <button class="btn" onclick="changeDisplayName()">
-          Save Display Name
+        <button class="btn green" onclick="saveDisplayName()">
+          Save Name
         </button>
 
-        <div id="settingsStatus" class="status"></div>
-
-      </div>
-
-
-      <div class="panel">
-
-        <h2>🔐 Account</h2>
-
-        <div id="settingsAccount">
-          You are using Guest Mode.
-        </div>
-
-        <br>
-
-        <button class="btn" onclick="openAuth()">
-          Login / Sign Up
-        </button>
-
-        <button
-          class="btn btn-danger"
-          onclick="logout()"
-          style="display:none"
-          id="logoutButton"
-        >
-          Logout
+        <button class="btn" onclick="resetDisplayName()">
+          Reset
         </button>
 
       </div>
 
+      <br>
 
-      <div class="panel">
+      <div class="card">
 
-        <h2>🧹 Device Data</h2>
+        <h3>Account</h3>
 
-        <p class="muted">
-          Remove your saved guest display name.
-        </p>
-
-        <button
-          class="btn btn-danger"
-          onclick="resetDisplayName()"
-        >
-          Reset Display Name
+        <button class="btn danger" onclick="logout()">
+          Log Out
         </button>
 
       </div>
 
-    </section>
+    </div>
+
+  </section>
+
+</main>
+</div>
+
+<!-- FULLSCREEN -->
+
+<div id="fullscreenOverlay">
+
+  <div class="fs-topbar">
+
+    <div class="fs-title" id="fsTitle">
+      Foxie
+    </div>
+
+    <button class="btn" onclick="browserFullscreen()">
+      ⛶ Browser Fullscreen
+    </button>
+
+    <button class="btn danger" onclick="closeFullscreen()">
+      ✕ Exit
+    </button>
 
   </div>
 
-</main>
+  <div class="fs-body" id="fsBody"></div>
 
+</div>
+
+<!-- ACCOUNT MODAL -->
+
+<div class="modal" id="accountModal">
+
+  <div class="modal-box">
+
+    <h2>🦊 Foxie Account</h2>
+
+    <input id="authUsername" placeholder="Username">
+
+    <input id="authDisplayName" placeholder="Display name">
+
+    <input id="authPassword" type="password" placeholder="Password">
+
+    <div class="modal-actions">
+
+      <button class="btn green" onclick="register()">
+        Sign Up
+      </button>
+
+      <button class="btn" onclick="login()">
+        Log In
+      </button>
+
+      <button class="btn" onclick="closeAccountModal()">
+        Close
+      </button>
+
+    </div>
+
+    <p id="authMessage"></p>
+
+  </div>
+
+</div>
+
+<!-- DISPLAY NAME -->
+
+<div class="modal" id="nameModal">
+
+  <div class="modal-box">
+
+    <h2>🦊 Welcome to Foxie</h2>
+
+    <p>Choose your display name.</p>
+
+    <input id="firstNameInput" placeholder="Display name">
+
+    <button class="btn green" onclick="saveFirstName()">
+      Enter Foxie
+    </button>
+
+  </div>
+
+</div>
 
 <script>
 
-const FOXIE_API =
-  "https://foxie-ai-backend.onrender.com";
-
-let currentUser = null;
-
-
 /* =========================
-   NAVIGATION
+   CONFIG
 ========================= */
 
-function showPage(page,button){
+const API =
+  "https://foxie-ai-backend.onrender.com";
 
-  document
-    .querySelectorAll(".page")
-    .forEach(p =>
-      p.classList.remove("active")
-    );
+let sessionToken =
+  localStorage.getItem("foxie_session") || "";
 
-  const target =
-    document.getElementById(
-      "page-" + page
-    );
+/* =========================
+   PARTICLES
+========================= */
 
-  if(target)
-    target.classList.add("active");
+for(let i=0;i<100;i++){
 
-  document
-    .querySelectorAll(".nav-btn")
-    .forEach(b =>
-      b.classList.remove("active")
-    );
+  const p=document.createElement("div");
 
-  if(button)
-    button.classList.add("active");
+  p.className="particle";
 
-  document
-    .getElementById("sidebar")
-    .classList.remove("open");
+  p.style.left=Math.random()*100+"%";
 
-  if(page === "leaderboard")
-    loadLeaderboard();
+  p.style.animationDuration=(5+Math.random()*10)+"s";
 
-  if(page === "profile")
-    loadProfile();
+  p.style.animationDelay=(Math.random()*10)+"s";
 
-  if(page === "friends")
-    loadFriends();
+  p.style.opacity=Math.random();
 
-  if(page === "creator")
-    loadCreatorStatus();
+  document.getElementById("particles").appendChild(p);
+}
+
+/* =========================
+   CLOCK
+========================= */
+
+function updateClock(){
+
+  const now=new Date();
+
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString();
 
 }
 
+setInterval(updateClock,1000);
+updateClock();
 
-function openPage(page){
-
-  const button =
-    [...document.querySelectorAll(".nav-btn")]
-      .find(b =>
-        b.getAttribute("onclick") &&
-        b.getAttribute("onclick")
-          .includes(
-            "showPage('" + page + "'"
-          )
-      );
-
-  showPage(page,button);
-
-}
-
+/* =========================
+   SIDEBAR
+========================= */
 
 function toggleSidebar(){
 
@@ -1491,418 +1246,481 @@ function toggleSidebar(){
 
 }
 
-
 /* =========================
-   CLOCK
+   PAGE SYSTEM
 ========================= */
 
-function updateClock(){
+function openPage(id,btn){
 
-  document.getElementById("clock")
-    .textContent =
-      new Date().toLocaleTimeString();
+  document.querySelectorAll(".page")
+    .forEach(p=>p.classList.remove("active"));
+
+  const page=document.getElementById(id);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(b=>b.classList.remove("active"));
+
+  if(btn){
+    btn.classList.add("active");
+  }
+
+  document
+    .getElementById("sidebar")
+    .classList.remove("open");
+
+  if(id==="profile") loadProfile();
+
+  if(id==="friends") loadFriends();
+
+  if(id==="leaderboard") loadLeaderboard();
+
+  if(id==="creator") loadCreator();
 
 }
 
-setInterval(updateClock,1000);
-updateClock();
-
-
 /* =========================
-   DISPLAY NAME
+   FULLSCREEN SYSTEM
 ========================= */
 
-function saveDisplayName(){
+function openFullscreen(type,title){
 
-  const input =
-    document.getElementById(
-      "displayNameInput"
-    );
+  const overlay=document.getElementById("fullscreenOverlay");
+  const body=document.getElementById("fsBody");
 
-  const error =
-    document.getElementById(
-      "nameError"
-    );
+  document.getElementById("fsTitle").textContent=title;
 
-  const name =
-    input.value.trim();
+  body.innerHTML="";
 
-  if(name.length < 2){
+  overlay.classList.add("show");
 
-    error.textContent =
-      "Name must be at least 2 characters.";
+  if(type==="web"){
 
-    return;
+    body.innerHTML=`
+      <div class="fake-game">
+        <div class="big">🌐</div>
+        <h2>Foxie Web</h2>
+        <p>Fullscreen web workspace</p>
+      </div>
+    `;
 
   }
 
-  localStorage.setItem(
-    "foxie_display_name",
-    name
-  );
+  if(type==="images"){
 
-  error.textContent = "";
+    body.innerHTML=`
+      <div class="fake-game">
+        <div class="big">🖼️</div>
+        <h2>Foxie Images</h2>
+        <p>Fullscreen image workspace</p>
+      </div>
+    `;
 
-  document
-    .getElementById("nameModal")
-    .style.display = "none";
+  }
 
-  updateDisplayNameUI(name);
+  if(type==="video"){
 
-}
-
-
-function updateDisplayNameUI(name){
-
-  document
-    .getElementById("welcomeName")
-    .textContent =
-      "Welcome to Foxie, " +
-      name +
-      " 🦊";
-
-  document
-    .getElementById("profileName")
-    .textContent =
-      name;
-
-  document
-    .getElementById("settingsName")
-    .value =
-      name;
-
-}
-
-
-function loadDisplayName(){
-
-  const saved =
-    localStorage.getItem(
-      "foxie_display_name"
-    );
-
-  const modal =
-    document.getElementById(
-      "nameModal"
-    );
-
-  if(saved){
-
-    modal.style.display = "none";
-
-    updateDisplayNameUI(saved);
-
-  }else{
-
-    modal.style.display = "flex";
-
-    setTimeout(() => {
-
-      document
-        .getElementById(
-          "displayNameInput"
-        )
-        .focus();
-
-    },100);
+    body.innerHTML=`
+      <div class="fake-game">
+        <div class="big">🎬</div>
+        <h2>Foxie Vids</h2>
+        <p>Fullscreen video player</p>
+      </div>
+    `;
 
   }
 
 }
 
+function openGame(icon,title){
 
-function changeDisplayName(){
+  const overlay=document.getElementById("fullscreenOverlay");
+  const body=document.getElementById("fsBody");
 
-  const input =
-    document.getElementById(
-      "settingsName"
-    );
+  document.getElementById("fsTitle").textContent=title;
 
-  const status =
-    document.getElementById(
-      "settingsStatus"
-    );
+  body.innerHTML=`
+    <div class="fake-game">
 
-  const name =
-    input.value.trim();
+      <div class="hud">
+        <span>🪙 0 COINS</span>
+        <span>⭐ 0 XP</span>
+        <span>🏆 RANK #—</span>
+      </div>
 
-  if(name.length < 2){
+      <div class="big">${icon}</div>
 
-    status.textContent =
-      "Name must be at least 2 characters.";
+      <h2>${title}</h2>
 
-    status.style.color =
-      "#ff5555";
+      <p>Game loading area</p>
 
-    return;
+      <button class="btn green"
+              onclick="alert('This game engine will be connected here next!')">
+        ▶ START GAME
+      </button>
 
-  }
+    </div>
+  `;
 
-  localStorage.setItem(
-    "foxie_display_name",
-    name
-  );
-
-  updateDisplayNameUI(name);
-
-  status.textContent =
-    "Display name saved ✓";
-
-  status.style.color =
-    "#39ff14";
+  overlay.classList.add("show");
 
 }
 
+function openCall(){
 
-function resetDisplayName(){
+  const overlay=document.getElementById("fullscreenOverlay");
 
-  localStorage.removeItem(
-    "foxie_display_name"
-  );
+  const body=document.getElementById("fsBody");
 
-  location.reload();
+  document.getElementById("fsTitle").textContent =
+    "📞 Foxie Call";
+
+  body.innerHTML=`
+
+    <div class="call-room">
+
+      <div class="video-tile">
+        👤
+        <div class="video-name">
+          You
+        </div>
+      </div>
+
+      <div class="video-tile">
+        🦊
+        <div class="video-name">
+          Waiting for player...
+        </div>
+      </div>
+
+      <div class="call-controls">
+
+        <button class="btn" onclick="toggleCallButton(this)">
+          🎤
+        </button>
+
+        <button class="btn" onclick="toggleCallButton(this)">
+          📹
+        </button>
+
+        <button class="btn" onclick="alert('Screen sharing will connect here.')">
+          🖥️
+        </button>
+
+        <button class="btn" onclick="alert('Chat will connect here.')">
+          💬
+        </button>
+
+        <button class="btn danger" onclick="closeFullscreen()">
+          📞
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  overlay.classList.add("show");
 
 }
 
+function toggleCallButton(button){
 
-/* =========================
-   AUTH MODAL
-========================= */
-
-function openAuth(){
-
-  document
-    .getElementById("authModal")
-    .style.display =
-      "flex";
+  button.classList.toggle("green");
 
 }
 
+function closeFullscreen(){
 
-function closeAuth(){
+  const overlay=document.getElementById("fullscreenOverlay");
 
-  document
-    .getElementById("authModal")
-    .style.display =
-      "none";
+  overlay.classList.remove("show");
 
-  document
-    .getElementById("authError")
-    .textContent = "";
-
-}
-
-
-function switchAuth(type){
-
-  const login =
-    document.getElementById(
-      "loginForm"
-    );
-
-  const register =
-    document.getElementById(
-      "registerForm"
-    );
-
-  const loginTab =
-    document.getElementById(
-      "loginTab"
-    );
-
-  const registerTab =
-    document.getElementById(
-      "registerTab"
-    );
-
-  if(type === "login"){
-
-    login.classList.add("active");
-    register.classList.remove("active");
-
-    loginTab.classList.add("active");
-    registerTab.classList.remove("active");
-
-  }else{
-
-    register.classList.add("active");
-    login.classList.remove("active");
-
-    registerTab.classList.add("active");
-    loginTab.classList.remove("active");
-
+  if(document.fullscreenElement){
+    document.exitFullscreen().catch(()=>{});
   }
 
 }
 
+async function browserFullscreen(){
+
+  const overlay=document.getElementById("fullscreenOverlay");
+
+  try{
+
+    if(!document.fullscreenElement){
+
+      await overlay.requestFullscreen();
+
+    }else{
+
+      await document.exitFullscreen();
+
+    }
+
+  }catch(error){
+
+    console.log(error);
+
+  }
+
+}
+
+document.addEventListener("keydown",function(e){
+
+  if(e.key==="Escape"){
+
+    const overlay=document.getElementById("fullscreenOverlay");
+
+    if(overlay.classList.contains("show")){
+      closeFullscreen();
+    }
+
+  }
+
+});
 
 /* =========================
-   REGISTER
+   CHAT
 ========================= */
+
+function addMessage(name,text,me=false){
+
+  const box=document.getElementById("messages");
+
+  const div=document.createElement("div");
+
+  div.className="message"+(me?" me":"");
+
+  div.innerHTML=`
+    <strong>${escapeHTML(name)}</strong>
+    ${escapeHTML(text)}
+  `;
+
+  box.appendChild(div);
+
+  box.scrollTop=box.scrollHeight;
+
+}
+
+async function sendChat(){
+
+  const input=document.getElementById("chatInput");
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  input.value="";
+
+  addMessage("You",text,true);
+
+  addMessage("🦊 Foxie","Thinking...");
+
+  const messages=document.getElementById("messages");
+
+  try{
+
+    const response=await fetch(API+"/api/chat",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        message:text
+      })
+    });
+
+    const data=await response.json();
+
+    messages.lastElementChild.remove();
+
+    addMessage(
+      "🦊 Foxie",
+      data.response ||
+      data.message ||
+      "I couldn't get a response."
+    );
+
+  }catch(error){
+
+    messages.lastElementChild.remove();
+
+    addMessage(
+      "🦊 Foxie",
+      "The Foxie server is waking up. Try again in a few seconds."
+    );
+
+  }
+
+}
+
+/* =========================
+   AUTH
+========================= */
+
+function openAccountModal(){
+
+  document
+    .getElementById("accountModal")
+    .classList.add("show");
+
+}
+
+function closeAccountModal(){
+
+  document
+    .getElementById("accountModal")
+    .classList.remove("show");
+
+}
 
 async function register(){
 
-  const username =
-    document.getElementById(
-      "registerUsername"
-    ).value.trim();
+  const username=
+    document.getElementById("authUsername").value.trim();
 
-  const displayName =
-    document.getElementById(
-      "registerDisplayName"
-    ).value.trim();
+  const display_name=
+    document.getElementById("authDisplayName").value.trim();
 
-  const password =
-    document.getElementById(
-      "registerPassword"
-    ).value;
+  const password=
+    document.getElementById("authPassword").value;
 
-  const error =
-    document.getElementById(
-      "authError"
-    );
+  if(!username||!display_name||!password){
 
-  error.textContent =
-    "Creating account...";
+    document.getElementById("authMessage").textContent =
+      "Fill in all fields.";
+
+    return;
+
+  }
 
   try{
 
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/auth/register",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            username,
-            display_name:
-              displayName ||
-              username,
-            password
-          })
-        }
-      );
+    const response=await fetch(API+"/api/auth/register",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        username,
+        display_name,
+        password
+      })
+    });
 
-    const data =
-      await response.json();
+    const data=await response.json();
 
     if(!response.ok){
 
-      error.textContent =
-        data.detail ||
-        data.message ||
-        "Could not create account.";
+      document.getElementById("authMessage").textContent =
+        data.detail || "Registration failed.";
 
       return;
 
     }
 
-    if(data.token){
-
-      localStorage.setItem(
-        "foxie_session",
-        data.token
-      );
-
-    }
-
-    closeAuth();
-
-    await loadCurrentUser();
+    document.getElementById("authMessage").textContent =
+      "Account created! Now log in.";
 
   }catch(e){
 
-    error.textContent =
-      "Could not connect to Foxie.";
+    document.getElementById("authMessage").textContent =
+      "Server unavailable.";
 
   }
 
 }
-
-
-/* =========================
-   LOGIN
-========================= */
 
 async function login(){
 
-  const username =
-    document.getElementById(
-      "loginUsername"
-    ).value.trim();
+  const username=
+    document.getElementById("authUsername").value.trim();
 
-  const password =
-    document.getElementById(
-      "loginPassword"
-    ).value;
-
-  const error =
-    document.getElementById(
-      "authError"
-    );
-
-  error.textContent =
-    "Logging in...";
+  const password=
+    document.getElementById("authPassword").value;
 
   try{
 
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/auth/login",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            username,
-            password
-          })
-        }
-      );
+    const response=await fetch(API+"/api/auth/login",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        username,
+        password
+      })
+    });
 
-    const data =
-      await response.json();
+    const data=await response.json();
 
     if(!response.ok){
 
-      error.textContent =
-        data.detail ||
-        data.message ||
-        "Login failed.";
+      document.getElementById("authMessage").textContent =
+        data.detail || "Login failed.";
 
       return;
 
     }
 
-    if(data.token){
+    sessionToken=
+      data.token ||
+      data.session_token ||
+      data.access_token ||
+      "";
+
+    if(sessionToken){
 
       localStorage.setItem(
         "foxie_session",
-        data.token
+        sessionToken
       );
 
     }
 
-    closeAuth();
+    closeAccountModal();
 
-    await loadCurrentUser();
+    loadCurrentUser();
 
   }catch(e){
 
-    error.textContent =
-      "Could not connect to Foxie.";
+    document.getElementById("authMessage").textContent =
+      "Server unavailable.";
 
   }
 
 }
 
+async function logout(){
+
+  if(sessionToken){
+
+    try{
+
+      await fetch(API+"/api/auth/logout",{
+        method:"POST",
+        headers:{
+          "Authorization":"Bearer "+sessionToken
+        }
+      });
+
+    }catch(e){}
+
+  }
+
+  sessionToken="";
+
+  localStorage.removeItem("foxie_session");
+
+  document.getElementById("accountName").textContent="Guest";
+
+  openPage("home");
+
+}
 
 /* =========================
    CURRENT USER
@@ -1910,523 +1728,37 @@ async function login(){
 
 async function loadCurrentUser(){
 
-  const token =
-    localStorage.getItem(
-      "foxie_session"
-    );
-
-  if(!token){
-
-    currentUser = null;
-
-    updateAccountUI();
-
-    return;
-
-  }
+  if(!sessionToken)return;
 
   try{
 
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/auth/me",
-        {
-          headers:{
-            Authorization:
-              "Bearer " + token
-          }
-        }
-      );
+    const response=await fetch(API+"/api/auth/me",{
+      headers:{
+        "Authorization":"Bearer "+sessionToken
+      }
+    });
 
-    if(!response.ok){
+    if(!response.ok)return;
 
-      localStorage.removeItem(
-        "foxie_session"
-      );
+    const data=await response.json();
 
-      currentUser = null;
+    const user=data.user || data;
 
-      updateAccountUI();
+    document.getElementById("accountName").textContent =
+      user.display_name ||
+      user.username ||
+      "User";
 
-      return;
+    document.getElementById("profileName").textContent =
+      user.display_name ||
+      "User";
 
-    }
+    document.getElementById("profileUsername").textContent =
+      "@"+(user.username || "user");
 
-    currentUser =
-      await response.json();
-
-    updateAccountUI();
-
-  }catch(e){
-
-    console.log(
-      "Account check failed."
-    );
-
-  }
+  }catch(e){}
 
 }
-
-
-/* =========================
-   ACCOUNT UI
-========================= */
-
-function updateAccountUI(){
-
-  const accountStatus =
-    document.getElementById(
-      "accountStatus"
-    );
-
-  const accountButton =
-    document.getElementById(
-      "accountButton"
-    );
-
-  const settingsAccount =
-    document.getElementById(
-      "settingsAccount"
-    );
-
-  const logoutButton =
-    document.getElementById(
-      "logoutButton"
-    );
-
-  if(currentUser){
-
-    const name =
-      currentUser.display_name ||
-      currentUser.username ||
-      "Foxie User";
-
-    document.getElementById(
-      "profileName"
-    ).textContent =
-      name;
-
-    document.getElementById(
-      "welcomeName"
-    ).textContent =
-      "Welcome back, " +
-      name +
-      " 🦊";
-
-    accountStatus.innerHTML =
-      '<div class="account-status">' +
-      '<span class="online-dot"></span>' +
-      'Logged in as ' +
-      escapeHTML(name) +
-      '</div>';
-
-    accountButton.textContent =
-      "Account Connected ✓";
-
-    accountButton.onclick =
-      function(){
-        openPage("settings");
-      };
-
-    settingsAccount.innerHTML =
-      "Logged in as <strong>" +
-      escapeHTML(name) +
-      "</strong>";
-
-    logoutButton.style.display =
-      "inline-block";
-
-    loadProfile();
-
-  }else{
-
-    accountStatus.textContent =
-      "Guest Mode";
-
-    accountButton.textContent =
-      "Login / Sign Up";
-
-    accountButton.onclick =
-      openAuth;
-
-    settingsAccount.textContent =
-      "You are using Guest Mode.";
-
-    logoutButton.style.display =
-      "none";
-
-  }
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-async function logout(){
-
-  const token =
-    localStorage.getItem(
-      "foxie_session"
-    );
-
-  if(token){
-
-    try{
-
-      await fetch(
-        FOXIE_API +
-        "/api/auth/logout",
-        {
-          method:"POST",
-          headers:{
-            Authorization:
-              "Bearer " + token
-          }
-        }
-      );
-
-    }catch(e){}
-
-  }
-
-  localStorage.removeItem(
-    "foxie_session"
-  );
-
-  currentUser = null;
-
-  updateAccountUI();
-
-  openPage("home");
-
-}
-
-
-/* =========================
-   CHAT
-========================= */
-
-async function sendChat(){
-
-  const input =
-    document.getElementById(
-      "chatInput"
-    );
-
-  const box =
-    document.getElementById(
-      "chatBox"
-    );
-
-  const message =
-    input.value.trim();
-
-  if(!message)
-    return;
-
-  const userMessage =
-    document.createElement("div");
-
-  userMessage.className =
-    "message user";
-
-  userMessage.textContent =
-    message;
-
-  box.appendChild(
-    userMessage
-  );
-
-  input.value = "";
-
-  const loading =
-    document.createElement("div");
-
-  loading.className =
-    "message foxie";
-
-  loading.textContent =
-    "Foxie is thinking...";
-
-  box.appendChild(
-    loading
-  );
-
-  box.scrollTop =
-    box.scrollHeight;
-
-  try{
-
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/chat",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            message
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    loading.textContent =
-      data.reply ||
-      data.message ||
-      "Foxie didn't return a response.";
-
-  }catch(e){
-
-    loading.textContent =
-      "Foxie couldn't connect to the server.";
-
-  }
-
-  box.scrollTop =
-    box.scrollHeight;
-
-}
-
-
-/* =========================
-   USERS
-========================= */
-
-async function searchUsers(){
-
-  const input =
-    document.getElementById(
-      "userSearch"
-    );
-
-  const results =
-    document.getElementById(
-      "userResults"
-    );
-
-  const query =
-    input.value.trim();
-
-  if(!query){
-
-    results.textContent =
-      "Enter a username.";
-
-    return;
-
-  }
-
-  results.textContent =
-    "Searching...";
-
-  try{
-
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/users/search?q=" +
-        encodeURIComponent(query)
-      );
-
-    const data =
-      await response.json();
-
-    if(!Array.isArray(data) ||
-       !data.length){
-
-      results.textContent =
-        "No users found.";
-
-      return;
-
-    }
-
-    results.innerHTML =
-      data.map(user => {
-
-        const username =
-          escapeHTML(
-            user.username || ""
-          );
-
-        const name =
-          escapeHTML(
-            user.display_name ||
-            user.username ||
-            "User"
-          );
-
-        return `
-          <div class="card" style="margin-top:10px">
-            <strong>${name}</strong>
-            <div class="muted">@${username}</div>
-            <br>
-            <button
-              class="btn"
-              onclick="sendFriendRequest('${username}')"
-            >
-              Add Friend
-            </button>
-          </div>
-        `;
-
-      }).join("");
-
-  }catch(e){
-
-    results.textContent =
-      "Could not search users.";
-
-  }
-
-}
-
-
-async function sendFriendRequest(username){
-
-  const token =
-    localStorage.getItem(
-      "foxie_session"
-    );
-
-  if(!token){
-
-    openAuth();
-
-    return;
-
-  }
-
-  try{
-
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/friends/request",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json",
-            Authorization:
-              "Bearer " + token
-          },
-          body:JSON.stringify({
-            username
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    alert(
-      data.message ||
-      data.detail ||
-      "Friend request sent."
-    );
-
-  }catch(e){
-
-    alert(
-      "Could not send friend request."
-    );
-
-  }
-
-}
-
-
-/* =========================
-   FRIENDS
-========================= */
-
-async function loadFriends(){
-
-  const box =
-    document.getElementById(
-      "friendsList"
-    );
-
-  const token =
-    localStorage.getItem(
-      "foxie_session"
-    );
-
-  if(!token){
-
-    box.textContent =
-      "Log into your account to use Friends.";
-
-    return;
-
-  }
-
-  box.textContent =
-    "Loading friends...";
-
-  try{
-
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/friends",
-        {
-          headers:{
-            Authorization:
-              "Bearer " + token
-          }
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(!Array.isArray(data) ||
-       !data.length){
-
-      box.textContent =
-        "No friends yet.";
-
-      return;
-
-    }
-
-    box.innerHTML =
-      data.map(friend => `
-
-        <div class="card" style="margin-top:10px">
-
-          <strong>
-            ${escapeHTML(
-              friend.display_name ||
-              friend.username ||
-              "Friend"
-            )}
-          </strong>
-
-        </div>
-
-      `).join("");
-
-  }catch(e){
-
-    box.textContent =
-      "Could not load friends.";
-
-  }
-
-}
-
 
 /* =========================
    PROFILE
@@ -2434,21 +1766,109 @@ async function loadFriends(){
 
 async function loadProfile(){
 
-  if(!currentUser){
+  if(!sessionToken)return;
 
-    const saved =
-      localStorage.getItem(
-        "foxie_display_name"
-      );
+  try{
 
-    if(saved){
+    const response=await fetch(API+"/api/profile",{
+      headers:{
+        "Authorization":"Bearer "+sessionToken
+      }
+    });
 
-      document.getElementById(
-        "profileName"
-      ).textContent =
-        saved;
+    if(!response.ok)return;
+
+    const data=await response.json();
+
+    const user=data.user || data;
+
+    document.getElementById("profileName").textContent =
+      user.display_name || "User";
+
+    document.getElementById("profileUsername").textContent =
+      "@"+(user.username || "user");
+
+    document.getElementById("profileXP").textContent =
+      user.xp ?? 0;
+
+    document.getElementById("profileCoins").textContent =
+      user.coins ?? 0;
+
+  }catch(e){}
+
+}
+
+/* =========================
+   USERS
+========================= */
+
+async function searchUsers(){
+
+  const query=
+    document.getElementById("userSearch").value.trim();
+
+  if(!query)return;
+
+  const box=document.getElementById("userResults");
+
+  box.innerHTML="<p>Searching...</p>";
+
+  try{
+
+    const response=await fetch(
+      API+"/api/users/search?q="+encodeURIComponent(query),
+      {
+        headers:{
+          "Authorization":"Bearer "+sessionToken
+        }
+      }
+    );
+
+    const data=await response.json();
+
+    const users=data.users || data || [];
+
+    box.innerHTML="";
+
+    users.forEach(user=>{
+
+      const card=document.createElement("div");
+
+      card.className="card";
+
+      card.innerHTML=`
+        <h3>${escapeHTML(user.display_name || user.username)}</h3>
+        <p>@${escapeHTML(user.username || "")}</p>
+
+        <button class="btn green"
+                onclick="sendFriendRequest('${escapeJS(user.username)}')">
+          Add Friend
+        </button>
+      `;
+
+      box.appendChild(card);
+
+    });
+
+    if(!users.length){
+
+      box.innerHTML="<p>No users found.</p>";
 
     }
+
+  }catch(e){
+
+    box.innerHTML="<p>Could not search right now.</p>";
+
+  }
+
+}
+
+async function sendFriendRequest(username){
+
+  if(!sessionToken){
+
+    openAccountModal();
 
     return;
 
@@ -2456,53 +1876,98 @@ async function loadProfile(){
 
   try{
 
-    const token =
-      localStorage.getItem(
-        "foxie_session"
-      );
+    const response=await fetch(API+"/api/friends/request",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer "+sessionToken
+      },
+      body:JSON.stringify({
+        username
+      })
+    });
 
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/profile",
-        {
-          headers:{
-            Authorization:
-              "Bearer " + token
-          }
-        }
-      );
+    const data=await response.json();
 
-    if(!response.ok)
-      return;
+    alert(
+      data.message ||
+      data.detail ||
+      "Friend request sent!"
+    );
 
-    const data =
-      await response.json();
+  }catch(e){
 
-    if(data.display_name){
+    alert("Could not send request.");
 
-      document.getElementById(
-        "profileName"
-      ).textContent =
-        data.display_name;
+  }
 
-    }
+}
 
-    if(data.xp !== undefined){
+/* =========================
+   FRIENDS
+========================= */
 
-      document.getElementById(
-        "profileXP"
-      ).textContent =
-        data.xp;
+async function loadFriends(){
 
-    }
+  if(!sessionToken){
 
-    if(data.coins !== undefined){
+    document.getElementById("friendsList").innerHTML=`
+      <div class="card">
+        <h3>🔐 Log in first</h3>
+        <p>You need an account to use friends.</p>
+        <button class="btn green" onclick="openAccountModal()">
+          Log In / Sign Up
+        </button>
+      </div>
+    `;
 
-      document.getElementById(
-        "profileCoins"
-      ).textContent =
-        data.coins;
+    return;
+
+  }
+
+  try{
+
+    const response=await fetch(API+"/api/friends",{
+      headers:{
+        "Authorization":"Bearer "+sessionToken
+      }
+    });
+
+    const data=await response.json();
+
+    const friends=data.friends || data || [];
+
+    const box=document.getElementById("friendsList");
+
+    box.innerHTML="";
+
+    friends.forEach(friend=>{
+
+      const card=document.createElement("div");
+
+      card.className="card";
+
+      card.innerHTML=`
+        <h3>👤 ${escapeHTML(friend.display_name || friend.username)}</h3>
+        <p>@${escapeHTML(friend.username || "")}</p>
+
+        <button class="btn" onclick="openCall()">
+          📞 Call
+        </button>
+      `;
+
+      box.appendChild(card);
+
+    });
+
+    if(!friends.length){
+
+      box.innerHTML=`
+        <div class="card">
+          <h3>No friends yet</h3>
+          <p>Find players and add them.</p>
+        </div>
+      `;
 
     }
 
@@ -2510,97 +1975,53 @@ async function loadProfile(){
 
 }
 
-
 /* =========================
    LEADERBOARD
 ========================= */
 
 async function loadLeaderboard(){
 
-  const box =
-    document.getElementById(
-      "leaderboard"
-    );
-
-  box.textContent =
-    "Loading leaderboard...";
-
   try{
 
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/leaderboard"
-      );
+    const response=await fetch(API+"/api/leaderboard");
 
-    const data =
-      await response.json();
+    const data=await response.json();
 
-    if(!Array.isArray(data) ||
-       !data.length){
+    const players=data.players || data || [];
 
-      box.textContent =
-        "No players yet.";
+    const body=document.getElementById("leaderboardBody");
 
-      return;
+    body.innerHTML="";
 
-    }
+    players.forEach((player,index)=>{
 
-    box.innerHTML =
-      data.map(
-        (user,index) => `
+      const tr=document.createElement("tr");
 
-          <div class="card"
-               style="margin-top:10px">
+      tr.innerHTML=`
+        <td>${index+1}</td>
+        <td>${escapeHTML(player.display_name || player.username || "Player")}</td>
+        <td>${player.xp ?? 0}</td>
+        <td>${player.coins ?? 0}</td>
+      `;
 
-            <strong>
-              #${index + 1}
-              ${escapeHTML(
-                user.display_name ||
-                user.username ||
-                "Player"
-              )}
-            </strong>
+      body.appendChild(tr);
 
-            <div class="muted">
-              XP: ${user.xp || 0}
-            </div>
+    });
 
-          </div>
-
-        `
-      ).join("");
-
-  }catch(e){
-
-    box.textContent =
-      "Could not load leaderboard.";
-
-  }
+  }catch(e){}
 
 }
-
 
 /* =========================
    CREATOR
 ========================= */
 
-async function loadCreatorStatus(){
+async function loadCreator(){
 
-  const box =
-    document.getElementById(
-      "creatorStatus"
-    );
+  if(!sessionToken){
 
-  const token =
-    localStorage.getItem(
-      "foxie_session"
-    );
-
-  if(!token){
-
-    box.textContent =
-      "Log into your account to check Creator Mode.";
+    document.getElementById("creatorStatus").textContent =
+      "🔐 Log in to check Creator Mode.";
 
     return;
 
@@ -2608,42 +2029,27 @@ async function loadCreatorStatus(){
 
   try{
 
-    const response =
-      await fetch(
-        FOXIE_API +
-        "/api/creator/status",
-        {
-          headers:{
-            Authorization:
-              "Bearer " + token
-          }
-        }
-      );
+    const response=await fetch(API+"/api/creator/status",{
+      headers:{
+        "Authorization":"Bearer "+sessionToken
+      }
+    });
 
-    const data =
-      await response.json();
+    const data=await response.json();
 
-    if(data.is_creator){
-
-      box.innerHTML =
-        "<span style='color:#39ff14'>Creator Mode enabled ✓</span>";
-
-    }else{
-
-      box.textContent =
-        "Creator Mode is not enabled for this account.";
-
-    }
+    document.getElementById("creatorStatus").textContent =
+      data.is_creator
+      ? "🛠️ Creator Mode enabled"
+      : "🔒 Creator Mode unavailable";
 
   }catch(e){
 
-    box.textContent =
+    document.getElementById("creatorStatus").textContent =
       "Could not check Creator Mode.";
 
   }
 
 }
-
 
 /* =========================
    CALCULATOR
@@ -2651,28 +2057,15 @@ async function loadCreatorStatus(){
 
 function calculate(){
 
-  const input =
-    document.getElementById(
-      "calcInput"
-    ).value.trim();
+  const value=
+    document.getElementById("calcInput").value.trim();
 
-  const result =
-    document.getElementById(
-      "calcResult"
-    );
+  const result=
+    document.getElementById("calcResult");
 
-  if(!input){
+  if(!/^[0-9+\-*/().%\s]+$/.test(value)){
 
-    result.textContent = "";
-
-    return;
-
-  }
-
-  if(!/^[0-9+\-*/().%\s]+$/.test(input)){
-
-    result.textContent =
-      "Invalid calculation.";
+    result.textContent="Invalid calculation.";
 
     return;
 
@@ -2680,268 +2073,112 @@ function calculate(){
 
   try{
 
-    const answer =
-      Function(
-        '"use strict";return (' +
-        input +
-        ')'
-      )();
-
-    result.textContent =
-      "= " + answer;
+    result.textContent=Function(
+      '"use strict";return ('+value+')'
+    )();
 
   }catch(e){
 
-    result.textContent =
-      "Couldn't calculate.";
+    result.textContent="Error.";
 
   }
 
 }
-
 
 /* =========================
-   WEB
+   DISPLAY NAME
 ========================= */
 
-function webSearch(){
+function saveFirstName(){
 
-  const input =
-    document.getElementById(
-      "webSearch"
-    );
+  const name=
+    document.getElementById("firstNameInput")
+      .value.trim();
 
-  const results =
-    document.getElementById(
-      "webResults"
-    );
+  if(!name)return;
 
-  const query =
-    input.value.trim();
+  localStorage.setItem(
+    "foxie_display_name",
+    name
+  );
 
-  if(!query){
+  document.getElementById("accountName").textContent=name;
 
-    results.textContent =
-      "Enter something to search.";
-
-    return;
-
-  }
-
-  results.innerHTML =
-    "Searching for <b>" +
-    escapeHTML(query) +
-    "</b>...";
+  document.getElementById("nameModal")
+    .classList.remove("show");
 
 }
 
+function saveDisplayName(){
 
-/* =========================
-   SNAKE
-========================= */
+  const name=
+    document.getElementById("displayNameInput")
+      .value.trim();
 
-let snake = [];
-let food = {};
-let direction = "right";
-let snakeRunning = false;
+  if(!name)return;
 
-function startSnake(){
+  localStorage.setItem(
+    "foxie_display_name",
+    name
+  );
 
-  const canvas =
-    document.getElementById(
-      "snakeCanvas"
-    );
-
-  const ctx =
-    canvas.getContext("2d");
-
-  const size = 20;
-
-  snake = [
-    {x:10,y:10},
-    {x:9,y:10},
-    {x:8,y:10}
-  ];
-
-  direction = "right";
-
-  spawnFood();
-
-  snakeRunning = true;
-
-  function loop(){
-
-    if(!snakeRunning)
-      return;
-
-    const head =
-      {...snake[0]};
-
-    if(direction === "right")
-      head.x++;
-
-    if(direction === "left")
-      head.x--;
-
-    if(direction === "up")
-      head.y--;
-
-    if(direction === "down")
-      head.y++;
-
-    if(
-      head.x < 0 ||
-      head.y < 0 ||
-      head.x >= 20 ||
-      head.y >= 20
-    ){
-
-      snakeRunning = false;
-
-      alert("Game over!");
-
-      return;
-
-    }
-
-    snake.unshift(head);
-
-    if(
-      head.x === food.x &&
-      head.y === food.y
-    ){
-
-      spawnFood();
-
-    }else{
-
-      snake.pop();
-
-    }
-
-    ctx.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    ctx.strokeStyle =
-      "#39ff14";
-
-    ctx.strokeRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    ctx.fillStyle =
-      "#39ff14";
-
-    snake.forEach(part => {
-
-      ctx.fillRect(
-        part.x * size,
-        part.y * size,
-        size - 2,
-        size - 2
-      );
-
-    });
-
-    ctx.fillStyle =
-      "#ffffff";
-
-    ctx.fillRect(
-      food.x * size,
-      food.y * size,
-      size - 2,
-      size - 2
-    );
-
-    setTimeout(
-      loop,
-      100
-    );
-
-  }
-
-  loop();
+  document.getElementById("accountName").textContent=name;
 
 }
 
+function resetDisplayName(){
 
-function spawnFood(){
+  localStorage.removeItem(
+    "foxie_display_name"
+  );
 
-  food = {
-    x:Math.floor(
-      Math.random()*20
-    ),
-    y:Math.floor(
-      Math.random()*20
-    )
-  };
+  document.getElementById("displayNameInput").value="";
+
+  document.getElementById("accountName").textContent="Guest";
 
 }
-
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if(
-      event.key === "ArrowUp" &&
-      direction !== "down"
-    )
-      direction = "up";
-
-    if(
-      event.key === "ArrowDown" &&
-      direction !== "up"
-    )
-      direction = "down";
-
-    if(
-      event.key === "ArrowLeft" &&
-      direction !== "right"
-    )
-      direction = "left";
-
-    if(
-      event.key === "ArrowRight" &&
-      direction !== "left"
-    )
-      direction = "right";
-
-  }
-);
-
 
 /* =========================
    SEARCH
 ========================= */
 
-function handleSearch(event){
+function globalSearch(event){
 
-  if(event.key !== "Enter")
-    return;
+  if(event.key!=="Enter")return;
 
-  const query =
-    event.target.value.trim();
+  const query=
+    document.getElementById("globalSearch")
+      .value.trim()
+      .toLowerCase();
 
-  if(!query)
-    return;
+  if(!query)return;
 
-  alert(
-    "Foxie search: " + query
-  );
+  if(query.includes("game")){
+
+    openPage("games");
+
+  }else if(query.includes("chat")){
+
+    openPage("chat");
+
+  }else if(query.includes("friend")){
+
+    openPage("friends");
+
+  }else if(query.includes("call")){
+
+    openCall();
+
+  }else{
+
+    alert("Foxie search: "+query);
+
+  }
 
 }
 
-
 /* =========================
-   SAFE HTML
+   HELPERS
 ========================= */
 
 function escapeHTML(value){
@@ -2955,12 +2192,40 @@ function escapeHTML(value){
 
 }
 
+function escapeJS(value){
+
+  return String(value)
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'");
+
+}
 
 /* =========================
-   START
+   STARTUP
 ========================= */
 
-loadDisplayName();
+const savedName=
+  localStorage.getItem("foxie_display_name");
+
+if(savedName){
+
+  document.getElementById("accountName")
+    .textContent=savedName;
+
+  document.getElementById("displayNameInput")
+    .value=savedName;
+
+}else{
+
+  setTimeout(()=>{
+
+    document.getElementById("nameModal")
+      .classList.add("show");
+
+  },500);
+
+}
+
 loadCurrentUser();
 
 </script>
