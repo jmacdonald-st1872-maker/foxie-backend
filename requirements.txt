@@ -6,3 +6,4 @@ openai
 flask
 flask-cors
 ddgs
+requests
