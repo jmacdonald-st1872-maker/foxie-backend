@@ -673,6 +673,38 @@ def get_current_user(
     return row
 
 
+
+# ============================================================
+# FOXIE AI — BRACKEN EASTER EGG
+# ============================================================
+
+class BrackenRequest(BaseModel):
+    message: str
+
+
+@app.post("/api/ai/bracken")
+def bracken_easter_egg(data: BrackenRequest):
+    """
+    Foxie AI easter egg:
+    When the message is exactly/essentially about "Bracken",
+    return the custom Foxie response.
+    """
+    message = data.message.strip().lower()
+
+    if "bracken" in message:
+        return {
+            "ok": True,
+            "triggered": True,
+            "reply": "WHAT'S CRACKING BRACKING 😭🦊",
+        }
+
+    return {
+        "ok": True,
+        "triggered": False,
+        "reply": None,
+    }
+
+
 # ============================================================
 # BASIC ROUTES
 # ============================================================
